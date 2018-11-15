@@ -1,0 +1,175 @@
+﻿
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "登录";
+}
+
+@section styles
+{
+    <style>
+       
+    </style>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function() {
+            $(function() {
+                var code = '9999';
+                $('#submit').click(function(e) {
+                    e.preventDefault();
+
+                    var username = $('#username').val();
+                    var password = $('#code').val();
+                    var nickname = $('#nickname').val();
+                    var name = $('#name').val();
+
+
+                    if (username === "") {
+                        $('#username').focus();
+                        app.message.warn('请输入手机号码!');
+                        return;
+                    }
+                    if (password === "") {
+                        $('#code').focus();
+                        app.message.warn('请输入验证码!');
+                        return;
+                    }
+                    if (password != code) {
+                        app.message.warn('验证码不正确!');
+                        return;
+                    }
+                    if (name === "") {
+                        $('#name').focus();
+                        app.message.warn('请输入您的真实姓名!');
+                        return;
+                    }
+
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.createUserByWX(username, nickname, name, '匿名', '')
+                        .done(function(result) {
+
+                            if (result.success) {
+
+                                window.location.href = '/weixin/my';
+
+                            } else {
+                             
+                                app.message.error(result.msg);
+                            }
+
+                        }).always(function() {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+
+                });
+
+                var wait = 60;
+
+                function time(o) {
+                    if (wait <= 0) {
+                        $(o).text("获取手机验证码");
+                        wait = 60;
+                        $('#bntSendCode').removeAttr("disabled");
+                    } else {
+                        $(o).text("重新发送(" + wait + ")");
+                        wait--;
+                        setTimeout(function() {
+                                time(o);
+                            },
+                            1000);
+                    }
+                }
+
+                $('#bntSendCode').click(function(e) {
+                    e.preventDefault();
+
+                    var username = $('#username').val();
+
+                    if (username === "") {
+                        $('#username').focus();
+                        app.message.warn('请输入手机号码!');
+                        return;
+                    }
+
+                    if (username.length !== 11) {
+                        $('#username').focus();
+                        app.message.warn('请输入正确的手机号码!');
+                        return;
+                    }
+
+                    app.services.app.weixinService.sendSMS(username, 1)
+                        .done(function(result) {
+                            if (result.success) {
+                                code = result.code;
+                                $('#bntSendCode').attr("disabled", "disabled");
+                                wait = 60;
+                                time($('#bntSendCode'));
+                            } else {
+                                app.message.warn(result.msg);
+                            }
+                        }).always(function() {
+
+                        });
+
+                });
+
+
+            });
+        })();
+
+    </script>
+}
+
+<div id="step_1">
+
+    @*<p class="am-serif" style="padding-left: 10px; padding-top: 10px; margin-bottom: 5px; font-size: 13px;color: gray">手机号码将成为系统的唯一登录账户名</p>*@
+    <div class="am-g" style="margin-top: 10px">
+        <p style="margin-bottom: 0px">
+
+
+            <div class="am-input-group" style="border-bottom:none">
+                <span class="am-input-group-label" style="background-color: white; color: lightgray; padding-left: 5px; padding-right: 5px; border-right: none;border-bottom:none">
+                    <i class="am-icon-mobile am-icon-fw"></i>
+                </span>
+                <input type="tel" id="username" class="am-form-field am-radius" placeholder="手机号码" style="border-left: none; border-bottom: none"/>
+                <span class="am-input-group-btn" style="background-color: white;border-bottom:none">
+                    <button class="am-btn am-btn-default" id="bntSendCode" style="background-color: transparent; color: gray; font-size: 12px; border-bottom: none;" type="button">获取手机验证码</button>
+                </span>
+            </div>
+
+            <div class="am-input-group">
+                <span class="am-input-group-label" style="background-color: white; color: lightgray; padding-left: 5px; padding-right: 5px;  border-right: none;border-bottom:none">
+                    <i class="am-icon-lock am-icon-fw"></i>
+                </span>
+                <input type="tel" id="code" class="am-form-field am-radius" placeholder="请输入验证码"  style="border-left: none;border-bottom: none"/>
+            </div>
+
+
+            <div class="am-input-group">
+                <span class="am-input-group-label" style="background-color: white; color: lightgray; padding-left: 5px; padding-right: 5px; border-right: none;">
+                    <i class="am-icon-user am-icon-fw"></i>
+                </span>
+                <input type="text" id="name" class="am-form-field am-radius" placeholder="请输入您的真实姓名" style="border-left: none;"/>
+            </div>
+
+            <input type="text" style="display: none" id="nickname" class="am-form-field am-radius" value="@(ViewData["nickname"])" placeholder="设置昵称" />
+            
+        </p>
+        @*<p class="am-serif" style="padding-left: 10px; padding-top: 10px; margin-bottom: 5px; font-size: 13px; color: gray;margin-top: 5px  ">点击"下一步"代表你已经阅读并同意《服务协议》</p>*@
+    </div>
+
+
+    <div class="am-g">
+        <div class="am-u-sm-12">
+            <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">提交</button>
+        </div>
+    </div>
+</div>
+
+

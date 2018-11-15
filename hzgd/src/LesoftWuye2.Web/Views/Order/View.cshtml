@@ -1,0 +1,166 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Estateinfos
+@using LesoftWuye2.Application.Estateinfos
+@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Application.Orders.Dto.OrderItemDto
+@{
+    ViewBag.ActiveMenu = "Orders";
+    ViewBag.Title = "订单查看";
+}
+
+@section styles{
+    @Html.IncludeStyle("~/Content/js/viewer/css/viewer.min.css")
+    <style>
+        #images img {
+            margin-right:10px
+        }
+    </style>
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/viewer/js/viewer.min.js")
+    @Html.IncludeScript("~/Views/Order/View.js")
+}
+
+<input type="hidden" id="orderId" value="@Model.Id" />
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="well invoice-container">
+            <div class="row">
+                <div class="col-xs-4">
+                    <h3 class="">
+                        <i class="fa fa-check"></i>
+                        订单详情
+                        @{
+                            if (Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.IsReading)
+                            {
+                                <a class="btn btn-link" id="btnShip" style="color: red!important">立即发货</a>
+                            }
+                        }
+                        
+                    </h3>
+                 
+                </div>
+                <div class="col-xs-8 text-right">
+                    <div>
+                        <span>订单号:</span>
+                        <strong>@(Model.OrderNo)</strong>
+                        <span> | </span>
+                        <span>下单时间:</span>
+                        <strong>@(Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"))</strong>
+                        <span> | </span>
+                        <span>订单状态:</span>
+                        <strong style="color: blue"> @(Model.StatusText) </strong>
+                    </div>
+                    <div class="horizontal-space">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h6>买家: @(Model.MemberName)</h6>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    @Model.Contact
+                                </li>
+                                <li>@Model.Mobile</li>
+                                <li>@Model.Address</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-5 col-xs-offset-2 text-right">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h6 style="color: red">￥@(Model.Amount)元</h6>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                   支付方式: @Model.PayChannel
+                                </li>
+                                <li>支付单号:@Model.PayTradeNo</li>
+                                @{
+                                    if (Model.RefundsPayTime.HasValue)
+                                    {
+                                        <li>
+                                            退款时间: @Model.RefundsPayTime.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                                        </li>
+                                        <li>退款单号:@Model.RefundsTradeNo</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- / end client details section -->
+
+
+            @{
+                if (!string.IsNullOrEmpty(Model.ClientRemark))
+                {
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h6>买家备注</h6>
+                                </div>
+                                <div class="panel-body">
+                                    <span>@Model.ClientRemark</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- / end client details section -->
+                }
+            }
+
+            @{
+                if (Model.RefundStatus!=LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.Done)
+                {
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h6>退款状态</h6>
+                                </div>
+                                <div class="panel-body">
+                                    <h2 style="color:red">@Model.RefundStatusDesc</h2>
+                                    <a href="/RefundOrder/view?id=@(Model.RefundOrderId)">查看退款详情</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- / end client details section -->
+                }
+            }
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 60px"><h5 class="no-margin-bottom text-center">缩略图</h5></th>
+                    <th><h5 class="no-margin-bottom">商品名称</h5></th>
+                    <th><h5 class="no-margin-bottom">数量</h5></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="@(Model.Thumbnail)?width=50&height=50&mode=crop"/>  </td>
+                        <td><a href="#">@Model.ProductName</a></td>
+                        <td class="text-center">@Model.Num</td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+            <hr class="wide" />
+          
+
+        </div>
+    </div>
+</div>
+

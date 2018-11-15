@@ -1,0 +1,90 @@
+﻿@using Abp.Application.Services.Dto
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "商品评论";
+    long productId = (long)ViewData["id"];
+}
+
+@section styles
+{
+    <style>
+    </style>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                var currentPage = 1;
+                var hasNext = true;
+
+                var GrouponItems = function() {
+                    $('#loading').show();
+
+                    app.services.app.weixinService.getProductComments(@(productId), {currentPage:currentPage}).done(function(result) {
+                        hasNext = result.pageIndex < result.pageCount;
+                        var html = template('postItemHtml', result);
+                        $('#postItemHtml-list').append(html);
+                    }).always(function() {
+                        $('#loading').hide();
+                    });
+                };
+
+                GrouponItems();
+
+
+                $(window).scroll(function () {
+                    var scrollTop = $(this).scrollTop();
+                    var scrollHeight = $(document).height();
+                    var windowHeight = $(this).height();
+                    if (scrollTop + windowHeight == scrollHeight) {
+                        if (!hasNext)return;
+                        currentPage++;
+                        GrouponItems();
+                    }
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+<div id="postItemHtml-list">
+
+</div>
+
+<div class="am-panel am-panel-default" id="loading" style="display: none">
+    <div class="am-panel-bd" style="text-align: center">数据加载中...</div>
+</div>
+
+
+
+<script id="postItemHtml" type="text/html">
+
+    {{each items as value i}}
+    <div class="am-panel am-panel-default portal-list-item" style="padding: 5px; margin: 5px; border-color: white; margin-top: 5px">
+        <div class="am-panel am-panel-default portal-list-item" style="padding: 5px; margin: 5px; border-color: white; margin-top: 5px">
+
+            <div class="am-g">
+                <div class="am-u-sm-2" style="padding: 0px">
+                    <img class="am-circle" src="{{value.thumbnail}}" style="width: 40px; height: 40px" />
+                </div>
+                <div class="am-u-sm-10" style="padding: 0px">
+                    <p style="color: black; font-size: 13px; margin-bottom: 5px">{{value.name}}</p>
+                    <p style="color: gray; font-size: 13px; margin-bottom: 5px; margin-top: 5px">{{value.creationTimeFormat}}</p>
+                </div>
+            </div>
+            <hr data-am-widget="divider" style="margin-top: 5px; margin-bottom: 5px" class="am-divider am-divider-dashed" />
+            <span>{{value.content}}</span>
+        </div>
+    </div>
+
+    {{/each}}
+
+</script>

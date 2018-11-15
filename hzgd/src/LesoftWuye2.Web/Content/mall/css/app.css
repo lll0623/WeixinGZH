@@ -1,0 +1,197 @@
+/* Write your styles */
+
+body{
+    background-color:#EFEFEF;
+}
+
+
+/*首页导航*/
+ul.home-icons{
+    padding-top: 10px;
+    background-color: white;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+ul.home-icons>li{
+    padding: 0px;
+}
+
+ul.home-icons>li>a.am-thumbnail{
+    margin-bottom: 0px;
+    border: none;
+}
+
+ul.home-icons>hr{
+    margin-bottom:10px;
+}
+
+ul.home-icons img{
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+ul.home-icons>li>a>figcaption{
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+/*首页新闻列表*/
+div.home-news-list{
+    background-color: white;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: -10px;
+
+}
+
+div.home-news-list>div.am-cf>a>h2{
+    color: #6B6B6B;
+    font-size: 1.4rem;
+    margin-left: 10px;
+}
+
+div.home-news-list span.am-list-news-more{
+    color: #9A9A9A;
+    margin-right: 10px;
+}
+
+div.home-news-list div.am-list-thumb img{
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+div.home-news-list div.am-list-main h3{
+    margin-left:5px;
+    font-size: 1.3rem;
+    height: 70px;
+    color: black;
+    text-align: left;
+    vertical-align:top;
+    display: block;
+}
+
+div.home-news-list div.am-list-main div.am-list-item-text{
+    margin-left:5px;
+    position:absolute;
+    bottom:0px;
+    padding:0px;
+    margin-left:5px;
+}
+
+/*物业服务表单*/
+div.service-form{
+    margin-bottom: 0px;
+}
+
+ul.service-form-uploadimages img{
+    height: 80px;
+    padding-left: 5px;
+    padding-right: 5px;
+    /*padding-top: 5px;*/
+    /*padding-bottom: 5px;*/
+    border: none;
+    margin-bottom: 0px;
+}
+
+div.service-form-input textarea{
+    resize: none;
+    padding: 10px;
+}
+
+small.service-form-tip{
+    color: #9A9A9A;
+    margin-left: 10px;
+}
+
+button.service-form-submit{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /*margin-left: 10px;*/
+    /*display: block;*/
+    /*width: 100%;*/
+
+    /*margin-right: 10px;*/
+}
+
+a.service-form-link{
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration:underline;
+    font-size: 1.3rem;
+}
+
+
+
+/*项目分类*/
+ul.project-items{
+    padding-top: 10px;
+    background-color: white;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+ul.project-items>li{
+    padding: 0px;
+}
+
+ul.project-items>li>a.am-thumbnail{
+    margin-bottom: 0px;
+    border: none;
+}
+
+ul.project-items>hr{
+    margin-bottom:10px;
+}
+
+ul.project-items img{
+    height: 128px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+ul.project-items>li>a>figcaption{
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+/*便民服务*/
+ul.life-service-items{
+    padding-top: 10px;
+    background-color: white;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+ul.life-service-items>li{
+    padding: 0px;
+    /*border: 1px;*/
+}
+
+ul.life-service-items>li>a.am-thumbnail{
+    margin-bottom: 0px;
+    border: 0.2px solid #ddd
+}
+
+ul.life-service-items>hr{
+    margin-bottom:10px;
+}
+
+ul.life-service-items img{
+    height: 64px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+ul.life-service-items>li>a>figcaption{
+    text-align: center;
+    font-size: 1.3rem;
+}

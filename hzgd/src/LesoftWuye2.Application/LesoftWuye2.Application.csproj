@@ -1,0 +1,493 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{85B18A20-336B-4320-AF2D-CE597E19D661}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LesoftWuye2.Application</RootNamespace>
+    <AssemblyName>LesoftWuye2.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Abp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.1.0.0.0\lib\net452\Abp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.AutoMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.AutoMapper.1.0.0.0\lib\net452\Abp.AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Zero, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Zero.1.0.0.0\lib\net452\Abp.Zero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.LoggingFacility.3.3.0\lib\net45\Castle.Facilities.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.DynamicFilters, Version=2.3.0.0, Culture=neutral, PublicKeyToken=146423a1b8d60775, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.DynamicFilters.2.3.0\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSLib.Extension, Version=1.4.2.0, Culture=neutral, PublicKeyToken=61d6a007a0eb6994, processorArchitecture=MSIL">
+      <HintPath>..\packages\extension.fishlee.net.1.4.2.0\lib\net45\FSLib.Extension.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSLib.Network, Version=2.2.0.0, Culture=neutral, PublicKeyToken=eb0741d7f117d5c6, processorArchitecture=MSIL">
+      <HintPath>..\packages\network.fishlee.net.2.2.2.0\lib\net45\FSLib.Network.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Obs.Application">
+      <HintPath>..\Libs\Obs.Application.dll</HintPath>
+    </Reference>
+    <Reference Include="Obs.Core">
+      <HintPath>..\Libs\Obs.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin, Version=4.12.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.4.12.3\lib\net45\Senparc.Weixin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Senparc.Weixin.MP, Version=14.4.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.MP.14.4.7\lib\net45\Senparc.Weixin.MP.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActivityProjects\ActivityProjectAppService.cs" />
+    <Compile Include="ActivityProjects\Dto\ActivityProjectItemDto.cs" />
+    <Compile Include="ActivityProjects\Dto\ActivityProjectListDto.cs" />
+    <Compile Include="ActivityProjects\Dto\CreateActivityProjectInput.cs" />
+    <Compile Include="ActivityProjects\Dto\UpdateActivityProjectInput.cs" />
+    <Compile Include="ActivityProjects\IActivityProjectAppService.cs" />
+    <Compile Include="Activitys\ActivityAppService.cs" />
+    <Compile Include="Activitys\Dto\ActivityItemDto.cs" />
+    <Compile Include="Activitys\Dto\ActivityPersonListDto.cs" />
+    <Compile Include="Activitys\Dto\ActivityListDto.cs" />
+    <Compile Include="Activitys\Dto\CreateActivityPersonInput.cs" />
+    <Compile Include="Activitys\Dto\CreateActivityInput.cs" />
+    <Compile Include="Activitys\Dto\UpdateActivityInput.cs" />
+    <Compile Include="Activitys\IActivityAppService.cs" />
+    <Compile Include="ApiLogs\ApiLogAppService.cs" />
+    <Compile Include="ApiLogs\Dto\ApiLogItemDto.cs" />
+    <Compile Include="ApiLogs\Dto\ApiLogListDto.cs" />
+    <Compile Include="ApiLogs\Dto\CreateApiLogInput.cs" />
+    <Compile Include="ApiLogs\Dto\UpdateApiLogInput.cs" />
+    <Compile Include="ApiLogs\IApiLogAppService.cs" />
+    <Compile Include="AppApis\AppapiService.cs" />
+    <Compile Include="AppApis\Dto\SetCurrentRoomInfo.cs" />
+    <Compile Include="AppApis\Dto\CurrentRoomInfo.cs" />
+    <Compile Include="AppApis\Dto\HomeNews.cs" />
+    <Compile Include="AppApis\Dto\NavigationItem.cs" />
+    <Compile Include="AppApis\Dto\SlideImage.cs" />
+    <Compile Include="AppApis\IAppapiService.cs" />
+    <Compile Include="Configuration\Dto\AlipaySettingsEditDto.cs" />
+    <Compile Include="ForumPosts\Dto\ForumPostItemDto.cs" />
+    <Compile Include="ForumPosts\Dto\ForumPostListDto.cs" />
+    <Compile Include="ForumPosts\Dto\ForumCommentReplyDto.cs" />
+    <Compile Include="ForumPosts\Dto\ForumPostReplyDto.cs" />
+    <Compile Include="ForumPosts\ForumPostService.cs" />
+    <Compile Include="ForumPosts\IForumPostService.cs" />
+    <Compile Include="Forums\Dto\ForumHomeData.cs" />
+    <Compile Include="Forums\Dto\NewCommentDto.cs" />
+    <Compile Include="Forums\Dto\NewPostDto.cs" />
+    <Compile Include="Forums\Dto\PostDetail.cs" />
+    <Compile Include="Forums\Dto\CommentListItem.cs" />
+    <Compile Include="Forums\Dto\PostListItem.cs" />
+    <Compile Include="Forums\ForumService.cs" />
+    <Compile Include="Forums\IForumService.cs" />
+    <Compile Include="FeeServices\Dto\CreateFeeServiceInput.cs" />
+    <Compile Include="FeeServices\Dto\FeeServiceItemDto.cs" />
+    <Compile Include="FeeServices\Dto\FeeServiceListDto.cs" />
+    <Compile Include="FeeServices\Dto\UpdateFeeServiceInput.cs" />
+    <Compile Include="FeeServices\IFeeServiceAppService.cs" />
+    <Compile Include="FeeServices\FeeServiceAppService.cs" />
+    <Compile Include="Jobs\OrderRefundWorker.cs" />
+    <Compile Include="Jobs\GrouponRefundsWorker.cs" />
+    <Compile Include="RefundOrder\Dto\RefundOrderAcceptDto.cs" />
+    <Compile Include="RefundOrder\Dto\RefundOrderRejectDto.cs" />
+    <Compile Include="RefundOrder\Dto\RefundOrderItemDto.cs" />
+    <Compile Include="RefundOrder\Dto\RefundOrderListDto.cs" />
+    <Compile Include="RefundOrder\IRefundOrderService.cs" />
+    <Compile Include="RefundOrder\RefundOrderService.cs" />
+    <Compile Include="Utils\TemplateMessageUtils.cs" />
+    <Compile Include="WeixinSubscribes\Dto\CreateWeixinSubscribeInput.cs" />
+    <Compile Include="WeixinSubscribes\Dto\WeixinSubscribeItemDto.cs" />
+    <Compile Include="WeixinSubscribes\Dto\WeixinSubscribeListDto.cs" />
+    <Compile Include="WeixinSubscribes\Dto\UpdateWeixinSubscribeInput.cs" />
+    <Compile Include="WeixinSubscribes\IWeixinSubscribeAppService.cs" />
+    <Compile Include="WeixinSubscribes\WeixinSubscribeAppService.cs" />
+    <Compile Include="Utils\WeiXinApi.cs" />
+    <Compile Include="Weixin\Dto\AddServiceDto.cs" />
+    <Compile Include="Weixin\Dto\CreatePayDto.cs" />
+    <Compile Include="Weixin\Dto\HomeDataDto.cs" />
+    <Compile Include="Weixin\Dto\LifeInfoNavDto.cs" />
+    <Compile Include="Weixin\Dto\MemberRoomItem.cs" />
+    <Compile Include="Weixin\Dto\MyCountInfo.cs" />
+    <Compile Include="Weixin\Dto\RefundViewDto.cs" />
+    <Compile Include="Weixin\Dto\RefundApplyDto.cs" />
+    <Compile Include="Weixin\Dto\ServiceTelDto.cs" />
+    <Compile Include="Weixin\Events\EventDatas\GrouponFailEventData.cs" />
+    <Compile Include="Weixin\Events\EventDatas\RefundOrderAcceptEventData.cs" />
+    <Compile Include="Weixin\Events\EventDatas\RefundOrderRejectEventData.cs" />
+    <Compile Include="Weixin\Events\EventDatas\OrderShipEventData.cs" />
+    <Compile Include="Weixin\Events\EventDatas\GrouponJoinEventData.cs" />
+    <Compile Include="Weixin\Events\EventDatas\GrouponCreateEventData.cs" />
+    <Compile Include="Weixin\Events\Writers\RefundOrderAcceptEventWriter.cs" />
+    <Compile Include="Weixin\Events\Writers\RefundOrderRejectEventWriter.cs" />
+    <Compile Include="Weixin\Events\Writers\OrderShipEventWriter.cs" />
+    <Compile Include="Weixin\Events\Writers\GrouponFailEventWriter.cs" />
+    <Compile Include="Weixin\Events\Writers\GrouponJoinEventWriter.cs" />
+    <Compile Include="Weixin\Events\Writers\GrouponCreateEventWriter.cs" />
+    <Compile Include="Weixin\WeixinService.cs" />
+    <Compile Include="Weixin\IWeixinService.cs" />
+    <Compile Include="Weixin\Session\WeixinSession.cs" />
+    <Compile Include="Weixin\Session\IWeixinSession.cs" />
+    <Compile Include="Jobs\GrouponCancelWorker.cs" />
+    <Compile Include="Malls\Dto\OrderCommentInfo.cs" />
+    <Compile Include="Orders\Dto\OrderItemDto.cs" />
+    <Compile Include="Orders\Dto\OrderListDto.cs" />
+    <Compile Include="Orders\Dto\OrderShipDto.cs" />
+    <Compile Include="Orders\IOrderService.cs" />
+    <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Plates\PlateAppService.cs" />
+    <Compile Include="Plates\Dto\PlateItemDto.cs" />
+    <Compile Include="Plates\Dto\PlateListDto.cs" />
+    <Compile Include="Plates\Dto\CreatePlateInput.cs" />
+    <Compile Include="Plates\Dto\UpdatePlateInput.cs" />
+    <Compile Include="Plates\IPlateAppService.cs" />
+    <Compile Include="Categorys\CategoryAppService.cs" />
+    <Compile Include="Categorys\Dto\CategoryItemDto.cs" />
+    <Compile Include="Categorys\Dto\CategoryListDto.cs" />
+    <Compile Include="Categorys\Dto\CreateCategoryInput.cs" />
+    <Compile Include="Categorys\Dto\UpdateCategoryInput.cs" />
+    <Compile Include="Categorys\ICategoryAppService.cs" />
+    <Compile Include="Configuration\Dto\SettingsEditDto.cs" />
+    <Compile Include="Configuration\Dto\WeixinSettingsEditDto.cs" />
+    <Compile Include="Configuration\Dto\MallSettingsEditDto.cs" />
+    <Compile Include="Configuration\Dto\YsPaySettingsEditDto.cs" />
+    <Compile Include="Configuration\Dto\WuyeSettingsEditDto.cs" />
+    <Compile Include="Configuration\ISettingsAppService.cs" />
+    <Compile Include="Configuration\SettingsAppService.cs" />
+    <Compile Include="Details\DetailAppService.cs" />
+    <Compile Include="Details\Dto\CreateDetailInput.cs" />
+    <Compile Include="Details\Dto\DetailItemDto.cs" />
+    <Compile Include="Details\Dto\DetailListDto.cs" />
+    <Compile Include="Details\Dto\UpdateDetailInput.cs" />
+    <Compile Include="Details\IDetailAppService.cs" />
+    <Compile Include="Frontpages\Dto\CreatePayDto.cs" />
+    <Compile Include="Frontpages\Dto\MyCountInfo.cs" />
+    <Compile Include="Groupons\Dto\CreateGrouponInput.cs" />
+    <Compile Include="Groupons\Dto\GrouponItemDto.cs" />
+    <Compile Include="Groupons\Dto\GrouponListDto.cs" />
+    <Compile Include="Groupons\Dto\UpdateGrouponInput.cs" />
+    <Compile Include="Groupons\GrouponAndProduct.cs" />
+    <Compile Include="Groupons\GrouponAppService.cs" />
+    <Compile Include="Groupons\IGrouponAppService.cs" />
+    <Compile Include="Malls\Dto\GrouponDetail.cs" />
+    <Compile Include="Malls\Dto\GrouponItem.cs" />
+    <Compile Include="Malls\Dto\GrouponOrderInfo.cs" />
+    <Compile Include="Malls\Dto\OrderListItem.cs" />
+    <Compile Include="Malls\Dto\GrouponOrderListItem.cs" />
+    <Compile Include="Malls\Dto\MallHomeData.cs" />
+    <Compile Include="Malls\Dto\MemberAddressListItem.cs" />
+    <Compile Include="Malls\Dto\OrderDetail.cs" />
+    <Compile Include="Malls\Dto\OrderPayInfo.cs" />
+    <Compile Include="Malls\Dto\OrderSubmitResult.cs" />
+    <Compile Include="Malls\Dto\OrderSubmitInfo.cs" />
+    <Compile Include="Malls\IMallService.cs" />
+    <Compile Include="Malls\MallService.cs" />
+    <Compile Include="PayNoifys\IPayNotifyAppService.cs" />
+    <Compile Include="PayNoifys\PayNotifyAppService.cs" />
+    <Compile Include="Products\Dto\CreateProductInput.cs" />
+    <Compile Include="Products\Dto\ProductCommentListDto.cs" />
+    <Compile Include="Products\Dto\ProductItemDto.cs" />
+    <Compile Include="Products\Dto\ProductListDto.cs" />
+    <Compile Include="Products\Dto\UpdateProductInput.cs" />
+    <Compile Include="Products\IProductAppService.cs" />
+    <Compile Include="Products\ProductAppService.cs" />
+    <Compile Include="Rentsaleinfos\Dto\CreateRentsaleinfoInput.cs" />
+    <Compile Include="Rentsaleinfos\Dto\RentsaleinfoItemDto.cs" />
+    <Compile Include="Rentsaleinfos\Dto\RentsaleinfoListDto.cs" />
+    <Compile Include="Rentsaleinfos\Dto\RentsaleinfoMyInfoDto.cs" />
+    <Compile Include="Rentsaleinfos\Dto\UpdateRentsaleinfoInput.cs" />
+    <Compile Include="Rentsaleinfos\RentsaleinfoAppService.cs" />
+    <Compile Include="Rentsaleinfos\IRentsaleinfoAppService.cs" />
+    <Compile Include="Estateinfos\Dto\CreateEstateinfoCommentInput.cs" />
+    <Compile Include="Estateinfos\Dto\CreateEstateinfoInput.cs" />
+    <Compile Include="Estateinfos\Dto\EstateinfoMyInfoDto.cs" />
+    <Compile Include="Estateinfos\Dto\EstateinfoItemDto.cs" />
+    <Compile Include="Estateinfos\Dto\EstateinfoCommentListDto.cs" />
+    <Compile Include="Estateinfos\Dto\EstateinfoListDto.cs" />
+    <Compile Include="Estateinfos\Dto\UpdateEstateinfoInput.cs" />
+    <Compile Include="Estateinfos\IEstateinfoAppService.cs" />
+    <Compile Include="Estateinfos\EstateinfoAppService.cs" />
+    <Compile Include="RentsaleinfoTypes\Dto\CreateRentsaleinfoTypeInput.cs" />
+    <Compile Include="RentsaleinfoTypes\Dto\RentsaleinfoTypeItemDto.cs" />
+    <Compile Include="RentsaleinfoTypes\Dto\RentsaleinfoTypeListDto.cs" />
+    <Compile Include="RentsaleinfoTypes\Dto\UpdateRentsaleinfoTypeInput.cs" />
+    <Compile Include="RentsaleinfoTypes\RentsaleinfoTypeAppService.cs" />
+    <Compile Include="RentsaleinfoTypes\IRentsaleinfoTypeAppService.cs" />
+    <Compile Include="Frontpages\Dto\HomeDataDto.cs" />
+    <Compile Include="Frontpages\Dto\LifeInfoNavDto.cs" />
+    <Compile Include="Frontpages\Dto\ServiceTelDto.cs" />
+    <Compile Include="Frontpages\FrontpageAppSrvice.cs" />
+    <Compile Include="Frontpages\IFrontpageAppSrvice.cs" />
+    <Compile Include="Frontpages\Session\FrontSession.cs" />
+    <Compile Include="Frontpages\Session\IFrontSession.cs" />
+    <Compile Include="LesoftWuye2ApplicationModule.cs" />
+    <Compile Include="LesoftWuye2AppServiceBase.cs" />
+    <Compile Include="LifeInfoProjects\Dto\CreateLifeInfoProjectInput.cs" />
+    <Compile Include="LifeInfoProjects\Dto\LifeInfoProjectItemDto.cs" />
+    <Compile Include="LifeInfoProjects\Dto\LifeInfoProjectListDto.cs" />
+    <Compile Include="LifeInfoProjects\Dto\UpdateLifeInfoProjectInput.cs" />
+    <Compile Include="LifeInfoProjects\ILifeInfoProjectAppService.cs" />
+    <Compile Include="LifeInfoProjects\LifeInfoProjectAppService.cs" />
+    <Compile Include="LifeInfos\Dto\CreateLifeInfoInput.cs" />
+    <Compile Include="LifeInfos\Dto\LifeInfoItemDto.cs" />
+    <Compile Include="LifeInfos\Dto\LifeInfoListDto.cs" />
+    <Compile Include="LifeInfos\Dto\UpdateLifeInfoInput.cs" />
+    <Compile Include="LifeInfos\ILifeInfoAppService.cs" />
+    <Compile Include="LifeInfos\LifeInfoAppService.cs" />
+    <Compile Include="EstateinfoTypes\Dto\CreateEstateinfoTypeInput.cs" />
+    <Compile Include="EstateinfoTypes\Dto\EstateinfoTypeItemDto.cs" />
+    <Compile Include="EstateinfoTypes\Dto\EstateinfoTypeListDto.cs" />
+    <Compile Include="EstateinfoTypes\Dto\UpdateEstateinfoTypeInput.cs" />
+    <Compile Include="EstateinfoTypes\IEstateinfoTypeAppService.cs" />
+    <Compile Include="EstateinfoTypes\EstateinfoTypeAppService.cs" />
+    <Compile Include="LifeInfoTypes\Dto\CreateLifeInfoTypeInput.cs" />
+    <Compile Include="LifeInfoTypes\Dto\LifeInfoTypeItemDto.cs" />
+    <Compile Include="LifeInfoTypes\Dto\LifeInfoTypeListDto.cs" />
+    <Compile Include="LifeInfoTypes\Dto\UpdateLifeInfoTypeInput.cs" />
+    <Compile Include="LifeInfoTypes\ILifeInfoTypeAppService.cs" />
+    <Compile Include="LifeInfoTypes\LifeInfoTypeAppService.cs" />
+    <Compile Include="NewsProjects\Dto\CreateNewsProjectInput.cs" />
+    <Compile Include="NewsProjects\Dto\NewsProjectItemDto.cs" />
+    <Compile Include="NewsProjects\Dto\NewsProjectListDto.cs" />
+    <Compile Include="NewsProjects\Dto\UpdateNewsProjectInput.cs" />
+    <Compile Include="NewsProjects\INewsProjectAppService.cs" />
+    <Compile Include="NewsProjects\NewsProjectAppService.cs" />
+    <Compile Include="NoticeProjects\Dto\CreateNoticeProjectInput.cs" />
+    <Compile Include="NoticeProjects\Dto\NoticeProjectItemDto.cs" />
+    <Compile Include="NoticeProjects\Dto\NoticeProjectListDto.cs" />
+    <Compile Include="NoticeProjects\Dto\UpdateNoticeProjectInput.cs" />
+    <Compile Include="NoticeProjects\INoticeProjectAppService.cs" />
+    <Compile Include="NoticeProjects\NoticeProjectAppService.cs" />
+    <Compile Include="Newss\Dto\CreateNewsInput.cs" />
+    <Compile Include="Newss\Dto\NewsItemDto.cs" />
+    <Compile Include="Newss\Dto\NewsListDto.cs" />
+    <Compile Include="Newss\Dto\NewsNoticeInput.cs" />
+    <Compile Include="Newss\INewsAppService.cs" />
+    <Compile Include="Newss\NewsAppService.cs" />
+    <Compile Include="Notices\Dto\CreateNoticeInput.cs" />
+    <Compile Include="Notices\Dto\NoticeItemDto.cs" />
+    <Compile Include="Notices\Dto\NoticeListDto.cs" />
+    <Compile Include="Notices\Dto\UpdateNoticeInput.cs" />
+    <Compile Include="Notices\INoticeAppService.cs" />
+    <Compile Include="Notices\NoticeAppService.cs" />
+    <Compile Include="Projects\Dto\CreateProjectInput.cs" />
+    <Compile Include="Projects\Dto\ProjectItemDto.cs" />
+    <Compile Include="Projects\Dto\ProjectListDto.cs" />
+    <Compile Include="Projects\Dto\UpdateProjectInput.cs" />
+    <Compile Include="Projects\IProjectAppService.cs" />
+    <Compile Include="Projects\ProjectAppService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyCitys\Dto\CreatePropertyCityInput.cs" />
+    <Compile Include="PropertyCitys\Dto\PropertyCityItemDto.cs" />
+    <Compile Include="PropertyCitys\Dto\PropertyCityListDto.cs" />
+    <Compile Include="PropertyCitys\Dto\UpdatePropertyCityInput.cs" />
+    <Compile Include="PropertyCitys\IPropertyCityAppService.cs" />
+    <Compile Include="PropertyCitys\PropertyCityAppService.cs" />
+    <Compile Include="Propertys\Dto\CreatePropertyInput.cs" />
+    <Compile Include="Propertys\Dto\PropertyItemDto.cs" />
+    <Compile Include="Propertys\Dto\PropertyListDto.cs" />
+    <Compile Include="Propertys\Dto\UpdatePropertyInput.cs" />
+    <Compile Include="Propertys\IPropertyAppService.cs" />
+    <Compile Include="Propertys\PropertyAppService.cs" />
+    <Compile Include="PropertyTypes\Dto\CreatePropertyTypeInput.cs" />
+    <Compile Include="PropertyTypes\Dto\PropertyTypeItemDto.cs" />
+    <Compile Include="PropertyTypes\Dto\PropertyTypeListDto.cs" />
+    <Compile Include="PropertyTypes\Dto\UpdatePropertyTypeInput.cs" />
+    <Compile Include="PropertyTypes\IPropertyTypeAppService.cs" />
+    <Compile Include="PropertyTypes\PropertyTypeAppService.cs" />
+    <Compile Include="ProductSlideImages\Dto\ProductCreateSlideImageInput.cs" />
+    <Compile Include="ProductSlideImages\Dto\ProductSlideImageItemDto.cs" />
+    <Compile Include="ProductSlideImages\Dto\ProductSlideImageListDto.cs" />
+    <Compile Include="ProductSlideImages\Dto\ProductUpdateSlideImageInput.cs" />
+    <Compile Include="ProductSlideImages\IProductSlideImageAppService.cs" />
+    <Compile Include="ProductSlideImages\ProductSlideImageAppService.cs" />
+    <Compile Include="MallSlideImages\Dto\CreateMallSlideImageInput.cs" />
+    <Compile Include="MallSlideImages\Dto\MallSlideImageItemDto.cs" />
+    <Compile Include="MallSlideImages\Dto\MallSlideImageListDto.cs" />
+    <Compile Include="MallSlideImages\Dto\UpdateMallSlideImageInput.cs" />
+    <Compile Include="MallSlideImages\IMallSlideImageAppService.cs" />
+    <Compile Include="MallSlideImages\MallSlideImageAppService.cs" />
+    <Compile Include="Substations\Dto\CreateSubstationInput.cs" />
+    <Compile Include="Substations\Dto\SubstationItemDto.cs" />
+    <Compile Include="Substations\Dto\SubstationListDto.cs" />
+    <Compile Include="Substations\Dto\UpdateSubstationInput.cs" />
+    <Compile Include="Substations\ISubstationAppService.cs" />
+    <Compile Include="Substations\SubstationAppService.cs" />
+    <Compile Include="ServiceTels\Dto\CreateServiceTelInput.cs" />
+    <Compile Include="ServiceTels\Dto\ServiceTelItemDto.cs" />
+    <Compile Include="ServiceTels\Dto\ServiceTelListDto.cs" />
+    <Compile Include="ServiceTels\Dto\UpdateServiceTelInput.cs" />
+    <Compile Include="ServiceTels\IServiceTelAppService.cs" />
+    <Compile Include="ServiceTels\ServiceTelAppService.cs" />
+    <Compile Include="SlideImages\Dto\CreateSlideImageInput.cs" />
+    <Compile Include="SlideImages\Dto\SlideImageItemDto.cs" />
+    <Compile Include="SlideImages\Dto\SlideImageListDto.cs" />
+    <Compile Include="SlideImages\Dto\UpdateSlideImageInput.cs" />
+    <Compile Include="SlideImages\ISlideImageAppService.cs" />
+    <Compile Include="SlideImages\SlideImageAppService.cs" />
+    <Compile Include="Suppliers\Dto\CreateSupplierInput.cs" />
+    <Compile Include="Suppliers\Dto\SupplierItemDto.cs" />
+    <Compile Include="Suppliers\Dto\SupplierListDto.cs" />
+    <Compile Include="Suppliers\Dto\UpdateSupplierInput.cs" />
+    <Compile Include="Suppliers\ISupplierAppService.cs" />
+    <Compile Include="Suppliers\SupplierAppService.cs" />
+    <Compile Include="WuyeApis\Dto\AddLinkBillDto.cs" />
+    <Compile Include="WuyeApis\Dto\CreatePayOrderPrePayResult.cs" />
+    <Compile Include="WuyeApis\Dto\PayByOrderResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetPRoomPrePayItemResult.cs" />
+    <Compile Include="WuyeApis\Dto\CreateUserByWXResult.cs" />
+    <Compile Include="WuyeApis\Dto\RegisteredResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetBillResult.cs" />
+    <Compile Include="WuyeApis\Dto\SendSMSResult.cs" />
+    <Compile Include="WuyeApis\Dto\CreatePayBillResult.cs" />
+    <Compile Include="WuyeApis\Dto\CreateReceiptResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetEventInfoResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetMessageInfoResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetNoPayFeeByMemberResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetMessageItemResult.cs" />
+    <Compile Include="WuyeApis\Dto\AddMemberByAPPUserDto.cs" />
+    <Compile Include="WuyeApis\Dto\GetMemberInfoByAPPUserIDResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetPFloorListByUnitResult.cs" />
+    <Compile Include="WuyeApis\Dto\AddLinkBillResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetPRoomInfoByPhoneResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetPRoomListByFloorResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetEventCountResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetEventItemResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetUserInfoResult.cs" />
+    <Compile Include="WuyeApis\Dto\LoginResult.cs" />
+    <Compile Include="WuyeApis\Dto\SearchHousingManagementResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetPUnitListResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetPBuildingListResult.cs" />
+    <Compile Include="WuyeApis\Dto\GetPProjectListResult.cs" />
+    <Compile Include="WuyeApis\Dto\InvokeResultDto.cs" />
+    <Compile Include="WuyeApis\IWuyeApiAppSrvice.cs" />
+    <Compile Include="WuyeApis\Utils\WuyeApi.cs" />
+    <Compile Include="WuyeApis\WuyeApiAppSrvice.cs" />
+    <Compile Include="YsPay\Common.cs" />
+    <Compile Include="YsPay\DataCertificate.cs" />
+    <Compile Include="YsPay\JiShi.cs" />
+    <Compile Include="YsPay\SecurityUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\alipay-sdk-NET-20170209153316\AopSdk.csproj">
+      <Project>{9C11CAE5-5188-4E71-825B-68FC3135728A}</Project>
+      <Name>AopSdk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LesoftWuye2.Core\LesoftWuye2.Core.csproj">
+      <Project>{AE6FECEC-CE26-4E93-8A04-B79A086A3763}</Project>
+      <Name>LesoftWuye2.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

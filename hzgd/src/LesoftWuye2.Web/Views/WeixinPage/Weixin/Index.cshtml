@@ -1,0 +1,315 @@
+﻿@model LesoftWuye2.Application.Weixin.Dto.HomeDataDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "物业服务";
+    ViewBag.HideBack = true;
+    bool isLogin = (bool)ViewData["isLogin"];
+    bool isBindRoom = (bool)ViewData["isBindRoom"];
+}
+
+@section scripts
+{
+    <script>
+
+        var isLogin = @(isLogin?"true":"false");
+        var isBindRoom =@(isBindRoom ? "true":"false");
+
+        (function() {
+            $(function() {
+                
+                $('#repair').click(function() {
+                    if (!isLogin) {
+                        window.location.href = '/weixin/register';
+                        return;
+                    }
+                
+                    if(isBindRoom)
+                        window.location.href = '/weixin/service/repair';
+                    else {
+                        app.message.confirm("该功能需要绑定房间才能使用，马上绑定?" + name, "绑定商铺?", function (isConfirmed) {
+                            if (isConfirmed) {
+                                window.location.href = '/weixin/room/add';
+                            }
+                        });
+                    }
+                });
+
+                $('#feedback').click(function() {
+                    if (!isLogin) {
+                        window.location.href = '/weixin/register';
+                        return;
+                    }
+                    if(isBindRoom)
+                        window.location.href = '/weixin/service/feedback';
+                    else {
+                        app.message.confirm("该功能需要绑定房间才能使用，马上绑定?" + name, "绑定商铺?", function (isConfirmed) {
+                            if (isConfirmed) {
+                                window.location.href = '/weixin/room/add';
+                            }
+                        });
+                    }
+                });
+
+
+                $('#contact').click(function() {
+                    if (!isLogin) {
+                        window.location.href = '/weixin/register';
+                        return;
+                    }
+                    if(isBindRoom)
+                        window.location.href = '/weixin/service/contact';
+                    else {
+                        app.message.confirm("该功能需要绑定房间才能使用，马上绑定?" + name, "绑定商铺?", function (isConfirmed) {
+                            if (isConfirmed) {
+                                window.location.href = '/weixin/room/add';
+                            }
+                        });
+                    }
+                });
+
+
+                $('#fee').click(function() {
+                    if (!isLogin) {
+                        window.location.href = '/weixin/register';
+                        return;
+                    }
+                    if(isBindRoom)
+                        window.location.href = '/weixin/service/fee';
+                    else {
+                        app.message.confirm("该功能需要绑定房间才能使用，马上绑定?" + name, "绑定商铺?", function (isConfirmed) {
+                            if (isConfirmed) {
+                                window.location.href = '/weixin/room/add';
+                            }
+                        });
+                    }
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+
+<header data-am-widget="header" class="am-header am-btn-default" style="z-index: 999;opacity:0.8;">
+    <h5 class="am-header-title" style="font-size: 12px;margin: 0 10%;">
+        <a href="/weixin/room/list" class="">
+            <i class="am-header-icon am-icon-map-marker"></i>&nbsp;<span id="current_room" style="color: black">@(Model.DefaultRoom)</span>
+        </a>
+    </h5>
+</header>
+
+
+<div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{"directionNav":false}' style="margin-top: -50px; z-index: 1">
+    <ul class="am-slides">
+        @{
+            foreach (var image in Model.SlideImages)
+            {
+                <li>
+                    <img src="@(image)?width=640&height=300&mode=crop">
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+
+<ul class="am-avg-sm-3 am-avg-md-3" style="margin-bottom: 0px">
+    <li>
+        <a href="javascript:void(0)" id="repair">
+            <div style="background-color: #FFCD5C; width: 100%; height: 120px; color: white; padding: 5px " >
+                <p style="font-size: 15px; margin-bottom: 5px">报事报修</p>
+                <p style="font-size: 12px; margin-top: 0px">报修实时</p>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a href="javascript:void(0)" id="feedback">
+            <div style="background-color: #F082BF; width: 100%; height: 60px; color: white; padding: 5px;">
+                <p style="font-size: 15px; margin-bottom: 5px">投诉建议</p>
+                <p style="font-size: 12px; margin-top: 0px">在线投诉</p>
+            </div>
+        </a>
+        <a href="javascript:void(0)" id="contact">
+            <div style="background-color: #C1A9FE; width: 100%; height: 60px; color: white; padding: 5px;">
+                <p style="font-size: 15px; margin-bottom: 5px">联系物业</p>
+                <p style="font-size: 12px; margin-top: 0px">一键直呼管家</p>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a href="javascript:void(0)" id="fee">
+            <div style="background-color: #5ECDE1; width: 100%; height: 60px; color: white; padding: 5px;">
+                <p style="font-size: 15px; margin-bottom: 5px">查费缴费</p>
+                <p style="font-size: 12px; margin-top: 0px">足不出户轻松支付</p>
+            </div>
+        </a>
+        <a href="/weixin/substation/list">
+            <div style="background-color: #44A6E3; width: 100%; height: 60px; color: white; padding: 5px;">
+                <p style="font-size: 15px; margin-bottom: 5px">关于我们</p>
+                <p style="font-size: 12px; margin-top: 0px">了解我们更多信息</p>
+            </div>
+        </a>
+    </li>
+
+
+</ul>
+
+@{
+    if (Model.Notice != null)
+    {
+        <div data-am-widget="list_news" class="am-list-news am-list-news-default  home-news-list">
+            <!--列表标题-->
+            <div class="am-list-news-hd am-cf">
+                <!--带更多链接-->
+                <a href="/weixin/notice/list" class="">
+                    <h2>社区公告</h2>
+                    <span class="am-list-news-more am-fr">更多 &raquo;</span>
+                </a>
+            </div>
+            <div class="am-list-news-bd">
+                <ul class="am-list">
+                    <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+                        <a href="/weixin/notice/view?id=@(Model.Notice.Id)" class="">
+                            @{
+                                if (!string.IsNullOrEmpty(Model.Notice.Thumbnail))
+                                {
+                                    <div class="am-u-sm-4 am-list-thumb">
+                                        <img src="@(Model.Notice.Thumbnail)?width=160&height=100&mode=crop" />
+                                    </div>
+                                    <div class="am-u-sm-8 am-list-main">
+                                        <h3 class="am-list-item-hd">@Model.Notice.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@Model.Notice.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="am-u-sm-12 am-list-main">
+                                        <h3 class="am-list-item-hd">@Model.Notice.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@Model.Notice.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                            }
+
+                        </a>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+                                }
+}
+
+@{
+    if (Model.Activity != null)
+    {
+        <div data-am-widget="list_news" class="am-list-news am-list-news-default  home-news-list">
+            <!--列表标题-->
+            <div class="am-list-news-hd am-cf">
+                <!--带更多链接-->
+                <a href="/weixin/activity/list" class="">
+                    <h2>社区活动</h2>
+                    <span class="am-list-news-more am-fr">更多 &raquo;</span>
+                </a>
+            </div>
+            <div class="am-list-news-bd">
+                <ul class="am-list">
+                    <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+                        <a href="/weixin/activity/view?id=@(Model.Activity.Id)" class="">
+                            @{
+                                if (!string.IsNullOrEmpty(Model.Activity.Thumbnail))
+                                {
+                                    <div class="am-u-sm-4 am-list-thumb">
+                                        <img src="@(Model.Activity.Thumbnail)?width=160&height=100&mode=crop" />
+                                    </div>
+                                    <div class="am-u-sm-8 am-list-main">
+                                        <h3 class="am-list-item-hd">@Model.Activity.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@Model.Activity.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="am-u-sm-12 am-list-main">
+                                        <h3 class="am-list-item-hd">@Model.Activity.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@Model.Activity.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                            }
+
+                        </a>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+                                }
+}
+
+@{
+    if (Model.News != null)
+    {
+        <div data-am-widget="list_news" class="am-list-news am-list-news-default  home-news-list">
+            <!--列表标题-->
+            <div class="am-list-news-hd am-cf">
+                <!--带更多链接-->
+                <a href="/weixin/news/list" class="">
+                    <h2>社区资讯</h2>
+                    <span class="am-list-news-more am-fr">更多 &raquo;</span>
+                </a>
+            </div>
+            <div class="am-list-news-bd">
+                <ul class="am-list">
+                    <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+                        <a href="/weixin/news/view?id=@(Model.News.Id)" class="">
+                            @{
+                                if (!string.IsNullOrEmpty(Model.News.Thumbnail))
+                                {
+                                    <div class="am-u-sm-4 am-list-thumb">
+                                        <img src="@(Model.News.Thumbnail)?width=160&height=100&mode=crop" />
+                                    </div>
+                                    <div class="am-u-sm-8 am-list-main">
+                                        <h3 class="am-list-item-hd">@Model.News.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@Model.News.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="am-u-sm-12 am-list-main">
+                                        <h3 class="am-list-item-hd">@Model.News.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@Model.News.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                            }
+
+                        </a>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+                                }
+}
+
+
+@*<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default "id="" >
+    <ul class="am-navbar-nav am-cf am-avg-sm-3" style="background-color: white">
+        <li>
+            <a href="/weixin/index" class="" style="color: #ff6600">
+                <img src="/Content/frontpage/i/toobar/icon_work_pressed.png" alt="消息" />
+                <span class="am-navbar-label">物业服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="/weixin/mall" style="color: black">
+                <img src="/Content/frontpage/i/toobar/icon_mall_normal.png" alt="呼叫" />
+                <span class="am-navbar-label">置信商城</span>
+            </a>
+        </li>
+        <li>
+            <a href="/weixin/my"  style="color: black">
+                <img src="/Content/frontpage/i/toobar/icon_myself_normal.png" alt="分享" />
+                <span class="am-navbar-label">我的</span>
+            </a>
+        </li>
+    </ul>
+</div>*@

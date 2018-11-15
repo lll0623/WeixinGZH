@@ -1,0 +1,81 @@
+﻿@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Application.Newss.Dto.NewsItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "添加商铺";
+}
+@section styles
+{
+    <style>
+        .am-form-group {
+            margin-bottom: 0px;
+        }
+    </style>
+}
+@section scripts
+{
+    <script>
+        (function() {
+            $(function() {
+
+                $('#type_1').click(function() {
+                    window.location.href = '/weixin/room/addwithphone';
+                });
+                $('#type_2').click(function() {
+                    window.location.href = '/weixin/room/addwithwizard';
+                });
+                $('#type_3').click(function() {
+                    window.location.href = '/weixin/room/addwithcode';
+                    //app.message.info('筹备中，敬请期待!');
+                });
+                $('#type_4').click(function () {
+                    window.location.href = '/weixin/room/addwithpassword';
+                });
+            });
+        })();
+
+    </script>
+}
+
+<div>
+
+    @*<div style="background-color: white; margin-top: 15px" id="type_1">
+        <ul class="am-list am-list-static am-list-border">
+            <li>
+                <i class="am-icon-credit-card am-icon-fw"></i>&nbsp;身份匹配
+                <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+            </li>
+     
+        </ul>
+    </div>
+
+    <div style="background-color: white; margin-top: 10px" id="type_2">
+        <ul class="am-list am-list-static am-list-border">
+           
+            <li>
+                <i class="am-icon-hand-o-up am-icon-fw"></i>&nbsp;自选楼盘
+                <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+            </li>
+         
+        </ul>
+    </div>*@
+
+    <div style="background-color: white; margin-top: 10px" id="type_3">
+        <ul class="am-list am-list-static am-list-border">
+           <li>
+                <i class="am-icon-qrcode am-icon-fw"></i>&nbsp;扫码绑定
+                <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+            </li>
+        </ul>
+    </div>
+
+    @*<div style="background-color: white; margin-top: 10px" id="type_4">
+        <ul class="am-list am-list-static am-list-border">
+            <li>
+                <i class="am-icon-user-plus am-icon-fw"></i>&nbsp;账号密码登录
+                <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+            </li>
+        </ul>
+    </div>*@
+
+</div>

@@ -1,0 +1,194 @@
+﻿@using Abp.Application.Services.Dto
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "收货地址";
+
+
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                var progress = $.AMUI.progress;
+                var GrouponItems = function () {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getAddresss().done(function (result) {
+
+                        var html = template('addressListHtml', { items: result });
+                        document.getElementById('address-list').innerHTML = html;
+
+                        $("input[type='checkbox']").uCheck();
+
+                        //绑定时间
+                        $('a.delete').click(function () {
+                            var id = $(this).data('id');
+                            app.message.confirm("确认删除地址:" + name, "询问", function (isConfirmed) {
+                                if (isConfirmed) {
+                                    app.services.app.weixinService.deleteAddress(id)
+                                        .done(function (result) {
+                                            GrouponItems();
+                                        });
+                                }
+                            });
+                        });
+
+                        $('label.setdefault').click(function () {
+                            var id = $(this).data('id');
+
+                            app.services.app.weixinService.setDefaultAddress(id)
+                                .done(function (result) {
+                                    GrouponItems();
+                                });
+
+                        });
+
+                    }).always(function () {
+                        progress.done(true);
+                        $('#main-container').show();
+                    });
+                };
+
+                GrouponItems();
+
+            });
+        })();
+
+    </script>
+}
+
+<div id="address-list">
+
+</div>
+
+
+<div class="am-g" style="margin-top:20px">
+    <div class="am-u-sm-12">
+        <a type="button" class="am-btn am-btn-warning am-radius am-btn-block" href="/weixin/mall/address/add">新增地址</a>
+    </div>
+</div>
+
+<script id="addressListHtml" type="text/html">
+    {{each items as value i}}
+
+    <section class="am-panel am-panel-default" style="margin: 5px">
+        <input type="hidden" name="id" value="{{value.id}}" />
+        <main class="am-panel-bd" style="padding-bottom: 10px">
+            <div class="am-g" style="font-size: 13px">
+                <span>{{value.contact}}</span>
+                <span>,</span>
+                <span>{{value.mobile}}</span>
+            </div>
+            <div class="am-g" style="font-size: 13px">
+                <span>{{value.provinceName}}</span>
+                <span>{{value.cityName}}</span>
+                <span>{{value.districtName}}</span>
+                <span>{{value.address}}</span>
+            </div>
+            <hr data-am-widget="divider" style="margin-bottom: .5rem" class="am-divider am-divider-default" />
+            <div class="am-g" style="font-size: 13px">
+                <div class="am-u-sm-6" style="padding-left: 0px">
+
+                    {{if value.isDefault}}
+                    <label class="am-u-sm-12  am-checkbox am-warning " style="font-size: 12px; margin-bottom: 0px;color: #ff6600;">
+                        <input type="checkbox" checked="checked" data-am-ucheck disabled="disabled">
+                        已设为默认
+                    </label>
+                    {{else}}
+                    <label class="am-u-sm-12  am-checkbox am-warning setdefault "  data-id="{{value.id}}"  style="font-size: 12px; margin-bottom: 0px">
+                        <input type="checkbox" data-am-ucheck>
+                        设置为默认地址
+                    </label>
+                    {{/if}}
+
+
+
+                </div>
+                <div class="am-u-sm-6">
+                    <div style="float: right; margin-top: 8px">
+                        <a class="am-icon-edit edit" href="/weixin/mall/address/edit?id={{value.id}}" style="color: gray">&nbsp;编辑</a> &nbsp;&nbsp;
+                        <a class="am-icon-trash delete" href="javascript:void(0)" data-id="{{value.id}}" style="color: gray">&nbsp;删除</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </section>
+
+    {{/each}}
+
+
+</script>
+
+
+@*<section class="am-panel am-panel-default" style="margin: 5px">
+        <main class="am-panel-bd" style="padding-bottom: 10px">
+            <div class="am-g" style="font-size: 13px">
+                <span>联系人</span>
+                <span>,</span>
+                <span>13811223344</span>
+            </div>
+            <div class="am-g" style="font-size: 13px">
+                <span>湖南</span>
+                <span>长沙</span>
+                <span>天心区</span>
+                <span>万家丽南二段999号格兰小镇141栋</span>
+            </div>
+            <hr data-am-widget="divider" style="margin-bottom: .5rem" class="am-divider am-divider-default" />
+            <div class="am-g" style="font-size: 13px">
+                <div class="am-u-sm-6" style="padding-left: 0px">
+                    <label class="am-u-sm-12  am-checkbox am-warning" style="font-size: 12px; margin-bottom: 0px">
+                        <input type="checkbox" id="isDefault" data-am-ucheck>
+                        设置为默认地址
+                    </label>
+                </div>
+                <div class="am-u-sm-6">
+                    <div style="float: right; margin-top: 8px">
+                        <a class="am-icon-edit" style="color: gray">&nbsp;编辑</a> &nbsp;&nbsp;
+                        <a class="am-icon-trash" style="color: gray">&nbsp;删除</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </section>
+
+    <section class="am-panel am-panel-default" style="margin: 5px">
+        <input type="hidden" name="id" value="1" />
+        <main class="am-panel-bd" style="padding-bottom: 10px">
+            <div class="am-g" style="font-size: 13px">
+                <span>联系人</span>
+                <span>,</span>
+                <span>13811223344</span>
+            </div>
+            <div class="am-g" style="font-size: 13px">
+                <span>湖南</span>
+                <span>长沙</span>
+                <span>天心区</span>
+                <span>万家丽南二段999号格兰小镇141栋</span>
+            </div>
+            <hr data-am-widget="divider" style="margin-bottom: .5rem" class="am-divider am-divider-default" />
+            <div class="am-g" style="font-size: 13px">
+                <div class="am-u-sm-6" style="padding-left: 0px">
+                    <label class="am-u-sm-12  am-checkbox am-warning setdefault " style="font-size: 12px; margin-bottom: 0px">
+                        <input type="checkbox" checked="checked" data-am-ucheck>
+                        设置为默认地址
+                    </label>
+                </div>
+                <div class="am-u-sm-6">
+                    <div style="float: right; margin-top: 8px">
+                        <a class="am-icon-edit edit" style="color: gray">&nbsp;编辑</a> &nbsp;&nbsp;
+                        <a class="am-icon-trash delete" style="color: gray">&nbsp;删除</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </section>*@

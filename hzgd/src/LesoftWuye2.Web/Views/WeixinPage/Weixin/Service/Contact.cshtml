@@ -1,0 +1,118 @@
+﻿
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "联系物业";
+ }
+
+@section scripts{
+
+    <script>
+
+
+        (function() {
+            $(function() {
+
+                var progress = $.AMUI.progress;
+
+                app.services.app.weixinService.getMyRooms()
+                    .done(function(result) {
+                        var html = '';
+                        $(result).each(function(idx, obj) {
+                            html += "<li  data-code='" + obj.pRoomCode + "' class='" +
+                                ((obj.isDefault) ? "am-active" : "")
+                                + "'><a href='javascript:void(0)' data-code='" + obj.pRoomCode + "' >" + obj.pRoomFullName + "</a></li>";
+                            if (obj.isDefault) {
+                                $("#room_selector").data('code', obj.pRoomCode);
+                                $("#room_selector").find('span[name="roomName"]').text(obj.pRoomFullName);
+                                getFee(obj.pRoomCode);
+                            }
+                        });
+                        $('#room_selector').find('ul').append(html);
+                    });
+
+                $("#room_selector").delegate('a', 'click', function(e) {
+                    e.preventDefault();
+                    var code = $(this).data('code');
+                    $("#room_selector").data('code', code);
+                    $("#room_selector").find('span[name="roomName"]').text($(this).text());
+                    $(this).parent().parent().find('li').removeClass('am-active');
+                    $(this).parent().attr('class', 'am-active');
+                    $('#room_selector').dropdown('close');
+                    getFee(code);
+                });
+
+
+                function getFee(PRoomCode) {
+                    $('#fee-list').empty();
+                    pRoomCode = PRoomCode;
+
+
+                    progress.start();
+                    //MemberId = "1";
+                    //PRoomCode = "01012702";
+                    app.services.app.weixinService.searchHousingManagement(PRoomCode)
+                        .done(function(result) {
+                            if (result.success) {
+
+                                var html = '';
+                                for (var i = 0; i < result.infos.length; i++) {
+                                    html += '<li onclick="window.location.href = \'tel:' + result.infos[i].tel + '\'"><i class="am-icon-volume-control-phone am-icon-fw"></i>&nbsp;&nbsp;' + result.infos[i].title + '<i class="am-icon-angle-right am-icon-fw am-fr"></i></li>';
+                                }
+                                //html = "<div class='am-panel am-panel-default pay-item' style='margin-top: 10px;margin-bottom: 10px'>             <div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>                 <div class='am-g'>                     <div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>                         <a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'>                             <i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i>                         </a>                     </div>                     <div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>                         <div>                             <a class='pay-item-expand'>                                 <span style='color: black'>费用名称</span>                                 <span style='color: #A5A5A5'>类型</span>                                 <i class='am-icon-chevron-down am-icon-fw' style='color: #CCCCCC; float: right'></i>                             </a>                         </div>                         <hr style='margin-top: 5px; margin-bottom: 5px' />                         <div class='pay-item-subitems' style='display: none'>                                     <div><span>时间</span><span style='float: right; color: #A5A5A5'>￥金额</span></div>                             <hr style='margin-top: 5px; margin-bottom: 5px' />                         </div>                         <div>                             <span>时间</span><span style='float: right; color: #F37B1D'>￥金额</span>                         </div></div></div></div></div><div class='am-panel am-panel-default pay-item' style='margin-top: 10px;margin-bottom: 10px'>             <div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>                 <div class='am-g'>                     <div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>                         <a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'>                             <i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i>                         </a>                     </div>                     <div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>                         <div>                             <a class='pay-item-expand'>                                 <span style='color: black'>费用名称</span>                                 <span style='color: #A5A5A5'>类型</span>                                 <i class='am-icon-chevron-down am-icon-fw' style='color: #CCCCCC; float: right'></i>                             </a>                         </div>                         <hr style='margin-top: 5px; margin-bottom: 5px' />                         <div class='pay-item-subitems' style='display: none'>                                     <div><span>时间</span><span style='float: right; color: #A5A5A5'>￥金额</span></div>                             <hr style='margin-top: 5px; margin-bottom: 5px' />                         </div>                         <div>                             <span>时间</span><span style='float: right; color: #F37B1D'>￥金额</span>                         </div></div></div></div></div>";
+                                $('#tel-list').empty();
+                                $('#tel-list').append(html);
+                                if (result.hasData) {
+                                    $('#tel-list').show();
+                                    $('#nodata').hide();
+                                } else {
+                                    $('#tel-list').hide();
+                                    $('#nodata').show();
+                                }
+
+                                progress.done(true);
+
+                            } else {
+                                progress.done(true);
+                                app.message.warn(result.msg);
+                            }
+
+                        });
+                };
+            });
+        })();
+
+
+    </script>
+}
+
+
+
+    <div class="am-panel am-panel-default service-form">
+        <div class="am-dropdown" data-am-dropdown="{justify: '#doc-dropdown-justify'}" style="width: 100%" id="room_selector">
+            <button style="width: 100%" class="am-btn am-btn-default  am-dropdown-toggle" data-am-dropdown-toggle>
+                <span name="roomName">请选择你的商铺</span>
+                <span class="am-icon-caret-down"></span>
+            </button>
+            <ul class="am-dropdown-content">
+                <li class="am-dropdown-header">我的商铺</li>
+            </ul>
+        </div>
+
+        
+
+        <div id="fee-list">
+
+        </div>
+
+
+        <div style="background-color: white; margin-top: 15px">
+            <ul class="am-list am-list-static am-list-border" id="tel-list">
+               
+            </ul>
+        </div>
+
+        <div class="am-panel am-panel-default" id="nodata">
+            <div class="am-panel-bd am-center" style="text-align: center;color: #ff6600">物业软件暂未设置联系方式</div>
+        </div>
+
+    </div>

@@ -1,0 +1,114 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Estateinfos
+@using LesoftWuye2.Application.Estateinfos
+@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Application.ForumPosts.Dto.ForumPostItemDto
+@{
+    ViewBag.ActiveMenu = "ForumPosts";
+    ViewBag.Title = "帖子查看";
+}
+
+@section styles{
+    @Html.IncludeStyle("~/Content/js/viewer/css/viewer.min.css")
+    <style>
+        #images img {
+            margin-right:10px
+        }
+    </style>
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/viewer/js/viewer.min.js")
+    @Html.IncludeScript("~/Views/ForumPost/View.js")
+}
+
+<div class="row" id="posts">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="well invoice-container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 class="">
+                        <strong> @(Model.Title)</strong>
+                    </h3>
+                    <br/>
+                    <span style="color: gray">发帖人:</span><span>@(Model.MemberName)</span>
+                    <span style="color: gray; margin-left: 10px">认证楼盘:</span><span>@(Model.MemberBindRooms)</span>
+                    <span style="color: gray;margin-left: 10px">认证房号:</span><span>@(Model.MemberPRoomFullName)</span>
+                    <span style="color: gray;margin-left: 10px">发帖时间:</span><span>@(Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"))</span>
+                </div>
+            </div>
+
+            <hr class="wide" />
+            <div class="invoice-notes">
+                <h5 style="color: gray">帖子内容:</h5>
+                <p>@Model.Content</p>
+                <div class="row">
+                    <div class="col-xs-12 images">
+                        @{
+                            foreach (var image in Model.Images)
+                            {
+                                <img style="cursor:pointer" data-original='@(image)' src='@(image)?width=128&height=128&mode=crop' />
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <p/>
+            <hr class="wide"/>
+            <h5 style="color: gray">管理员回复:<a class="btn btn-link" data-id="@Model.Id" id="btnSetPostReply" style="color: red!important">设置回复</a></h5>
+            <p style="color:blue">@Model.AdminReply</p>
+            <hr class="wide" />
+            <div class="invoice-notes">
+                <h5 style="color: gray">回复列表:</h5>
+                <table class="table table-bordered table-hover table-striped data-list">
+                    <thead class="bordered-themeprimary">
+                        <tr role="row">
+                            <th style="width: 100px" class='center'>回复人</th>
+                            <th>回复内容</th>
+                            <th style="width: 150px" class="center">回复时间</th>
+                            <th style="width:130px" class="center">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var comment in Model.Comments)
+                            {
+                                <tr>
+                                    <td>@(comment.MemberName)<br/>@(comment.MemberBindRooms)</td>
+                                    <td>@comment.Content<br/>
+                                        @{
+                                            if (!string.IsNullOrEmpty(comment.AdminReply))
+                                            {
+                                                <p style="color:blue">管理员回复：@(comment.AdminReply)</p>
+                                            }
+                                        }
+                                        <div class="row">
+                                            <div class="col-xs-12 images">
+                                                @{
+                                                    foreach (var image in comment.Images)
+                                                    {
+                                                        <img style="cursor:pointer" data-original='@(image)' src='@(image)?width=80&height=80&mode=crop' />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@comment.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td>
+                                        <a data-role-name="Pages.Estateinfos.Delete" data-role="reply-row" data-id="@(comment.Id)" class="btn btn-default btn-xs"><i class="fa fa-comment-o"></i>回复</a>
+                                        <a data-role-name="Pages.Estateinfos.Delete" data-role="delete-row" data-id="@(comment.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
+               
+            </div>
+
+        </div>
+    </div>
+</div>

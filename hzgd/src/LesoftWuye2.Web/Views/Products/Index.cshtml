@@ -1,0 +1,411 @@
+﻿@using Abp.Application.Services.Dto
+
+@using LesoftWuye2.Application.Products
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Products.Dto.ProductListDto>
+@{
+    ViewBag.ActiveMenu = "Products";
+    ViewBag.Title = "商品";
+
+    List<ComboboxItemDto> types = ViewData["types"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+    List<ComboboxItemDto> suppliers = ViewData["suppliers"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+    List<ComboboxItemDto> tags = ViewData["tags"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+
+    string typesJson = "{ 'id': '', 'text': '所有分类' }";
+    foreach (var type in types)
+    {
+        typesJson += ",{ 'id': '" + type.Value + "', 'text': '" + type.DisplayText + "' }";
+    }
+    typesJson = "[" + typesJson + "]";
+
+
+
+    string suppliersJson = "{ 'id': '', 'text': '所有供应商' }";
+    foreach (var type in suppliers)
+    {
+        suppliersJson += ",{ 'id': '" + type.Value + "', 'text': '" + type.DisplayText + "' }";
+    }
+    suppliersJson = "[" + suppliersJson + "]";
+
+}
+
+@section styles{
+    <style>
+        ul.service-form-uploadimages img {
+            height: 80px;
+            padding-left: 5px;
+            padding-right: 5px;
+            /*padding-top: 5px;*/
+            /*padding-bottom: 5px;*/
+            border: none;
+            margin-bottom: 0px;
+        }
+    </style>
+}
+
+@section scripts
+{
+
+    @Html.IncludeScript("~/Content/js/file-input/bootstrap-filestyle.min.js")
+    @Html.IncludeScript("~/Content/js/ajaxfileupload.js")
+    @Html.IncludeScript("~/Content/js/kindeditor/kindeditor-min.js")
+    @Html.IncludeScript("~/Content/js/kindeditor/lang/zh_CN.js")
+
+    @Html.IncludeScript("~/Views/Products/Index.js")
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">商品管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.Products.Create" data-toggle="modal" data-target="#ProductCreateModal"><i class="fa fa-plus"></i>添加商品</button>
+                </div>
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 160px">缩略图</th>
+
+                                <th>名称</th>
+                                <th style="width: 100px">规格</th>
+                                <th style="width: 60px" class='center'>单位</th>
+                                <th style="width: 60px" class='center'>状态</th>
+                                <th class='center'>销量</th>
+                                <th class='center'>市场价</th>
+                                <th class='center'>业主尊享价</th>
+
+
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 200px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.Items)
+                            {
+                                <tr>
+                                    <td class='center'>
+                                        <img src="@(product.Thumbnail)?width=160&height=75&mode=crop" />
+                                    </td>
+                                    <td>@product.Name</td>
+                                    <td>@product.Specification</td>
+                                    <td class='center'>@product.Unit</td>
+                                    <td class='center'>
+
+                                        @{
+                                            if (product.IsSale)
+                                            {
+                                                <span class='label label-success'>上架</span>
+                                            }
+                                            else
+                                            {
+                                                <span class='label label-default'>下架</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td class='center'>@product.SellCount</td>
+                                    <td class='center'>@product.SalePrice</td>
+                                    <td class='center'>@product.MemberPrice</td>
+                                    <td class="center">@product.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a href="/Products/SlideImages?productId=@(product.Id)" class="btn btn-default btn-xs"><i class="fa fa-image"></i>轮播图</a>
+                                        <a data-role-name="Pages.Products.Update" data-role="update-row" data-id="@(product.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.Products.Delete" data-role="delete-row" data-id="@(product.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div class="modal fade" id="ProductCreateModal" tabindex="-1" role="dialog" aria-labelledby="ProductCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+            <form name="productCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加商品</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-9">
+                            <div class='form-group'>
+                                <label label-for='Name'>名称<span class='required'>*</span></label><input class='form-control' type='text' name='Name' required maxlength='@LesoftWuye2.Core.Products.Product.MaxNameLength'>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-3">
+                            <div class='form-group'>
+                                <div class='checkbox'>
+                                    <label><input type='checkbox' class='colored-blue' value='true' name='IsSale' data-role='excluded'><span class='text'>是否销售中</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class='form-group'>
+                        <label label-for='Summary'>商品简介</label><input class='form-control' type='text' name='Summary'>
+                    </div>*@
+                    <div class='form-group'>
+                        <label label-for='tags_create'>服务标签<span class='required'>*</span></label>
+                        <select multiple="multiple" style="width: 100%;" class="select2" name="tags" id="tags_create" data-placeholder="点击选择服务标签">
+                            @{
+
+                                foreach (var itemDto in tags)
+                                {
+                                    <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='title'>供应商<span class='required'>*</span></label>
+                                <select style="width: 100%;" name="supplierId" required>
+                                    <option value=""></option>
+                                    @{
+
+                                        foreach (var itemDto in suppliers)
+                                        {
+                                            <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='title'>所属分类<span class='required'>*</span></label>
+                                <select style="width: 100%;" name="categoryId" required>
+                                    <option value=""></option>
+                                    @{
+
+                                        foreach (var itemDto in types)
+                                        {
+                                            <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'><label label-for='Specification'>规格<span class='required'>*</span></label><input class='form-control' type='text' name='Specification' required maxlength='@LesoftWuye2.Core.Products.Product.MaxServiceTagsLength'></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class='form-group'><label label-for='Unit'>单位<span class='required'>*</span></label><input class='form-control' type='text' name='Unit' required maxlength='@LesoftWuye2.Core.Products.Product.MaxUnitLength'></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='Price'>销量<span class='required'>*</span></label><input class='form-control' type='number' step="0.01" name='SellCount' required>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='SalePrice'>市场价<span class='required'>*</span></label><input class='form-control' data-bv-numeric="true" name='SalePrice' required>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='MemberPrice'>业主尊享价<span class='required'>*</span></label><input class='form-control' data-bv-numeric="true" name='MemberPrice' required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label>缩略图</label>
+                                <br />
+                                <input type="hidden" name="thumbnail" id="thumbnail" data-role="excluded">
+                                <img src="/Content/img/placehold/640x300.png" id="thumbnailImg" style="width: 160px; height: 75px" />
+                                &nbsp;&nbsp;<input id="uploadImage" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader.ajaxupload();">
+                                &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage" onclick="tUploader.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>商品详情<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="create_content" style="height: 300px; width: 100%; visibility: hidden;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="ProductUpdateModal" tabindex="-1" role="dialog" aria-labelledby="ProductCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+            <form name="productUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>修改商品</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-9">
+                            <div class='form-group'>
+                                <label label-for='name'>名称<span class='required'>*</span></label>
+                                <input class='form-control' type='text' name='name' required maxlength='@LesoftWuye2.Core.Products.Product.MaxNameLength'>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-3">
+                            <div class='form-group'>
+                                <div class='checkbox'>
+                                    <label><input type='checkbox' class='colored-blue' value='true' name='isSale' data-role='excluded'><span class='text'>是否销售中</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class='form-group'>
+                        <label label-for='summary'>商品简介</label><input class='form-control' type='text' name='summary'>
+                    </div>*@
+                    <div class='form-group'>
+                        <label label-for='tags_update'>服务标签<span class='required'>*</span></label>
+                        <select multiple="multiple" style="width: 100%;" class="select2" name="tags" id="tags_update" data-placeholder="点击选择服务标签">
+                            @{
+
+                                foreach (var itemDto in tags)
+                                {
+                                    <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='supplierId'>供应商<span class='required'>*</span></label>
+                                <select style="width: 100%;" name="supplierId" required>
+                                    <option value=""></option>
+                                    @{
+
+                                        foreach (var itemDto in suppliers)
+                                        {
+                                            <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='title'>所属分类<span class='required'>*</span></label>
+                                <select style="width: 100%;" name="categoryId" required>
+                                    <option value=""></option>
+                                    @{
+
+                                        foreach (var itemDto in types)
+                                        {
+                                            <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='Specification'>规格<span class='required'>*</span></label>
+                                <input class='form-control' type='text' name='specification' required maxlength='@LesoftWuye2.Core.Products.Product.MaxServiceTagsLength'>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='Unit'>单位<span class='required'>*</span></label>
+                                <input class='form-control' type='text' name='unit' required maxlength='@LesoftWuye2.Core.Products.Product.MaxUnitLength'>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='Price'>销量<span class='required'>*</span></label>
+                                <input class='form-control' type='number' step="0.01" name='sellCount' required>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='SalePrice'>市场价<span class='required'>*</span></label>
+                                <input class='form-control' data-bv-numeric="true" name='salePrice' required>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='MemberPrice'>业主尊享价<span class='required'>*</span></label>
+                                <input class='form-control' data-bv-numeric="true" name='memberPrice' required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label>缩略图</label>
+                                <br />
+                                <input type="hidden" name="thumbnail" id="thumbnail2" data-role="excluded">
+                                <img src="/Content/img/placehold/640x300.png" id="thumbnailImg2" style="width: 160px; height: 75px" />
+                                &nbsp;&nbsp;<input id="uploadImage2" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader2.ajaxupload();">
+                                &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage2" onclick="tUploader2.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>商品详情<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="update_content" style="height: 300px; width: 100%; visibility: hidden;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

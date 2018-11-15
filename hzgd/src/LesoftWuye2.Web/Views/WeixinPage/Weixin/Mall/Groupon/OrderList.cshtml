@@ -1,0 +1,92 @@
+﻿@using Abp.Application.Services.Dto
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "我的拼团";
+    int type = (int)ViewData["type"];
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                var progress = $.AMUI.progress;
+                var GrouponItems = function () {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getGrouponOrders('@type', {}).done(function (result) {
+
+                        var html = template('groupItemHtml', result);
+                        document.getElementById('groupItem-list').innerHTML = html;
+
+
+
+                    }).always(function () {
+                        progress.done(true);
+                        $('#main-container').show();
+                    });
+                };
+
+                GrouponItems();
+
+            });
+        })();
+
+    </script>
+}
+
+<div data-am-widget="tabs" class="am-tabs am-tabs-d2" style="margin: 0px">
+    <ul data-am-sticky class="am-tabs-nav am-cf">
+        <li class="@(type==0?"am-active":"")"><a onclick="window.location = '/weixin/mall/groupon/orderList?type=0'">全部</a></li>
+        <li class="@(type==1?"am-active":"")"><a onclick="window.location = '/weixin/mall/groupon/orderList?type=1'">待成团</a></li>
+        <li class="@(type==2?"am-active":"")"><a onclick="window.location = '/weixin/mall/groupon/orderList?type=2'">已成团</a></li>
+        <li class="@(type==3?"am-active":"")"><a onclick="window.location = '/weixin/mall/groupon/orderList?type=3'">拼团失败</a></li>
+
+    </ul>
+    <div class="am-tabs-bd">
+        <div id="groupItem-list">
+
+        </div>
+
+    </div>
+</div>
+
+<script id="groupItemHtml" type="text/html">
+
+    {{each items as value i}}
+
+    <div class="am-g" style="border: 1px; background-color: white; margin-top: 10px">
+        <a href="/weixin/mall/groupon/order?id={{value.grouponOrderId}}">
+            <div class="am-u-sm-3 am-list-thumb" style="padding: 0px">
+                <img class="am-thumbnail" src="{{value.thumbnail}}?width=100&height=100&mode=crop" style="border: none; margin: 5px; width: 80px; height: 80px; text-align: center"/>
+            </div>
+
+            <div class="am-u-sm-9 am-list-main">
+                <p class="am-list-item-hd" style="margin-top: 10px; color: black; font-size: 13px; text-align: left; height: 38px; overflow: hidden; word-wrap: break-word; margin-bottom: 5px">{{value.productName}}</p>
+                <div class="am-list-item-text" style="text-align: left">
+                    <span style="color: gray; font-size: 15px">{{value.requireCount}}人团</span>
+                    <span style="color: #ff6600; font-size: 15px">￥{{value.amount}}</span>
+                    <span style="color: #ff6600; font-size: 15px;float: right">{{value.statusText}}</span>
+                </div>
+            </div>
+
+        </a>
+        <hr data-am-widget="divider" style="" class="am-divider am-divider-default"/>
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-bottom: 10px; margin-right: 0px">
+            &nbsp;<a href="/weixin/mall/order/view?id={{value.orderId}}" style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px" class="am-btn am-btn-warning am-radius am-btn-xs am-fr">查看订单详情</a>&nbsp;
+            <a href="/weixin/mall/groupon/order?id={{value.grouponOrderId}}" style="margin-bottom: 10px" class="am-btn am-btn-warning am-radius am-btn-xs am-fr">查看团详情</a>&nbsp;
+        </div>
+    </div>
+
+    {{/each}}
+
+</script>
+
+
+

@@ -1,0 +1,123 @@
+﻿@model LesoftWuye2.Core.Wuyebase.Members.Member
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "我的信息";
+}
+
+@section styles
+{
+    <style>
+      
+    </style>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function() {
+            $(function() {
+
+                $('#submit').click(function(e) {
+                    e.preventDefault();
+
+                    var username = $('#username').val();
+                    var password = $('#password').val();
+
+                    if (username === "") {
+                        $('#username').focus();
+                        app.message.warn('请输入手机号码!');
+                        return;
+                    }
+                    if (password === "") {
+                        $('#password').focus();
+                        app.message.warn('请输入密码 !');
+                        return;
+                    }
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.login(username, password)
+                        .done(function(result) {
+                            app.message.success('登录成功', '成功', function() {
+                                window.location.reload();
+                            });
+                        }).always(function() {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+                $('#logout').click(function() {
+                    app.message.confirm("确认退出系统:", "询问", function (isConfirmed) {
+                        if (isConfirmed) {
+
+                            app.services.app.weixinService.logout()
+                                .done(function (result) {
+                                    window.location.href = '/weixin/register';
+
+                                }).always(function () {
+
+                                });
+                        }
+                    });
+                });
+
+                $('#myrank').click(function () {
+                    app.message.info('筹备中，敬请期待!');                
+                });
+
+                $('#accounts').click(function () {
+                    app.message.info('筹备中，敬请期待!');
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+<div class="am-g" style="background-color: #ff6600; padding: 15px">
+    <div class="am-u-sm-3" style="padding: 0px">
+        <img class="am-circle" src="@(Model.Thumbnail)?width=60&height=60&mode=crop" style="width: 60px; height: 60px"/>
+    </div>
+    <div class="am-u-sm-8" style="padding: 0px; margin-left: -20px; margin-top: 5px">
+        <p style="color: white; font-size: 15px; margin-bottom: 5px">@Model.Name</p>
+        <p style="color: white; font-size: 12px; margin-bottom: 5px; margin-top: 5px">@Model.PRoomFullName</p>
+    </div>
+    <div class="am-u-sm-1" style="padding: 0px">
+        <p style="color: white; font-size: 13px; margin-top: 13px; float: right"><span class="am-icon-angle-right  am-icon-lg"></span></p>
+    </div>
+</div>
+
+<div style="background-color: white; margin-top: 15px">
+    <ul class="am-list am-list-static am-list-border">
+        @*<li id="myrank">
+            <i class="am-icon-map-marker am-icon-fw"></i> &nbsp;&nbsp;我的排名
+            <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+        </li>*@
+        <li onclick="window.location.href = '/weixin/linkbill/count'">
+            <i class="am-icon-newspaper-o am-icon-fw"></i>&nbsp;&nbsp;我的工单
+            <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+        </li>
+        @*<li id="accounts">
+            <i class="am-icon-birthday-cake am-icon-fw"></i>&nbsp;&nbsp;账号管理（管理我的子账号）
+            <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+        </li>
+        <li onclick="window.location.href = '/weixin/forgetpassword?type=1'">
+            <i class="am-icon-lock am-icon-fw"></i>&nbsp;&nbsp;修改密码
+            <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+        </li>*@
+    </ul>
+</div>
+
+
+<div style="background-color: #ff6600; margin-top: 15px" id="logout">
+    <ul class="am-list am-list-static am-list-border">
+        <li style="background-color: #ff6600; color: white">
+            <i class="am-icon-sign-out am-icon-fw"></i>&nbsp;&nbsp;退出系统
+            <i class="am-icon-angle-right am-icon-fw am-fr"></i>
+        </li>
+    </ul>
+</div>

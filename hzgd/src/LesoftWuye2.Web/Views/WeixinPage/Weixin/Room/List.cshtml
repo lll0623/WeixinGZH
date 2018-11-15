@@ -1,0 +1,117 @@
+﻿@model List<string>
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "我的商铺";
+}
+
+@section scripts
+{
+    <script>
+        (function() {
+            $(function() {
+                var loadRooms = function() {
+
+                    app.services.app.weixinService.getMyRooms().done(function(result) {
+
+                        var html = '';
+                        $(result).each(function(idx, obj) {
+                            var line = '';
+                            line += "<li data-select='" + (obj.isDefault ? "true" : "false") + "' data-name='" + obj.pRoomFullName + "' data-code='" + obj.pRoomCode + "' data-projectcode='" + obj.pProjectCode + "'>";
+                            line += "<i data-role='select' class='" + (obj.isDefault ? "am-icon-check-circle-o am-icon-fw" : "am-icon-circle-o am-icon-fw") + "' style='color: #0894ec'></i>";
+                            line += "<span class='am-badge am-badge-danger'><a data-role='delete' style='color: white'>删除</a></span>";
+                            line += "<span><span>" + obj.pRoomFullName + "</span> <br /><i style='font-size: .9rem;color: #666'>单元编号:" + obj.pRoomCode + "</i></span></li>";
+
+                            html += line;
+                        });
+                        $('#room-list').empty();
+                        $('#room-list').append(html);
+                    });
+                };
+
+                loadRooms();
+
+                $('#room-list').delegate('li', 'click', function(e) {
+                    e.preventDefault();
+                    var code = $(this).data('code');
+                    $('#room-list li i[data-role="select"]').attr('class', 'am-icon-circle-o am-icon-fw');
+                    $('#room-list li').attr('data-select', 'false');
+
+
+                    $('#room-list li[data-code="' + code + '"] i[data-role="select"]').attr('class', 'am-icon-check-circle-o am-icon-fw');
+                    $('#room-list li[data-code="' + code + '"]').attr('data-select', 'true');
+                });
+
+                $('#room-list').delegate('a', 'click', function(e) {
+                    e.preventDefault();
+                    var code = $(this).parent().parent().data('code');
+                    var name = $(this).parent().parent().data('name');
+                    app.message.confirm("确认移除商铺:" + name, "询问", function(isConfirmed) {
+                        if (isConfirmed) {
+
+                            app.services.app.weixinService.memberRemovePRoom(code)
+                                .done(function(result) {
+                                    if (result.success) {
+                                        loadRooms();
+                                    } else {
+                                        app.message.warn(result.msg);
+                                    }
+
+                                }).always(function() {
+
+                                });
+
+                        }
+                    });
+                });
+
+                $('#select-room').click(function(e) {
+
+                    var item = $('#room-list li[data-select="true"]');
+                    if (!$(item).data('code')) {
+                        app.message.warn("请选择商铺!");
+                        return;
+                    }
+
+                    app.services.app.weixinService.setCurrentRoomInfo($(item).data('code')).done(function() {
+                        app.message.success('修改默认房间成功', '成功', function () {
+                            //window.location.href = '/weixin/index';
+                            app.gotoPage('/weixin/index');
+                        });
+                    });
+
+                  
+
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+
+<div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{"directionNav":false}' style="margin-top: 0px;z-index: 1">
+    <ul class="am-slides">
+        @{
+            foreach (var image in Model)
+            {
+                <li>
+                    <img src="@(image)?width=640&height=300&mode=crop">
+                </li>
+            }
+        }
+    </ul>
+</div>
+<ul class="am-list am-list-static am-list-border" style="margin-top: 0" id="room-list"></ul>
+
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <a href="javascript:void(0)" id="select-room" class="am-btn am-btn-warning am-radius am-btn-block service-form-submit">选择商铺</a>
+    </div>
+</div>
+
+<div class="am-g" style="margin-top: 20px">
+    <div class="am-u-sm-12">
+        <a href="/weixin/room/add" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit">+添加商铺</a>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "账号登录";
+}
+
+@section styles
+{
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                $('#submit').click(function (e) {
+                    e.preventDefault();
+
+                    var username = $('#username').val();
+                    var password = $('#password').val();
+
+                    if (username === "") {
+                        $('#username').focus();
+                        app.message.warn('请输入手机号码!');
+                        return;
+                    }
+                    if (password === "") {
+                        $('#password').focus();
+                        app.message.warn('请输入密码 !');
+                        return;
+                    }
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.login(username, password)
+                        .done(function (result) {
+                            app.message.success('登录成功', '成功', function () {
+                                window.location.href = '/weixin/my';
+                            });
+                        }).always(function () {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+<div class="am-g" style="padding-top: 50px; padding-bottom: 50px;text-align: center">
+    <img src="/Content/frontpage/i/app-icon72x72@2x.png" style="width: 100px; height: 100px;"/>
+</div>
+
+
+<div class="am-g">
+    <p>
+        <input type="text" id="username" class="am-form-field am-radius" placeholder="手机号码" />
+        <input type="password" id="password" class="am-form-field am-radius" placeholder="登录密码" />
+    </p>
+
+</div>
+
+
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">登录</button>
+    </div>
+    <div class="am-u-sm-12">
+        <a class="am-btn am-btn-link am-fr" href="/weixin/forgetpassword?type=0" id="forgetpassword">忘记密码</a>
+        <a class="am-btn am-btn-link am-fr" href="/weixin/register" id="register">注册</a>
+    </div>
+</div>

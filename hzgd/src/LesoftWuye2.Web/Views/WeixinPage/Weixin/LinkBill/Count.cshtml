@@ -1,0 +1,75 @@
+﻿@model List<string>
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "我的工单";
+}
+
+@section scripts
+{
+    <script>
+        (function () {
+            $(function () {
+
+                var progress = $.AMUI.progress;
+                var loadRooms = function () {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getEventCount(0)
+                                .done(function (result) {
+                                    if (result.success) {
+
+                                        var html = '';
+
+                                        $(result.info).each(function (idx, obj) {
+                                            var line = '';
+
+                                            line += "<div data-type='" + obj.eType + "'>";
+                                            line += "<div data-am-widget='titlebar' class='am-titlebar am-titlebar-default' style='margin-top: 5px'>";
+                                            line += "<h2 class='am-titlebar-title '>" + obj.eTypeName + "</h2>";
+                                            line += "</div>";
+                                            line += "<ul data-am-widget='gallery' class='am-gallery am-avg-sm-3  am-gallery-overlay'>";
+                                            $(obj.eTypeInfo).each(function (idx1, obj1) {
+                                                line += "<li data-type='" + obj1.edType + "' style='padding: 5px'>";
+                                                line += "<div  style='height: 30px;height: 50px; background-color: white'>";
+                                                line += "<a href='/weixin/linkbill/list?EType=" + obj.eType + "&EDType=" + obj1.edType + "' class=''>";
+                                                //line += "<img src='/Content/frontpage/i/my-item-bg.png' />";
+                                                line += "  <p style='text-align: center; color: gray; margin-bottom: 0px'>" + obj1.edTypeName + "</p>";
+                                                line += "  <p style='text-align: center; color: gray; margin: 0px'>" + obj1.edCount + "</p>";
+                                                //line += "<h3 class='am-gallery-title' style='text-align: center'>" + obj1.edTypeName + "(" + obj1.edCount + ")</h3>";
+                                                line += "</a></div></li>";
+                                            });
+
+
+                                            line += "  </ul> </div>";
+
+
+                                            html += line;
+                                        });
+                                        $('#items-list').empty();
+                                        $('#items-list').append(html);
+                                        progress.done(true);
+                                        $('#main-container').show();
+                                    } else {
+                                        progress.done(true);
+                                        $('#main-container').show();
+                                        app.message.warn(result.msg);
+                                    }
+
+                                });
+                };
+
+                loadRooms();
+
+
+            });
+        })();
+
+    </script>
+}
+
+<div id="items-list"></div>
+
+
+
+

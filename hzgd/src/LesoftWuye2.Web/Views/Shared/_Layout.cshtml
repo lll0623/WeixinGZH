@@ -1,0 +1,155 @@
+﻿@using System.Threading
+@using System.Web.Optimization
+@using Abp.Timing
+@using Abp.Web.Mvc.Extensions
+@{
+    SetAntiForgeryCookie();
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>物业社区后台系统 | @(ViewBag.Title)</title>
+
+    <meta name="description" content="blank page" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/Content/img/favicon.png" type="image/x-icon">
+
+    @Styles.Render("~/Bundles/vendor/css")
+    @Styles.Render("~/Bundles/css")
+
+    @RenderSection("styles", required: false)
+
+    <script type="text/javascript">
+        var abp = abp || {};
+        abp.appPath = '@ApplicationPath';
+    </script>
+
+    @Scripts.Render("~/Bundles/vendor/js/top")
+
+</head>
+<!-- /Head -->
+<!-- Body -->
+<body>
+    <!-- Loading Container -->
+    <div class="loading-container">
+        <div class="loading-progress">
+            <div class="rotator">
+                <div class="rotator">
+                    <div class="rotator colored">
+                        <div class="rotator">
+                            <div class="rotator colored">
+                                <div class="rotator colored"></div>
+                                <div class="rotator"></div>
+                            </div>
+                            <div class="rotator colored"></div>
+                        </div>
+                        <div class="rotator"></div>
+                    </div>
+                    <div class="rotator"></div>
+                </div>
+                <div class="rotator"></div>
+            </div>
+            <div class="rotator"></div>
+        </div>
+    </div>
+    <!--  /Loading Container -->
+    @*@Html.Partial("_TopBar")*@
+    @Html.Action("TopBar", "Layout")
+    <!-- Main Container -->
+    <div class="main-container container-fluid">
+        <!-- Page Container -->
+        <div class="page-container">
+            @Html.Partial("_SideBar")
+            <!-- Page Content -->
+            <div class="page-content">
+                @Html.Partial("_PageHeader")
+                <!-- Page Body -->
+                <div class="page-body">
+                    @RenderBody()
+                </div>
+                <!-- /Page Body -->
+            </div>
+            <!-- /Page Content -->
+        </div>
+        <!-- /Page Container -->
+        <!-- Main Container -->
+
+    </div>
+
+    <!-- 修改密码 -->
+    <div class="modal fade" id="ChangePasswordModal" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <form name="userCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span><i class="fa fa-locked">&nbsp;</i>修改密码</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label>原密码<span class="required">*</span></label>
+                            <input type="password" name="OldPassword" class="form-control" required maxlength="@Obs.Users.User.MaxPlainPasswordLength"
+                                   data-bv-notempty="true"
+                                   data-bv-notempty-message="密码不能为空">
+                        </div>
+
+                        <div class="form-group">
+                            <label>新密码<span class="required">*</span></label>
+                            <input type="password" name="NewPassword" class="form-control" required maxlength="@Obs.Users.User.MaxPlainPasswordLength"
+                                   data-bv-notempty="true"
+                                   data-bv-notempty-message="密码不能为空"
+                                   data-bv-identical-field="NewPassword2" 
+                                   data-bv-identical-message="2次输入的新密码不一致"
+                                   >
+                        </div>
+
+                        <div class="form-group">
+                            <label>密码（确认）<span class="required">*</span></label>
+                            <input type="password" name="NewPassword2" class="form-control" required maxlength="@Obs.Users.User.MaxPlainPasswordLength"
+                                   data-bv-notempty="true"
+                                   data-bv-notempty-message="密码不能为空"
+                                   data-bv-identical-field="NewPassword" 
+                                   data-bv-identical-message="2次输入的新密码不一致"
+                                   >
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/Bundles/vendor/js/bottom")
+    <script>
+        moment.locale('@Thread.CurrentThread.CurrentUICulture.Name');
+    </script>
+   
+    <script src="~/api/AbpServiceProxies/GetAll?v=@(Clock.Now.Ticks)"></script>
+    <script src="~/AbpScripts/GetScripts?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+   
+    @RenderSection("scripts", required: false)
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,138 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Estateinfos
+@using LesoftWuye2.Application.Estateinfos
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.ForumPosts.Dto.ForumPostListDto>
+@{
+    ViewBag.ActiveMenu = "ForumPosts";
+    ViewBag.Title = "帖子列表";
+}
+
+@section styles{
+    @Html.IncludeStyle("~/Content/js/viewer/css/viewer.min.css")
+    <style>
+        #images img {
+            margin-right:10px
+        }
+    </style>
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/viewer/js/viewer.min.js")
+    @Html.IncludeScript("~/Views/ForumPost/Index.js")
+}
+
+
+
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">帖子列表</span>
+                <div class="widget-buttons">
+                    
+                </div>
+            </div>
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])" ></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 100px" class='center'>论坛版块</th>
+                                <th style="width: 100px" class='center'>发帖人</th>
+                                <th>标题</th>
+                                <th style="width: 70px" class='center'>阅读数</th>
+                                <th style="width: 70px" class='center'>回复数</th>
+                                <th style="width: 150px" class="center">最新回复时间</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 150px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var post in Model.Items)
+                            {
+                                <tr>
+                                    <td class='center'>@post.PlateName</td>
+                                    <td>@post.MemberName</td>
+                                    <td>@post.Title</td>
+                                    <td class='center' >@post.ReadCount</td>
+                                    <td class='center'>@post.CommentCount</td>
+                                    <td class="center">@post.LastCommentTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="center">@post.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a href="/ForumPost/View?id=@(post.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>查看</a>
+                                        <a data-role-name="Pages.Estateinfos.Delete" data-role="delete-row" data-id="@(post.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--修改-->
+<div class="modal fade" id="EstateinfoUpdateModal" tabindex="-1" role="dialog" aria-labelledby="EstateinfoCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+            <form name="estateinfoUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-eye">&nbsp;</i>查看跳蚤信息</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class='form-group'>
+                                <label label-for='title'>标题<span class='required'>*</span></label><input class='form-control' readonly="readonly" type='text' name='title' required maxlength='@LesoftWuye2.Core.Estateinfos.Estateinfo.MaxTitleLength'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px">
+                        <div class="col-xs-4">
+                            <span>联系人:<strong id="contact"></strong></span>
+                        </div>
+                        <div class="col-xs-4">
+                            <span>联系电话:<strong id="mobile"></strong></span>
+                        </div>
+                        <div class="col-xs-4">
+                            <span>发布时间:<strong id="creationTime"></strong></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>内容<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="update_content" readonly="readonly" style="height: 300px; width: 100%;"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" id="images">
+                          
+                        </div>
+                        
+                    </div>  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

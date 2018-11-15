@@ -1,0 +1,39 @@
+﻿
+@model List<string>
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "支付宝付款";
+    
+}
+
+@section scripts{
+
+    <script>
+
+       
+
+    </script>
+}
+
+<div>
+    
+
+    <div style="background-color: white; padding-top: 15px; padding-bottom: 15px; margin-bottom: 10px;padding: 10px">
+        <div align="center" style="margin-top: 30px">
+            <img src="~/Content/frontpage/i/alipay-logo.png" style="width: 150px;text-align: center" />    
+        </div>
+        <p align="center" style="color: gray">如何通过支付宝支付</p>
+        <p align="center" style="color: gray">由于微信屏蔽了支付宝，您需要按照以下步骤操作</p>
+        <hr/>
+        <div align="center" style="margin-top: 30px; background: lightgray; padding: 10px">
+            <img src="~/Content/frontpage/i/live_weixin.png" style="width: 100%; text-align: center"/>
+        </div>
+        <div class="am-g" style="margin-top: 20px;margin-bottom: 30px">
+            <div class="am-u-sm-12">
+                <a href="@(ViewData["returnUrl"])" id="submit" class="am-btn am-btn-danger am-radius am-btn-block service-form-submit" data-text="去付款">支付完成</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+

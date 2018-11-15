@@ -1,0 +1,93 @@
+﻿@model List<string>
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = ViewData["title"];
+}
+
+@section scripts
+{
+    <script>
+        (function() {
+            $(function() {
+
+                var progress = $.AMUI.progress;
+                var loadRooms = function() {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getMyRentsaleinfos('@(ViewData["type"])', { currentPage: 1 })
+                                .done(function (result) {
+
+                                    var html = '';
+
+                                    $(result.items).each(function (idx, obj) {
+                                        var line = '';
+
+                                        line += "<li class='am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left'>";
+                                        line += "<a href='/weixin/rentsaleinfo/MyView?id=" + obj.id + "' class=''>";
+                                        if (obj.thumbnail !== null) {
+                                            line += "<div class='am-u-sm-4 am-list-thumb'>";
+                                            line += "<img src='" + obj.thumbnail + "?width=160&height=100&mode=crop' />";
+                                            line += "</div>";
+                                            line += "<div class='am-u-sm-8 am-list-main'>";
+                                            line += "<h3 class='am-list-item-hd'>" + obj.title + "</h3>";
+                                            line += "<div class='am-list-item-text'>发布日期:" + obj.creationTime.substr(0, 10) + "</div>";
+                                            line += "</div>";
+                                        } else {
+
+                                            line += "<div class='am-u-sm-12 am-list-main'>";
+                                            line += "<h3 class='am-list-item-hd'>" + obj.title + "</h3>";
+                                            line += "<div class='am-list-item-text'>发布日期:" + obj.creationTime.substr(0, 10) + "</div>";
+                                            line += "</div>";
+                                        }
+
+                                        line += "</a>";
+                                        line += "</li>";
+
+                                        html += line;
+                                    });
+                                    $('#items-list').empty();
+                                    $('#items-list').append(html);
+
+
+                                }).always(function () {
+                                    progress.done(true);
+                                    $('#main-container').show();
+                                });
+                };
+
+                loadRooms();
+
+
+            });
+        })();
+
+    </script>
+}
+
+<div data-am-widget="titlebar" class="am-titlebar am-titlebar-multi" style="margin-top: 0;border-bottom: 2px solid #ff6600;border-top:none">
+
+    <nav class="am-titlebar-nav">
+
+        <a href="/weixin/rentsaleinfo/my?type=0" class="am-active">未审核</a>
+        <a href="/weixin/rentsaleinfo/my?type=1" class="">上架中</a>
+        <a href="/weixin/rentsaleinfo/my?type=2" class="">已下架</a>
+
+    </nav>
+</div>
+
+
+<div data-am-widget="list_news" class="am-list-news am-list-news-default  home-news-list">
+    <div class="am-list-news-bd">
+        <ul class="am-list" id="items-list">
+           
+        </ul>
+    </div>
+
+    <div class="am-g" style="margin-bottom: 20px">
+        <div class="am-u-sm-12">
+            <a href="/weixin/rentsaleinfo/add" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">我要发布</a>
+        </div>
+    </div>
+
+</div>

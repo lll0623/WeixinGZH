@@ -1,0 +1,89 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Estateinfos
+@using LesoftWuye2.Application.Estateinfos
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Orders.Dto.OrderListDto>
+@{
+    ViewBag.ActiveMenu = "Orders";
+    ViewBag.Title = "订单列表";
+}
+
+@section styles{
+    @Html.IncludeStyle("~/Content/js/viewer/css/viewer.min.css")
+    <style>
+        #images img {
+            margin-right:10px
+        }
+    </style>
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/viewer/js/viewer.min.js")
+    @Html.IncludeScript("~/Views/Order/Index.js")
+}
+
+
+
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">订单列表</span>
+                <div class="widget-buttons">
+                    
+                </div>
+            </div>
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])" ></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 100px" class='center'>类型</th>
+                                <th style="width: 100px" class='center'>会员</th>
+                                <th style="width: 100px" class='center'>订单号</th>
+                                <th>商品</th>
+                                <th style="width: 90px" class='center'>金额</th>
+                                <th style="width: 90px" class='center'>收货人</th>
+                                <th style="width: 90px" class='center'>联系电话</th>
+                                <th style="width: 150px" class='center'>订单状态</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 150px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.Items)
+                            {
+                                <tr>
+                                    <td class='center'>@order.TypeText</td>
+                                    <td class='center'>@order.MemberName</td>
+                                    <td class='center'>@order.OrderNo</td>
+                                    <td>@order.ProductName</td>
+                                    <td class='center'>@order.Amount</td>
+                                    <td class='center' >@order.Contact</td>
+                                    <td class='center'>@order.Mobile</td>
+                                    <td class='center'>@order.StatusText</td>
+                                    <td class="center">@order.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a href="/Order/View?id=@(order.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>查看</a>
+                                        @*<a data-role-name="Pages.Estateinfos.Delete" data-role="delete-row" data-id="@(order.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>*@
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

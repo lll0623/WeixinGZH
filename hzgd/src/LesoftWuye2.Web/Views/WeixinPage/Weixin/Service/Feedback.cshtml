@@ -1,0 +1,257 @@
+﻿@using Abp.Web.Mvc.Extensions
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "投诉建议";
+}
+
+@section styles
+{
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+        wx.config({
+            debug: false,  // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@(ViewData["AppId"])', // 必填，公众号的唯一标识
+            timestamp: '@(ViewData["Timestamp"])', // 必填，生成签名的时间戳
+            nonceStr: '@(ViewData["NonceStr"])', // 必填，生成签名的随机串
+            signature: '@(ViewData["Signature"])', // 必填，签名，见附录1
+            jsApiList: ['uploadImage', 'chooseImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+        wx.ready(function () {
+            $('#image-0').show();
+        });
+
+
+    </script>
+}
+
+@section scripts
+{
+
+    @Html.IncludeScript("~/Content/frontpage/js/lrz.bundle.js")
+
+    <script>
+
+
+        (function() {
+            $(function() {
+
+                //setTitle('ces');
+
+                console.log(location.href.split('#')[0]);
+
+                app.services.app.weixinService.getMyRooms()
+                    .done(function(result) {
+                        var html = '';
+                        $(result).each(function(idx, obj) {
+                            html += "<li  data-code='" + obj.pRoomCode + "' class='" +
+                                ((obj.isDefault) ? "am-active" : "")
+                                + "'><a href='javascript:void(0)' data-code='" + obj.pRoomCode + "' >" + obj.pRoomFullName + "</a></li>";
+                            if (obj.isDefault) {
+                                $("#room_selector").data('code', obj.pRoomCode);
+                                $("#room_selector").find('span[name="roomName"]').text(obj.pRoomFullName);
+                            }
+                        });
+                        $('#room_selector').find('ul').append(html);
+                    });
+
+                $("#room_selector").delegate('a', 'click', function(e) {
+                    e.preventDefault();
+                    var code = $(this).data('code');
+                    $("#room_selector").data('code', code);
+                    $("#room_selector").find('span[name="roomName"]').text($(this).text());
+                    $(this).parent().parent().find('li').removeClass('am-active');
+                    $(this).parent().attr('class', 'am-active');
+                    $('#room_selector').dropdown('close');
+                });
+
+                var imglist = new Array();
+                $('#image-0').click(function() {
+
+                    wx.chooseImage({
+                        success: function(res) {
+                            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                            if (imglist.length + localIds.length > 4) {
+                                abp.message.warn("最多上传4张图片!");
+                                return;
+                            }
+
+                            for (var i = 0; i < localIds.length; i++) {
+                                wx.uploadImage({
+                                    localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
+                                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                                    success: function(res) {
+                                        var serverId = res.serverId; // 返回图片的服务器端ID
+                                        $.post(
+                                            "/File/UploadImageFromWeixinJssdk",
+                                            { serverId: serverId },
+                                            function(result) {
+                                                console.log(result);
+                                                if (result.success) {
+                                                    var imageUrl = result.result.host + "/Upload/Images/" + result.result.fileName;
+                                                    var newImage = "<li data-url='" + imageUrl + "' ><img class='am-thumbnail'  src='" + imageUrl + "?width=128&height=128&mode=crop" + "' /></li>";
+                                                    $('#image-groups li').eq(0).before(newImage);
+                                                    if ($('#image-groups li').length >= 5) {
+                                                        $('#image-0').hide();
+                                                    }
+                                                } else {
+                                                    app.message.error(result.error.message);
+                                                }
+                                            });
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                });
+
+                $('#image-groups').delegate('li[data-url]', 'click', function(e) {
+                    e.preventDefault();
+                    var obj = $(this);
+                    app.message.confirm("确认移除图片", "询问", function(isConfirmed) {
+                        if (isConfirmed) {
+                            $(obj).remove();
+                            if ($('#image-groups li').length < 5) {
+                                $('#image-0').show();
+                            }
+                        }
+                    });
+                });
+
+
+                $('#submit').click(function(e) {
+                    e.preventDefault();
+
+                    var pRoomCode = $('#room_selector').data('code');
+                    var content = $('#content').val();
+                    var type = $('input[name="type"]:checked').val();
+                    console.log(type);
+
+
+                    var fileAddress = "";
+
+                    $('#image-groups li').each(function(idx, obj) {
+                        if (!$(obj).data('url')) return;
+                        if (fileAddress.length > 0)
+                            fileAddress += ";";
+                        fileAddress += $(obj).data('url');
+                    });
+
+                    if (!pRoomCode) {
+                        app.message.warn('请选择你的商铺!');
+                        return;
+                    }
+
+                    if (content === "") {
+                        $('#content').focus();
+                        app.message.warn('请输入投诉建议内容!');
+                        return;
+                    }
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.addService({ pRoomCode: pRoomCode, busiType: type, linkContent: content, fileAddress: fileAddress })
+                        .done(function (result) {
+
+                            if (result.success) {
+
+                                if (result.otherInfo != null) {
+                                    app.message.confirm1(result.otherInfo.msg, '投诉建议成功', "拨打电话", "确定", function (isConfirmed) {
+                                        if (isConfirmed) {
+                                            window.location.href = 'tel://' + result.otherInfo.tel;
+                                        }
+                                    });
+
+                                } else {
+                                    app.message.success('投诉建议成功', '成功', function () {
+                                        history.go(-1);
+                                    });
+                                }
+
+
+                            } else {
+                                app.message.warn(result.msg);
+                            }
+
+
+
+                            //app.message.success('投诉建议成功', '成功', function() {
+                            //    history.go(-1);
+                            //});
+
+                        }).always(function() {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+
+            });
+        })();
+
+    </script>
+}
+
+<div class="am-panel am-panel-default service-form">
+
+
+    <div class="am-g" style="padding-top: 10px; padding-left: 10px;padding-bottom: 10px">
+        <div class="am-u-sm-12" style="text-align: center">
+            <label class="am-checkbox am-warning  am-inline" style="font-size: 12px; margin-bottom: 0px">
+                <input type="radio" data-am-ucheck name="type" checked="checked" value="投诉">
+                投诉
+            </label>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <label class="am-checkbox am-warning am-inline" style="font-size: 12px; margin-bottom: 0px">
+                <input type="radio" data-am-ucheck name="type" value="建议">
+                建议
+            </label>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <label class="am-checkbox am-warning am-inline" style="font-size: 12px; margin-bottom: 0px">
+                <input type="radio" data-am-ucheck name="type" value="表扬">
+                表扬
+            </label>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <label class="am-checkbox am-warning am-inline" style="font-size: 12px; margin-bottom: 0px">
+                <input type="radio" data-am-ucheck name="type" value="咨询">
+                咨询
+            </label>
+        </div>
+    </div>
+
+
+
+    <div class="am-dropdown" data-am-dropdown="{justify: '#doc-dropdown-justify'}" style="width: 100%" id="room_selector">
+        <button style="width: 100%" class="am-btn am-btn-default  am-dropdown-toggle" data-am-dropdown-toggle>
+            <span name="roomName">请选择你的商铺</span>
+            <span class="am-icon-caret-down"></span>
+        </button>
+        <ul class="am-dropdown-content">
+            <li class="am-dropdown-header">我的商铺</li>
+        </ul>
+    </div>
+
+  
+    <div class="am-form-group service-form-input">
+        <textarea class="" rows="5" id="content" style="width: 100%; border: 0" placeholder="输入投诉建议内容，你可以输入10-500个字."></textarea>
+    </div>
+
+    <!--<hr/>-->
+
+
+    <ul class="am-avg-sm-4 service-form-uploadimages" id="image-groups" style="margin-bottom: 10px">
+
+        <li id="image-0" style="display: none">
+            <div class="am-form-group am-form-file ">
+                <img class="am-thumbnail" src="/Content/frontpage/i/shangchuan.png"/>
+            </div>
+        </li>
+    </ul>
+
+</div>
+<small class="service-form-tip">可上传1-4张现场图片(选填)</small>
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <button type="button"  class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">提交</button>
+    </div>
+</div>

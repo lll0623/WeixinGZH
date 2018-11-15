@@ -1,0 +1,425 @@
+﻿@using Abp.Application.Services.Dto
+@model LesoftWuye2.Application.Malls.Dto.GrouponDetail
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "拼团商品详情";
+    bool isyz = (bool)ViewData["isyz"];
+    string host = ViewData["host"].ToString();
+}
+
+@section styles
+{
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+        wx.config({
+            debug: false,  
+            appId: '@(ViewData["AppId"])', 
+            timestamp: '@(ViewData["Timestamp"])', 
+            nonceStr: '@(ViewData["NonceStr"])', 
+            signature: '@(ViewData["Signature"])', 
+            jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] 
+        });
+
+        wx.ready(function () {
+
+            var shareConfig = {
+                title: '@(Model.Name)', 
+                desc: '@Model.Summary.Replace(Environment.NewLine,"")', 
+                link: '@host/weixin/mall/groupon/view?id=@Model.Id', 
+                imgUrl: '@host@(Model.Thumbnail)?width=200&height=200&mode=crop', 
+                success: function() {
+                    app.message.success('分享成功!');
+                },
+                cancel: function() {
+                    app.message.warn('您取消了分享!');
+                }
+            };
+
+            wx.onMenuShareAppMessage(shareConfig);
+            wx.onMenuShareTimeline(shareConfig);
+        });
+
+
+    </script>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function() {
+            $(function() {
+
+                var joinGrouponId = 0;
+                var isExpire = @(Model.IsExpire ? "true" : "false");
+
+                $('#open-buy-modal').click(function() {
+                    $('#buy-modal').modal();
+                });
+
+                $('#open-groupon-modal').click(function() {
+                    if (!isExpire) {
+                        joinGrouponId = 0;
+                        $('#groupon-modal').modal();
+                    }
+                });
+
+                $('#buy-modal button.add').click(function() {
+                    var num = parseInt($('#buy-modal input[type=number]').val());
+                    $('#buy-modal input[type=number]').val(++num);
+                });
+                $('#buy-modal button.remove').click(function() {
+                    var num = parseInt($('#buy-modal input[type=number]').val());
+                    if (num > 1)
+                        $('#buy-modal input[type=number]').val(--num);
+                });
+                $('#buy-modal button.submit').click(function() {
+                    var num = parseInt($('#buy-modal input[type=number]').val());
+                    window.location.href = '/weixin/mall/groupon/submit?id=@(Model.Id)&type=1&num=' + num;
+                });
+
+
+                $('#groupon-modal button.add').click(function() {
+                    var num = parseInt($('#groupon-modal input[type=number]').val());
+                    $('#groupon-modal input[type=number]').val(++num);
+                });
+                $('#groupon-modal button.remove').click(function() {
+                    var num = parseInt($('#groupon-modal input[type=number]').val());
+                    if (num > 1)
+                        $('#groupon-modal input[type=number]').val(--num);
+                });
+                $('#groupon-modal button.submit').click(function() {
+                    var num = parseInt($('#groupon-modal input[type=number]').val());
+                    window.location.href = '/weixin/mall/groupon/submit?id=@(Model.Id)&type=0&num=' + num + "&joinGrouponId=" + joinGrouponId;
+                });
+
+                $("button.join-groupon").click(function() {
+                    var grouponId = $(this).data('id');
+                    window.location.href = '/weixin/mall/groupon/order?id=' + grouponId;
+                });
+
+                $('#share').click(function() {
+                    app.message.info('使用右上角『发送给朋友』,『分享到朋友圈』');
+                });
+
+                $('#like').click(function() {
+                    app.services.app.weixinService.likeProduct('@(Model.ProductId)').done(function(result) {
+                        app.message.success('收藏成功', '成功', function() {
+                            window.location.reload();
+                        });
+                    });
+                });
+
+                $('#unlike').click(function() {
+                    app.services.app.weixinService.unLikeProduct('@(Model.ProductId)').done(function(result) {
+                        app.message.success('取消收藏成功', '成功', function() {
+                            window.location.reload();
+                        });
+                    });
+                });
+
+                $('#open-grouponDescription-popup').click(function() {
+                    $('#GrouponDescription-popup').modal();
+                });
+            });
+        })();
+
+
+    </script>
+}
+
+<div data-am-widget="gotop" class="am-gotop am-gotop-fixed">
+    <a href="#top" title="回到顶部">
+        <span class="am-gotop-title">回到顶部</span>
+        <i class="am-gotop-icon am-icon-chevron-up"></i>
+    </a>
+</div>
+
+<div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{"directionNav":false}' style="z-index: 1">
+    <ul class="am-slides">
+        @{
+            foreach (var image in Model.SlideImages)
+            {
+                <li>
+                    <img src="@(image)?width=640&height=400&mode=crop">
+                </li>
+            }
+        }
+    </ul>
+</div>
+<div class="am-g bar" style="margin-bottom: 0px; margin-top: 10px">
+    <div class="am-u-sm-12">
+        <small style="color: #7E7E7E;">特惠价:￥@(Model.SalePrice)</small>
+        <span style="color: #ff6600;">拼团价:<strong>￥@(Model.Price)</strong></span>
+        <small class="am-fr " style="color: #7E7E7E; margin-top: 3px">累计销售@(Model.SellCount)@(Model.Unit)</small>
+    </div>
+</div>
+
+<hr data-am-widget="divider" style="margin-top: 5px;margin-bottom: 5px" class="am-divider am-divider-default" />
+
+<p style="margin-left: 10px; margin-right: 10px; margin-top: 0px; margin-bottom: 5px; color: black;font-size: 18px">@(Model.Name)</p>
+<p style="color: #7E7E7E; margin-left: 10px; margin-right: 10px; margin-top: 0px; font-size: 13px">
+    @(Model.Summary)
+</p>
+
+
+<div class="am-g" style="background-color: #F5F5F5; padding: 5px; padding-left: 10px">
+    @{
+        foreach (var tag in Model.Tags)
+        {
+            <span style="color: #ff6600;font-size: 13px" class="am-icon-check-circle"> </span>
+            <span style="color: #7E7E7E; font-size: 13px; margin-left: 2px; margin-right: 10px">@(tag)</span>
+        }
+    }
+</div>
+
+
+<hr data-am-widget="divider" style="margin-top: 5px;margin-bottom: 5px" class="am-divider am-divider-default" />
+
+<div class="am-g" style="padding: 5px; padding-left: 5px">
+    <span style="color: #7E7E7E; font-size: 12px">支付开团并邀请 @(Model.RequireCount - 1) 人参团，人数不足自动退款</span>
+    <a class="am-fr " id="open-grouponDescription-popup" style="color: #ff6600; font-size: 12px; margin-top: 5px">拼团玩法</a>
+</div>
+<hr data-am-widget="divider" style="margin-top: 5px;margin-bottom: 5px" class="am-divider am-divider-default" />
+@{
+
+    if (Model.GrouponingItems.Count > 0)
+    {
+
+        <div class="am-g" style="background-color: #F5F5F5; padding: 5px; padding-left: 10px">
+            <span style="font-size: 15px">以下小伙伴正在发起团购，您可以直接参与</span>
+        </div>
+
+        <div class="am-panel am-panel-default">
+            <div class="am-panel-bd">
+                @{
+                    var idx = 0;
+                    foreach (var item in Model.GrouponingItems)
+                    {
+                        if (idx++ > 0)
+                        {
+                            <hr data-am-widget="divider" style="" class="am-divider am-divider-dashed" />
+                        }
+
+                        <div class="am-g" style="margin-bottom: 0px">
+                            <div class="am-u-sm-2" style="padding-left: 0px">
+                                <img class="am-circle" src="@item.Thumbnail" width="50" height="50" />
+                            </div>
+
+                            <div class="am-u-sm-7" style="min-height: 30px;">
+
+                                <strong style="font-size: 12px; color: black;">@item.Name</strong>
+                                <span style="font-size: 12px; margin-top: 3px; color: red; float: right">还差@(item.RequireCount)人成团</span>
+                                <br style="line-height: 10px" />
+                                <span style="font-size: 12px; color: gray">@item.BindRooms</span>
+                                <span style="font-size: 12px; margin-top: 3px; color: gray; float: right">剩余@(item.LostTime)结束</span>
+
+                            </div>
+                            <div class="am-u-sm-3" style="margin-top: 10px;">
+                                <button type="button" style="font-size: 13px; margin-left: -5px" data-id="@item.Id" class="am-btn am-btn-warning am-round join-groupon">去参团 &nbsp;<span class="am-icon-play"></span></button>
+                            </div>
+                        </div>
+
+
+
+                    }
+                }
+            </div>
+        </div>
+
+        <hr data-am-widget="divider" style="margin-top: 5px;margin-bottom: 5px" class="am-divider am-divider-default" />
+                    }
+}
+
+
+@{
+    if (Model.Comments.Count > 0)
+    {
+        <div class="am-g" style="background-color: #F5F5F5; padding: 5px; padding-left: 10px">
+            <span style="color: #7E7E7E; font-size: 12px">用户评价</span>
+            <a class="am-fr" href="/weixin/mall/groupon/comments?id=@(Model.ProductId)" style="color: #7E7E7E; font-size: 12px; margin-top: 5px">共@(Model.CommentCount)条评价>></a>
+        </div>
+        <div class="am-panel am-panel-default">
+            @{
+                foreach (var item in Model.Comments)
+                {
+                    <div class="am-panel am-panel-default portal-list-item" style="padding: 5px; margin: 5px; border-color: white; margin-top: 5px">
+
+                        <div class="am-g">
+                            <div class="am-u-sm-2" style="padding: 0px">
+                                <img class="am-circle" src="@item.Thumbnail" style="width: 40px; height: 40px" />
+                            </div>
+                            <div class="am-u-sm-10" style="padding: 0px">
+                                <p style="color: black; font-size: 13px; margin-bottom: 5px">@item.Name</p>
+                                <p style="color: gray; font-size: 13px; margin-bottom: 5px; margin-top: 5px">@item.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                            </div>
+                        </div>
+                        <hr data-am-widget="divider" style="margin-top: 5px; margin-bottom: 5px" class="am-divider am-divider-dashed" />
+                        <span>@item.Content</span>
+                    </div>
+                }
+            }
+        </div>
+                }
+}
+
+
+
+<div class="am-article-bd" style="margin-bottom: 100px;padding: 10px">
+    @(Html.Raw(Model.Content))
+</div>
+
+
+<div class="am-g" style="border: 1px; position: fixed; bottom: 0; background-color: white">
+    <div class="am-u-sm-5" style="padding: 0px">
+        <ul class="am-avg-sm-3 ">
+            <li style="padding: 2px; text-align: center; border-right-width: 1px; border-right-color: #E1E1E1; border-right-style: solid">
+                <a href="/weixin/mall">
+                    <img class="am-thumbnail" src="/Content/mall/i/pingtuan_bar_home.png" style="border: none; margin-left: 6px; margin-bottom: 0px; width: 35px; height: 35px; text-align: center" />
+                    <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">首页</figcaption>
+                </a>
+            </li>
+            <li style="padding: 2px; text-align: center; border-right-width: 1px; border-right-color: #E1E1E1; border-right-style: solid">
+                <a id="@(!Model.IsLike?"like":"unlike")">
+                    <img class="am-thumbnail" src="/Content/mall/i/pingtuan_bar_sc.png" style="border: none; margin-left: 6px; margin-bottom: 0px; width: 35px; height: 35px; text-align: center" />
+                    <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">@(Model.IsLike ? "取消" : "收藏")</figcaption>
+                </a>
+            </li>
+            <li style="padding: 2px; text-align: center;">
+                <a id="share">
+                    <img class="am-thumbnail" src="/Content/mall/i/pingtuan_bar_share.png" style="border: none; margin-left: 6px; margin-bottom: 0px; width: 35px; height: 35px; text-align: center" />
+                    <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">邀请</figcaption>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="am-u-sm-7" style="padding: 0px">
+        <ul class="am-avg-sm-2">
+            <li style="padding: 2px; text-align: center; background-color: #FF9A66; display: block">
+                <a id="open-buy-modal">
+                    <p style="font-size: 15px; color: white; margin-bottom: 3px; margin-top: 3px" id="bottomPrice">￥@(isyz ? Model.MemberPrice : Model.SalePrice)</p>
+                    <figcaption class="am-thumbnail-caption" style="font-size: 15px; color: white; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">直接购买</figcaption>
+                </a>
+            </li>
+            <li style="padding: 2px; text-align: center; background-color: #ff6600; display: block">
+                <a id="open-groupon-modal">
+                    @{
+                        if (Model.IsExpire)
+                        {
+                            <p style="font-size: 15px; color: white; margin-bottom: 3px; margin-top: 3px">拼团无效</p>
+                        }
+                        else
+                        {
+                            <p style="font-size: 15px; color: white; margin-bottom: 3px; margin-top: 3px">￥@(Model.Price)</p>
+                        }
+                    }
+
+                    <figcaption class="am-thumbnail-caption" style="font-size: 15px; color: white; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">@(Model.RequireCount)人团</figcaption>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+<div class="am-modal-actions" id="groupon-modal" style="background-color: white">
+    <div class="am-modal-actions-group" style="margin: 0px">
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-top: 10px">
+
+            <div class="am-u-sm-5 am-list-thumb" style="padding: 0px">
+                <img class="am-thumbnail" src="@(Model.Thumbnail)?width=200&height=200&mode=crop" style="border: none; margin: 5px; width: 150px; height: 150px; text-align: center" />
+            </div>
+
+            <div class="am-u-sm-7 am-list-main">
+                <span data-am-modal-close class="am-close" style="font-size: 40px; color: #ff6600; float: right">&times;</span>
+                <p class="am-list-item-hd" style="text-align: left; height: 100px; overflow: hidden; word-wrap: break-word; margin-bottom: 10px">@(Model.Name)</p>
+                <div class="am-list-item-text" style="text-align: left"><span style="color: #ff6600; font-size: 20px">￥@(Model.Price)</span></div>
+                <div class="am-list-item-text" style="text-align: left"><span style="color: #7E7E7E; font-size: 15px">参团购买</span></div>
+            </div>
+        </div>
+        <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+        <div class="am-g" style="border: 1px; background-color: white">
+            <div class="am-u-sm-4" style="padding-top: 6px;">
+                <span style="color: black; margin-top: 5px; text-align: left">购买数量</span>
+            </div>
+            <div class="am-u-sm-8">
+                <div class="am-input-group" style="width: 120px; float: right">
+                    <span class="am-input-group-btn">
+                        <button class="am-btn am-btn-default remove" type="button"><i class="am-icon-minus"></i></button>
+                    </span>
+                    <input type="number" class="am-form-field" style="width: 50px; text-align: center" value="1">
+                    <span class="am-input-group-btn">
+                        <button class="am-btn am-btn-default add" type="button"><i class="am-icon-plus"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+        <div class="am-g" style="border: 1px; background-color: white; margin-bottom: 10px">
+            <button type="button" style="text-align: center" class="am-btn am-btn-warning am-radius submit">确 认</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="am-modal-actions" id="buy-modal" style="background-color: white">
+    <div class="am-modal-actions-group" style="margin: 0px">
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-top: 10px">
+
+            <div class="am-u-sm-5 am-list-thumb" style="padding: 0px">
+                <img class="am-thumbnail" src="@(Model.Thumbnail)?width=200&height=200&mode=crop" style="border: none; margin: 5px; width: 150px; height: 150px; text-align: center" />
+            </div>
+
+            <div class="am-u-sm-7 am-list-main">
+                <span data-am-modal-close class="am-close" style="font-size: 40px; color: #ff6600; float: right">&times;</span>
+                <p class="am-list-item-hd" style="text-align: left; height: 100px; overflow: hidden; word-wrap: break-word; margin-bottom: 10px">@(Model.Name)</p>
+                <div class="am-list-item-text" style="text-align: left"><span style="color: #ff6600; font-size: 20px" id="buyPrice">￥@(isyz ? Model.MemberPrice : Model.SalePrice)</span></div>
+                <div class="am-list-item-text" style="text-align: left"><span style="color: #7E7E7E; font-size: 15px">直接购买</span></div>
+            </div>
+        </div>
+        <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+        <div class="am-g" style="border: 1px; background-color: white">
+            <div class="am-u-sm-4" style="padding-top: 6px;">
+                <span style="color: black; margin-top: 5px; text-align: left">购买数量</span>
+            </div>
+            <div class="am-u-sm-8">
+                <div class="am-input-group" style="width: 120px; float: right">
+                    <span class="am-input-group-btn">
+                        <button class="am-btn am-btn-default remove" type="button"><i class="am-icon-minus"></i></button>
+                    </span>
+                    <input type="number" class="am-form-field" style="width: 50px; text-align: center" value="1">
+                    <span class="am-input-group-btn">
+                        <button class="am-btn am-btn-default add" type="button"><i class="am-icon-plus"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+        <div class="am-g" style="border: 1px; background-color: white; margin-bottom: 10px">
+            <button type="button" style="text-align: center" class="am-btn am-btn-warning am-radius submit">确 认</button>
+        </div>
+    </div>
+</div>
+
+<div class="am-popup" id="GrouponDescription-popup">
+    <div class="am-popup-inner">
+        <div class="am-popup-hd">
+            <h4 class="am-popup-title">拼团玩法</h4>
+            <span data-am-modal-close style="color:#ff6600 "
+                  class="am-close">&times;</span>
+        </div>
+        <div class="am-popup-bd">
+            @(Html.Raw(ViewData["GrouponDescription"]))
+        </div>
+    </div>
+</div>

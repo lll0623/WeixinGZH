@@ -1,0 +1,275 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Rentsaleinfos
+@using LesoftWuye2.Application.Rentsaleinfos
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Rentsaleinfos.Dto.RentsaleinfoListDto>
+@{
+    ViewBag.ActiveMenu = "Rentsaleinfos";
+    ViewBag.Title = "租售信息";
+    List<ComboboxItemDto> types = ViewData["types"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+    string typesJson = "{ 'id': '', 'text': '所有类型' }";
+    foreach (var type in types)
+    {
+        typesJson += ",{ 'id': '" + type.Value + "', 'text': '" + type.DisplayText + "' }";
+    }
+    typesJson = "[" + typesJson + "]";
+
+}
+
+
+@section styles{
+    @Html.IncludeStyle("~/Content/js/viewer/css/viewer.min.css")
+    <style>
+        #images img {
+            margin-right: 10px;
+        }
+    </style>
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/viewer/js/viewer.min.js")
+    @Html.IncludeScript("~/Content/js/file-input/bootstrap-filestyle.min.js")
+    @Html.IncludeScript("~/Content/js/ajaxfileupload.js")
+@Html.IncludeScript("~/Content/js/kindeditor/kindeditor-min.js")
+@Html.IncludeScript("~/Content/js/kindeditor/lang/zh_CN.js")
+    @Html.IncludeScript("~/Views/Rentsaleinfos/Index.js")
+
+}
+
+
+
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">租售信息管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.Rentsaleinfos.Create" data-toggle="modal" data-target="#RentsaleinfoCreateModal"><i class="fa fa-plus"></i>添加租售信息</button>
+                </div>
+            </div>
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])" data-types="@Html.Raw(typesJson)"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 50px" class='center'>来源</th>
+                                <th style="width: 50px" class='center'>类型</th>
+                                <th>标题</th>
+                                <th style="width: 70px" class='center'>联系人</th>
+                                <th style="width: 70px" class='center'>联系电话</th>
+                                <th style="width: 70px" class='center'>上架状态</th>
+                                <th style="width: 70px" class='center'>审核状态</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 200px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var rentsaleinfo in Model.Items)
+                            {
+                                <tr>
+                                    <td class='center'>@rentsaleinfo.SourceDesc</td>
+                                    <td class='center'>@rentsaleinfo.Type_Name</td>
+                                    <td>@rentsaleinfo.Title</td>
+                                    <td class='center'>@rentsaleinfo.Contact</td>
+                                    <td class='center'>@rentsaleinfo.Mobile</td>
+                                    <td class='center'>
+                                        @if (rentsaleinfo.IsSale)
+                                        {
+                                            <span class='label label-success'>上架</span>
+                                        }
+                                        else
+                                        {
+                                            <span class='label label-default'>下架</span>
+                                        }
+                                    </td>
+                                    <td class='center'>
+                                        @if (rentsaleinfo.IsShow)
+                                        {
+                                            <span class='label label-success'>显示</span>
+                                        }
+                                        else
+                                        {
+                                            <span class='label label-default'>隐藏</span>
+                                        }
+                                    </td>
+                                    <td class="center">@rentsaleinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        @if (rentsaleinfo.IsShow)
+                                        {
+                                            <a data-role-name="Pages.Rentsaleinfos.Update" data-role="hide-row" data-id="@(rentsaleinfo.Id)" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i>隐藏</a>
+                                        }
+                                        else
+                                        {
+                                            <a data-role-name="Pages.Rentsaleinfos.Update" data-role="show-row" data-id="@(rentsaleinfo.Id)" class="btn btn-default btn-xs"><i class="fa fa-eye"></i>显示</a>
+                                        }
+                                        <a data-role-name="Pages.Rentsaleinfos.Update" data-role="update-row" data-id="@(rentsaleinfo.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.Rentsaleinfos.Delete" data-role="delete-row" data-id="@(rentsaleinfo.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div class="modal fade" id="RentsaleinfoCreateModal" tabindex="-1" role="dialog" aria-labelledby="RentsaleinfoCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary  modal-lg" role="document">
+        <div class="modal-content">
+            <form name="rentsaleinfoCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <input type="hidden" name="memberId" value="0"/>
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加租售信息</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class='form-group'>
+                                <label label-for='title'>标题<span class='required'>*</span></label><input class='form-control' type='text' name='title' required maxlength='@LesoftWuye2.Core.Rentsaleinfos.Rentsaleinfo.MaxTitleLength'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px">
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='type'>类型<span class='required'>*</span></label>
+                                <select style="width: 100%;" class="select2" name="rentsaleinfoTypeId" id="type_create" required data-placeholder="点击选择类型">
+                                    <option value=""></option>
+                                    @{
+
+                                        foreach (var itemDto in types)
+                                        {
+                                            <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='contact'>联系人<span class='required'>*</span></label><input class='form-control' type='text' name='contact' required maxlength='@LesoftWuye2.Core.Rentsaleinfos.Rentsaleinfo.MaxTitleLength'>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='mobile'>联系电话<span class='required'>*</span></label><input class='form-control' type='text' name='mobile' required maxlength='@LesoftWuye2.Core.Rentsaleinfos.Rentsaleinfo.MaxTitleLength'>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label>缩略图</label>
+                        <br />
+                        <input type="hidden" name="thumbnail" id="thumbnail" data-role="excluded">
+                        <img src="/Content/img/placehold/160x100.png" id="thumbnailImg" style="width: 160px; height: 100px" />
+                        &nbsp;&nbsp;<input id="uploadImage" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader.ajaxupload();">
+                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage" onclick="tUploader.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>内容<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="create_content" style="height: 300px; width: 100%; visibility: hidden;"></textarea>
+                    </div>
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="RentsaleinfoUpdateModal" tabindex="-1" role="dialog" aria-labelledby="RentsaleinfoCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+            <form name="rentsaleinfoUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-eye">&nbsp;</i>修改租售信息</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class='form-group'>
+                                <label label-for='title'>标题<span class='required'>*</span></label><input class='form-control' type='text' name='title' required maxlength='@LesoftWuye2.Core.Rentsaleinfos.Rentsaleinfo.MaxTitleLength'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px">
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='type'>类型<span class='required'>*</span></label>
+                                <select style="width: 100%;" class="select2" name="rentsaleinfoTypeId" id="type_update" required data-placeholder="点击选择类型">
+                                    <option value=""></option>
+                                    @{
+
+                                        foreach (var itemDto in types)
+                                        {
+                                            <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='contact'>联系人<span class='required'>*</span></label><input class='form-control' type='text' name='contact' required maxlength='@LesoftWuye2.Core.Rentsaleinfos.Rentsaleinfo.MaxTitleLength'>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class='form-group'>
+                                <label label-for='mobile'>联系电话<span class='required'>*</span></label><input class='form-control' type='text' name='mobile' required maxlength='@LesoftWuye2.Core.Rentsaleinfos.Rentsaleinfo.MaxTitleLength'>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label>缩略图</label>
+                        <br/>
+                        <input type="hidden" name="thumbnail" id="thumbnail2" data-role="excluded">
+                        <img src="/Content/img/placehold/160x100.png" id="thumbnailImg2" style="width: 160px; height: 100px"/>
+                        &nbsp;&nbsp;<input id="uploadImage2" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader2.ajaxupload();">
+                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage2" onclick="tUploader2.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+
+                    </div>
+
+             
+                    <div class="form-group">
+                        <label>内容<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="update_content" style="height: 300px; width: 100%; visibility: hidden;"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

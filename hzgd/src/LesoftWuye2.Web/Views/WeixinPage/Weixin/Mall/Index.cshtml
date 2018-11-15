@@ -1,0 +1,168 @@
+﻿@using Abp.Application.Services.Dto
+@model LesoftWuye2.Application.Malls.Dto.MallHomeData
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "商城";
+}
+
+@section styles
+{
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                
+            });
+        })();
+
+    </script>
+}
+
+<div data-am-widget="gotop" class="am-gotop am-gotop-fixed">
+    <a href="#top" title="回到顶部">
+        <span class="am-gotop-title">回到顶部</span>
+        <i class="am-gotop-icon am-icon-chevron-up"></i>
+    </a>
+</div>
+
+<div data-am-widget="slider" class="am-slider am-slider-a1" data-am-slider='{"directionNav":false}' style="z-index: 1">
+    <ul class="am-slides">
+        @{
+            foreach (var image in Model.SlideImages)
+            {
+                <li>
+                    <a href="@(string.IsNullOrEmpty(image.Url) ? "javascript:void(0);" : image.Url)">
+                        <img src="@(image.Thumbnail)?width=640&height=300&mode=crop">
+                    </a>
+
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+<div style="margin-top: 10px; margin-bottom: 10px">
+    <ul class="am-avg-sm-5 ">
+        <li style="padding: 2px; text-align: center;">
+            <a href="/weixin/mall/groupon/list">
+                <img class="am-thumbnail" src="/Content/mall/i/拼团.png" style="border: none; margin-left: 2px; margin-bottom: 0px; text-align: center; padding-left: 15px; padding-right: 15px"/>
+                <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">拼团</figcaption>
+            </a>
+        </li>
+
+        <li style="padding: 2px; text-align: center;">
+            <a href="/weixin/mall/waiting">
+                <img class="am-thumbnail" src="/Content/mall/i/家政.png" style="border: none; margin-left: 2px; margin-bottom: 0px; text-align: center; padding-left: 15px; padding-right: 15px"/>
+                <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">家政</figcaption>
+            </a>
+        </li>
+
+        <li style="padding: 2px; text-align: center;">
+            <a href="/weixin/rentsaleinfo/list">
+                <img class="am-thumbnail" src="/Content/mall/i/房屋出售.png" style="border: none; margin-left: 2px; margin-bottom: 0px; text-align: center; padding-left: 15px; padding-right: 15px"/>
+                <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">房屋租售</figcaption>
+            </a>
+        </li>
+
+        <li style="padding: 2px; text-align: center;">
+            <a href="/weixin/estateinfo/list">
+                <img class="am-thumbnail" src="/Content/mall/i/跳蚤市场.png" style="border: none; margin-left: 2px; margin-bottom: 0px; text-align: center; padding-left: 15px; padding-right: 15px"/>
+                <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">跳蚤市场</figcaption>
+            </a>
+        </li>
+
+        <li style="padding: 2px; text-align: center;">
+            <a href="/weixin/mall/waiting">
+                <img class="am-thumbnail" src="/Content/mall/i/周边商圈.png" style="border: none; margin-left: 2px; margin-bottom: 0px; text-align: center; padding-left: 15px; padding-right: 15px"/>
+                <figcaption class="am-thumbnail-caption" style="font-size: 12px; color: #7E7E7E; margin-bottom: 0px; margin-top: 0px; padding-top: 0px; padding-bottom: 0px">周边商圈</figcaption>
+            </a>
+        </li>
+    </ul>
+</div>
+
+@{
+    if (!string.IsNullOrEmpty(ViewData["AdImage"].ToString()))
+    {
+        <div>
+            <a href="@(string.IsNullOrEmpty(ViewData["AdUrl"].ToString())?"javascript:void(0);":ViewData["AdUrl"])">
+                <img src="@(ViewData["AdImage"])?width=640&height=150&mode=crop" style="width: 100%" />    
+            </a>
+            
+        </div>
+    }
+}
+
+
+
+<div class="am-g" style="background: #EFEFEF;">
+
+    @{
+        foreach (var item in Model.Groupons)
+        {
+
+            <div class="am-u-sm-6" style="padding: 0">
+                <div class="am-panel am-panel-default portal-list-item" style="padding: 2px; margin: 2px; border-color: white; margin-top: 5px">
+                    <a href="/weixin/mall/groupon/view?id=@(item.Id)">
+                        <img src="@(item.Thumbnail)?width=400&height=400&mode=crop" style="width: 100%"/>
+                        <p class="goods-name" style="height: 42px; overflow: hidden; word-wrap: break-word; color: black; font-size: 13px">@(item.Name)</p>
+                        <div class="am-g bar" style="margin-bottom: 10px; margin-left: 0px; margin-right: 0px">
+
+                            <span style="color: #ff6600">￥@(item.Price)</span>
+                            <a style="color: white; margin-right: 15px" href="/weixin/mall/groupon/view?id=@(item.Id)" class="am-btn am-radius am-btn-xs am-btn-warning am-fr">去开团&nbsp;<i class="am-icon-chevron-right "></i></a>
+
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+@{
+    if (!string.IsNullOrEmpty(ViewData["AdImage2"].ToString()))
+    {
+        <div>
+            <a href="@(string.IsNullOrEmpty(ViewData["AdUrl2"].ToString())?"javascript:void(0);":ViewData["AdUrl2"])">
+                <img src="@(ViewData["AdImage2"])?width=640&height=150&mode=crop" style="width: 100%" />
+            </a>
+
+        </div>
+    }
+}
+
+
+@*<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default " id="">
+    <ul class="am-navbar-nav am-cf am-avg-sm-3" style="background-color: white">
+        <li>
+            <a href="/weixin/index" class="" style="color: black">
+                <img src="/Content/frontpage/i/toobar/icon_work_normal.png" alt="消息" />
+                <span class="am-navbar-label">物业服务</span>
+            </a>
+        </li>
+        <li>
+            <a href="/weixin/mall" style="color:  #ff6600">
+                <img src="/Content/frontpage/i/toobar/icon_mall_pressed.png" alt="呼叫" />
+                <span class="am-navbar-label">置信商城</span>
+            </a>
+        </li>
+        <li>
+            <a href="/weixin/my" style="color: black">
+                <img src="/Content/frontpage/i/toobar/icon_myself_normal.png" alt="分享" />
+                <span class="am-navbar-label">我的</span>
+            </a>
+        </li>
+    </ul>
+</div>*@

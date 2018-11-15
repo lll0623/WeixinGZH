@@ -1,0 +1,480 @@
+﻿@model LesoftWuye2.Application.Newss.Dto.NewsItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "工单详情";
+}
+
+@section styles
+{
+    <link   rel="stylesheet" type="text/css" href="/Content/frontpage/js/jquery-star-rating/rating.css"/>
+    <style>
+        .am-article-meta {
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+        .field-title {
+            color: gray;
+            font-size: 13px;
+        }
+        .field-value {
+            margin-left: 10px;
+            color: black;
+            font-size: 13px;
+        }
+        .field-item {
+            border-width: 0 0 1px 0;
+            border-style: solid;
+            border-color: lightgray;
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/Content/frontpage/js/jquery-star-rating/rating.js"></script>
+    <script>
+        (function() {
+            $(function() {
+
+                var selectVote = 0; //评分
+                var progress = $.AMUI.progress;
+                var loadRooms = function() {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getEventInfo('@(ViewData["EType"])', '@(ViewData["EDType"])', '@(ViewData["BillCode"])').done(function(result) {
+                        if (result.success) {
+                            $('#billCode').text(result.info.billCode);
+                            $('#pRoomCode').text(result.info.pRoomCode);
+                            $('#state').text(result.info.state);
+                            $('#date').text(result.info.date);
+                            $('#content').text(result.info.content);
+
+                            if (result.info.file != null) {
+                                $('#files').show();
+                            }
+
+                            if (result.info.returnVisitDate !== '') {
+                                $('#returns').show();
+                            }
+                            $('#returnVisitDate').text(result.info.returnVisitDate);
+                            $('#returnVisitMan').text(result.info.returnVisitMan);
+                            $('#returnVisitResult').text(result.info.returnVisitResult);
+                            $('#returnVisitCustSuggest').text(result.info.returnVisitCustSuggest);
+
+                            $('#isProject').text(result.info.isProject);
+                            $('#handelSugg').text(result.info.handelSugg);
+
+                            $('#sendDate').text(result.info.sendDate);
+                            $('#sendMan').text(result.info.sendMan);
+                            $('#receiveDate').text(result.info.receiveDate);
+                            $('#receiveMan').text(result.info.receiveMan);
+                            $('#receiveMan-1').text(result.info.receiveMan);
+                            $('#arriveDate').text(result.info.arriveDate);
+                            $('#rBDate').text(result.info.rBDate);
+                            $('#rEDate').text(result.info.rEDate);
+                            $('#rEDate-1').text(result.info.rEDate);
+                            $('#repaireHour').text(result.info.repaireHour);
+                            $('#feeCount').text(result.info.feeCount);
+                            $('#materialFee').text(result.info.materialFee);
+                            $('#laborFee').text(result.info.laborFee);
+                            $('#otherFee').text(result.info.otherFee);
+                            $('#repaireType').text(result.info.repaireType);
+                            $('#completeMemo').text(result.info.completeMemo);
+                            $('#completeMemo-1').text(result.info.completeMemo);
+
+                            //msg
+
+                            var html = template('commentItemHtml', { items: result.info.msgList });
+                            document.getElementById('commentItem-list').innerHTML = html;
+
+
+                            progress.done(true);
+                            $('#main-container').show();
+                            if (result.info.state == '待评价') {
+                                $('#returnVisitNo').show();
+                                $('#returnVisitDiv').show();
+                                openPingjia();
+                            }
+
+                            if (result.info.state == '已评价') {
+                                $('#returnVisitInfo').show();
+                                $('#returnVisitDiv').show();
+                            }
+
+                            if (result.info.busiType == '报修') {
+                                $('#repair-div').show();
+                                $('#repair-div-2').show();
+                                $('#feedback-div').hide();
+                            } else {
+                                $('#repair-div').hide();
+                                $('#repair-div-2').hide();
+                                $('#feedback-div').show();
+                            }
+
+
+                        } else {
+                            progress.done(true);
+                            app.message.warn(result.msg);
+                        }
+                    });
+                };
+
+                loadRooms();
+
+
+                $('#add-message').click(function() {
+                    $('#modal-add-message').modal();
+                    $('#add-message-content').focus();
+                });
+
+                $('#submit-message').click(function() {
+
+                    var billcode = '@(ViewData["BillCode"])';
+                    var chartinfo = $('#add-message-content').val();
+                    if (chartinfo.length <= 0) {
+                        app.message.warn("留言内容不能为空!");
+                        return;
+                    }
+
+
+                    app.services.app.weixinService.addLinkBillMemberMSG(billcode, chartinfo).done(function(result) {
+                        if (result.success) {
+                            //app.message.success('留言成功', '成功', function() {
+                            window.location.reload();
+                            //});
+                        } else {
+                            app.message.warn(result.msg);
+                            return;
+
+                        }
+                    });
+
+                });
+
+                var openPingjia = function() {
+                    $('#modal-pingjia').modal();
+
+                };
+
+                $('#pingjia').click(function() {
+                    openPingjia();
+                });
+
+                $('#submit-pingjia').click(function() {
+
+                    var billcode = '@(ViewData["BillCode"])';
+                    var suggest = $('#pingjia-message').val();
+                    var evalLevel = selectVote;
+                    if (evalLevel == 0 || evalLevel > 5) {
+                        app.message.warn("请选择评分!");
+                        return;
+                    }
+
+                    app.services.app.weixinService.updateLinkBillEvaluation(billcode, evalLevel, suggest).done(function(result) {
+                        if (result.success) {
+                            //app.message.success('评价成功', '成功', function() {
+                            app.reloadPage();
+                            //});
+                        } else {
+                            app.message.warn(result.msg);
+                            return;
+
+                        }
+                    });
+
+                });
+
+
+                $('.container').rating(function(vote, event) {
+                    var desc = "";
+                    selectVote = parseInt(vote);
+                    switch (vote) {
+                    case "1":
+                        desc = "非常不满意，各方面都很差";
+                        break;
+                    case "2":
+                        desc = "不满意，比较差";
+                        break;
+                    case "3":
+                        desc = "一般，还需改善";
+                        break;
+                    case "4":
+                        desc = "比较满意，然可改善";
+                        break;
+                    case "5":
+                        desc = "非常满意，无可挑剔";
+                        break;
+                    }
+
+                    $('#pingjia-desc').text(desc);
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+
+<div class="am-panel am-panel-default" style="margin: 5px">
+    <div class="am-panel-bd" style="padding: 10px">
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">单据编号</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="billCode"></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">联系时间</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="date"></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">业户地址</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="pRoomCode"></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">联系内容</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="content"></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">工单状态</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" style="color: green" id="state"></span></div>
+        </div>
+    </div>
+</div>
+
+<div class="am-panel am-panel-default" style="margin: 5px; border: none">
+    <div class="am-panel-bd" style="padding: 0px">
+        <section data-am-widget="accordion" class="am-accordion am-accordion-gapped" data-am-accordion='{  }' style="margin: 0px">
+            <dl class="am-accordion-item" style="margin: 0px">
+                <dt class="am-accordion-title" style="font-size: 13px">
+                    <i class="am-icon-comments-o">&nbsp;</i>沟通记录
+             
+                </dt>
+                <dd class="am-accordion-bd am-collapse am-in">
+                    <div class="am-accordion-content">
+                        <div class="am-g">
+                            <a href="javascript:void(0);" style="color: blue; float: right;margin-right: 10px" id="add-message">我要留言&gt;&gt;</a>
+                        </div>
+                        <div id="commentItem-list">
+                            
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </section>
+    </div>
+</div>
+
+
+<div class="am-panel am-panel-default" style="margin: 5px; border: none;display: none" id="repair-div-2">
+    <div class="am-panel-bd" style="padding: 0px">
+        <section data-am-widget="accordion" class="am-accordion am-accordion-gapped" data-am-accordion='{  }' style="margin: 0px">
+            <dl class="am-accordion-item" style="margin: 0px">
+                <dt class="am-accordion-title" style="font-size: 13px">
+                    <i class="am-icon-user-plus">&nbsp;</i>派单情况
+                </dt>
+                <dd class="am-accordion-bd am-collapse">
+                    <div class="am-accordion-content">
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">派单人</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value"  id="sendMan"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">派单时间</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="sendDate"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">维修人</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="receiveMan"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">接单时间</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="receiveDate"></span></div>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </section>
+    </div>
+</div>
+
+<div class="am-panel am-panel-default" style="margin: 5px; border: none;display: none" id="repair-div">
+    <div class="am-panel-bd" style="padding: 0px">
+        <section data-am-widget="accordion" class="am-accordion am-accordion-gapped" data-am-accordion='{  }' style="margin: 0px">
+            <dl class="am-accordion-item" style="margin: 0px">
+                <dt class="am-accordion-title" style="font-size: 13px">
+                    <i class="am-icon-comments-o">&nbsp;</i>维修详情
+                </dt>
+                <dd class="am-accordion-bd am-collapse">
+                    <div class="am-accordion-content">
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">到达时间</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="arriveDate"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">开始时间</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="rBDate"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">完成时间</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="rEDate"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">维修时长</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="repaireHour"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">材料费</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="materialFee"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">人工费</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="laborFee"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">其他费</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="otherFee"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">维修说明</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="completeMemo"></span></div>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </section>
+    </div>
+</div>
+
+
+<div class="am-panel am-panel-default" style="margin: 5px; border: none;display: none" id="feedback-div">
+    <div class="am-panel-bd" style="padding: 0px">
+        <section data-am-widget="accordion" class="am-accordion am-accordion-gapped" data-am-accordion='{  }' style="margin: 0px">
+            <dl class="am-accordion-item" style="margin: 0px">
+                <dt class="am-accordion-title" style="font-size: 13px">
+                    <i class="am-icon-comments-o">&nbsp;</i>处理
+                </dt>
+                <dd class="am-accordion-bd am-collapse am-in">
+                    <div class="am-accordion-content">
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">处理时间</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="rEDate-1"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">处理人</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="receiveMan-1"></span></div>
+                        </div>
+                        <div class="am-g field-item">
+                            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">处理结果</span></div>
+                            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="completeMemo-1"></span></div>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </section>
+    </div>
+</div>
+
+
+<div class="am-panel am-panel-default" style="margin: 5px; border: none;display: none" id="returnVisitDiv">
+    <div class="am-panel-bd" style="padding: 0px">
+        <section data-am-widget="accordion" class="am-accordion am-accordion-gapped" data-am-accordion='{  }' style="margin: 0px">
+            <dl class="am-accordion-item" style="margin: 0px">
+                <dt class="am-accordion-title" style="font-size: 13px">
+                    <i class="am-icon-star-o">&nbsp;</i>服务评价
+                </dt>
+                <dd class="am-accordion-bd am-collapse am-in">
+                    <div class="am-accordion-content">
+                        <div class="am-g" style="text-align: center;display: none" id="returnVisitNo">
+                            <a href="javascript:void(0);" style="color: blue; text-align: center; margin-right: 10px" id="pingjia">&gt;&gt;评价本次服务&lt;&lt;</a>
+                        </div>
+
+                        <div id="returnVisitInfo" style="display: none">
+                            <div class="am-g field-item">
+                                <div class="am-u-sm-2" style="padding: 0px"><span class="field-title" id="returnVisitResult" style="color: red"></span></div>
+                                <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="returnVisitDate"></span></div>
+                            </div>
+                            <div class="am-g field-item">
+                                <span id="returnVisitCustSuggest"></span>
+                            </div>    
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </section>
+    </div>
+</div>
+
+
+
+<div class="am-modal-actions" id="modal-add-message" style="background-color: white">
+    <div class="am-popup-hd">
+        <h4 class="am-popup-title">我要留言</h4>
+        <span data-am-modal-close
+              class="am-close">&times;</span>    
+    </div>
+    
+    <div class="am-modal-actions-group" style="padding-top: 10px">
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-top: 30px">
+            <textarea style="width: 100%" rows="5" placeholder="输入您给我们的留言" id="add-message-content"></textarea>
+        </div>
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-bottom: 10px;margin-top: 20px">
+            <button type="button" style="text-align: center" class="am-btn am-btn-warning am-radius submit" id="submit-message">提  交</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="am-modal-actions" id="modal-pingjia" style="background-color: white">
+    <div class="am-popup-hd">
+        <h4 class="am-popup-title">评价</h4>
+        <span data-am-modal-close
+              class="am-close">&times;</span>
+    </div>
+
+    <div class="am-modal-actions-group" style="padding-top: 10px">
+
+        <div style="margin-top: 30px;">
+            <div class="container" style="text-align: center; float: left">
+                <input type="radio" name="example" class="rating" value="1"/>
+                <input type="radio" name="example" class="rating" value="2"/>
+                <input type="radio" name="example" class="rating" value="3"/>
+                <input type="radio" name="example" class="rating" value="4"/>
+                <input type="radio" name="example" class="rating" value="5"/>
+            </div>
+            <span style="float: right; color: #ff6600" id="pingjia-desc">请对本次服务进行评分</span>
+        </div>
+        <br/>
+        <div class="am-g" style="clear: both; text-align: center; margin-top: 5px">
+            <span style="color: gray">您对本次服务满意吗？</span>
+        </div>
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-top: 10px">
+            <textarea style="width: 100%" rows="3" placeholder="输入您对我们的批评或建议" id="pingjia-message"></textarea>
+        </div>
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-bottom: 10px; margin-top: 20px">
+            <button type="button" style="text-align: center" class="am-btn am-btn-warning am-radius submit" id="submit-pingjia">提 交</button>
+        </div>
+    </div>
+</div>
+
+
+<script id="commentItemHtml" type="text/html">
+
+    {{each items as value i}}
+    <div class="am-panel am-panel-default portal-list-item" style="padding: 5px; margin: 5px; border-color: white; margin-top: 5px">
+        <div class="am-g">
+            <span style="color: black;font-size: 13px; margin-bottom: 5px">{{value.name}}</span>
+            <span style="color: gray; font-size: 13px; float: right;margin-bottom: 5px; margin-top: 0px">{{value.createTime}}</span>
+        </div>
+        <hr data-am-widget="divider" style="margin-top: 5px; margin-bottom: 5px" class="am-divider am-divider-dashed" />
+        <span style="{{value.type==1?'color: black;':'color: blue;'}}">{{value.content}}</span>
+    </div>
+    {{/each}}
+
+</script>

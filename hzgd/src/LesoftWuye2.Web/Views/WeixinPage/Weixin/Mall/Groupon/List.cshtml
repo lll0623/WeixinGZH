@@ -1,0 +1,90 @@
+﻿@using Abp.Application.Services.Dto
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "拼团";
+
+    List<ComboboxItemDto> categories = ViewData["categories"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+    int cid = (int)ViewData["cid"];
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function() {
+            $(function() {
+
+                var progress = $.AMUI.progress;
+                var GrouponItems = function() {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getGrouponItems(@(cid), {}).done(function(result) {
+
+                        var html = template('groupItemHtml', result);
+                        document.getElementById('groupItem-list').innerHTML = html;
+
+
+                    }).always(function() {
+                        progress.done(true);
+                        $('#main-container').show();
+                    });
+                };
+
+                GrouponItems();
+
+            });
+        })();
+
+    </script>
+}
+
+<div data-am-widget="gotop" class="am-gotop am-gotop-fixed">
+    <a href="#top" title="回到顶部">
+        <span class="am-gotop-title">回到顶部</span>
+        <i class="am-gotop-icon am-icon-chevron-up"></i>
+    </a>
+</div>
+
+<div data-am-widget="tabs" class="am-tabs am-tabs-d2" style="margin: 0px">
+    <ul data-am-sticky class="am-tabs-nav am-cf">
+
+        @{
+            foreach (var itemDto in categories)
+            {
+                <li class="@(itemDto.Value == cid.ToString() ? "am-active" : "")"><a onclick="window.location = '/weixin/mall/groupon/list?cid=@(itemDto.Value)'">@itemDto.DisplayText</a></li>
+            }
+        }
+
+    </ul>
+    <div class="am-tabs-bd">
+        <div id="groupItem-list">
+            
+        </div>
+    </div>
+</div>
+
+<script id="groupItemHtml" type="text/html">
+
+    {{each items as value i}}
+    <div class="am-panel am-panel-default portal-list-item" style="padding: 2px; margin: 5px; border-color: white; margin-top: 5px">
+        <a href="/weixin/mall/groupon/view?id={{value.id}}">
+            <img src="{{value.thumbnail}}?width=640&height=300&mode=crop" style="width: 100%" />
+            <p class="goods-name" style="color: black">{{value.name}}</p>
+            <div class="am-g bar" style="margin-bottom: 10px">
+                <div class="am-u-sm-8">
+                    <span style="color: #ff6600">￥{{value.price}}</span>
+                    <span style="color: gray; margin-left: 5px">已团{{value.sellCount}}{{value.unit}}</span>
+                </div>
+                <div class="am-u-sm-4 ">
+                    <a style="color: white;" href="/weixin/mall/groupon/view?id={{value.id}}" class="am-btn am-radius am-btn-warning pull-right">去开团&nbsp;<i class="am-icon-chevron-right "></i></a>
+                </div>
+            </div>
+        </a>
+     
+    </div>
+    {{/each}}
+
+</script>

@@ -1,0 +1,17 @@
+﻿@model LesoftWuye2.Application.Notices.Dto.NoticeItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = Model.Title;
+}
+
+<article class="am-article" style="padding: 10px">
+    <div class="am-article-hd">
+        <h1 class="am-article-title">@Model.Title</h1>
+        <p class="am-article-meta">发布时间：@Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+    </div>
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+
+    <div class="am-article-bd">
+       @(Html.Raw(Model.Content))
+    </div>
+</article>

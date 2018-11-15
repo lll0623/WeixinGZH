@@ -1,0 +1,224 @@
+﻿@using Abp.Authorization.Users
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<Obs.Users.Dto.UserListDto>
+@{
+    ViewBag.ActiveMenu = "Users"; //The menu item will be active for this page.
+    ViewBag.Title = "系统用户";
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Users/Index.js")
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">用户管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#UserCreateModal"><i class="fa fa-plus"></i>添加用户</button>
+                    @*<div class="btn-group">
+                        <a class="btn btn-default btn-sm " href="javascript:void(0);">更多操作</a>
+                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu dropdown-blue pull-left">
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-file-excel-o"></i>&nbsp;导出EXCEL</a>
+                            </li>
+                        </ul>
+                    </div>*@
+                </div>
+
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 150px">用户名</th>
+                                <th class="">角色</th>
+                                <th style="width: 150px" class="">姓名</th>
+                                <th style="width: 50px" class="center">激活</th>
+                                <th style="width: 150px" class="center">上次登录时间</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 200px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Items)
+                            {
+                                <tr>
+                                    <td>@user.UserName</td>
+                                    <td>@user.RoleNames</td>
+                                    <td>@user.Name</td>
+                                    <td class="center">
+                                        @{
+                                            if (user.IsActive)
+                                            {
+                                                <span class='label label-success'>是</span>
+                                            }
+                                            else
+                                            {
+                                                <span class='label label-default'>否</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td class="center">@(user.LastLoginTime.HasValue ? user.LastLoginTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "")</td>
+                                    <td class="center">@user.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role="update-row" data-role-name="Pages.Users.Update" data-id="@(user.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role="delete-row" data-role-name="Pages.Users.Delete" data-id="@(user.Id)" data-delete-msg="用户『@(user.Name)』" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                        <div class="btn-group">
+                                            <a class="btn btn-default btn-xs " href="javascript:void(0);">更多</a>
+                                            <a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><i class="fa fa-angle-down"></i></a>
+                                            <ul class="dropdown-menu dropdown-blue pull-left">
+                                                <li>
+                                                    <a href="javascript:void(0);" data-role-name="Pages.Users.Update" data-role="setrole-row" data-id="@(user.Id)">设置角色</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div class="modal fade" id="UserCreateModal" tabindex="-1" role="dialog" aria-labelledby="UserCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="userCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加用户</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label label-for="UserName">用户名<span class="required">*</span></label>
+                        <input class="form-control" type="text" name="UserName" required
+                               maxlength="@AbpUserBase.MaxUserNameLength" minlength="2">
+                    </div>
+                    <div class="form-group">
+                        <label label-for="Name">姓名<span class="required">*</span></label>
+                        <input type="text" name="Name" class="form-control" required maxlength="@Obs.Users.User.MaxNameLength">
+                    </div>
+                    <div class="form-group">
+                        <label label-for="EmailAddress">Email<span class="required">*</span></label>
+                        <input type="email" name="EmailAddress" class="form-control" required maxlength="@Obs.Users.User.MaxEmailAddressLength">
+                    </div>
+                    <div class="form-group">
+                        <label  label-for="Password">密码<span class="required">*</span></label>
+                        <input type="password" name="Password" class="form-control" required maxlength="@Obs.Users.User.MaxPlainPasswordLength">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="UserUpdateModal" tabindex="-1" role="dialog" aria-labelledby="UserCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="userCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>修改用户</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label label-for="userName">用户名<span class="required">*</span></label>
+                        <input class="form-control" type="text" name="userName" required maxlength="@AbpUserBase.MaxUserNameLength" minlength="2" >
+                    </div>
+                    <div class="form-group">
+                        <label label-for="name">姓名<span class="required">*</span></label>
+                        <input type="text" name="name" class="form-control" required maxlength="@Obs.Users.User.MaxNameLength">
+                    </div>
+                    <div class="form-group">
+                        <label label-for="emailAddress">Email<span class="required">*</span></label>
+                        <input type="email" name="emailAddress" class="form-control" required maxlength="@Obs.Users.User.MaxEmailAddressLength">
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="colored-blue" value="true" name="isActive" data-role="excluded">
+                                <span class="text">激活</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!--设置角色-->
+<div class="modal fade" id="UserSetRoleModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="roleCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>设置角色</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-xs-4" data-role="roles">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked="checked" name="role" value="true">
+                                    <span class="text">Basic</span>
+                                </label>
+                            </div>
+
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked="checked" name="role" value="true">
+                                    <span class="text">Basic</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

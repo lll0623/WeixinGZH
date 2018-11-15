@@ -1,0 +1,76 @@
+﻿@using Abp.Application.Services.Dto
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Estateinfos.Dto.EstateinfoListDto>
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "跳蚤市场";
+    List<ComboboxItemDto> newItems = (ViewData["nextItems"] as List<ComboboxItemDto>) ?? new List<ComboboxItemDto>();
+    ViewBag.HideBack = true;
+}
+
+
+@section scripts
+{
+
+    <script>
+    
+
+    </script>
+}
+
+<div data-am-widget="titlebar" class="am-titlebar am-titlebar-multi" style="margin-top: 0;border-bottom: 2px solid #3bb4f2;border-top:none">
+    <h2 class="am-titlebar-title ">
+        @(ViewData["thismode"])
+    </h2>
+
+    <nav class="am-titlebar-nav">
+        @{
+            foreach (var item in newItems)
+            {
+                <a href="/weixin/estateinfo/list?mode=@item.Value" class="">@item.DisplayText</a>
+            }
+        }
+    </nav>
+</div>
+
+<div data-am-widget="list_news" class="am-list-news am-list-news-default  home-news-list">
+    <div class="am-list-news-bd">
+        <ul class="am-list">
+            @{
+                foreach (var item in Model.Items)
+                {
+                    <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+                        <a href="/weixin/estateinfo/view?id=@(item.Id)" class="">
+                            @{
+                                if (!string.IsNullOrEmpty(item.Thumbnail))
+                                {
+                                    <div class="am-u-sm-4 am-list-thumb">
+                                        <img src="@(item.Thumbnail)?width=160&height=100&mode=crop" />
+                                    </div>
+                                    <div class="am-u-sm-8 am-list-main">
+                                        <h3 class="am-list-item-hd">@item.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@item.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="am-u-sm-12 am-list-main">
+                                        <h3 class="am-list-item-hd">@item.Title</h3>
+                                        <div class="am-list-item-text">发布日期:@item.CreationTime.ToString("yyyy-MM-dd")</div>
+                                    </div>
+                                }
+                            }
+
+                        </a>
+                    </li>
+                                }
+            }
+        </ul>
+    </div>
+
+    <div class="am-g" style="margin-bottom: 20px">
+        <div class="am-u-sm-12">
+            <a href="/weixin/estateinfo/add" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">我要发布</a>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,79 @@
+﻿@using Abp.Collections.Extensions
+@using LesoftWuye2.Web.Views
+@model LesoftWuye2.Web.Models.Layout.TopMenuViewModel
+@{
+    var calculateMenuUrl = new Func<string, string>((url) =>
+    {
+        if (string.IsNullOrEmpty(url))
+        {
+            return ApplicationPath;
+        }
+
+        if (UrlChecker.IsRooted(url))
+        {
+            return url;
+        }
+
+        return ApplicationPath + url;
+    });
+}
+@foreach (var menuItem in Model.MainMenu.Items)
+{
+
+
+    if (menuItem.Items.IsNullOrEmpty())
+    { 
+        <li class="@(Model.ActiveMenuItemName == menuItem.Name ? "active" : "")">
+            <!--一级菜单-->
+            <a href="@calculateMenuUrl(menuItem.Url)">
+                @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
+                {
+                    <i class="menu-icon @menuItem.Icon"></i>
+                }
+                <span class="menu-text"> @menuItem.DisplayName </span>
+
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="@(Model.ActiveMenuItemParentName == menuItem.Name ? "open" : "")">
+            <a href="" class="menu-dropdown">
+                @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
+                {
+                    <i class="menu-icon @menuItem.Icon"></i>
+                }
+                <span class="menu-text"> @menuItem.DisplayName </span>
+                <i class="menu-expand"></i>
+            </a>
+            <ul class="submenu">
+                @foreach (var subMenuItem in menuItem.Items)
+                {
+                    <li class="@(Model.ActiveMenuItemName == subMenuItem.Name ? "active" : "")">
+                        <a href="@calculateMenuUrl(subMenuItem.Url)">
+                            @if (!string.IsNullOrWhiteSpace(subMenuItem.Icon))
+                        {
+                                <i class="menu-icon @subMenuItem.Icon"></i>
+                            }
+                            <span class="menu-text"> @subMenuItem.DisplayName </span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

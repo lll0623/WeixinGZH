@@ -1,0 +1,94 @@
+﻿@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Notices.Dto.NoticeListDto>
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "社区公告";
+}
+
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                var currentPage = 1;
+                var hasNext = true;
+
+                var GrouponItems = function () {
+                    $('#loading').show();
+
+                    app.services.app.weixinService.getNotices({ currentPage: currentPage }).done(function (result) {
+                        hasNext = result.pageIndex < result.pageCount;
+                        var html = template('itemHtml', result);
+                        $('#itemHtml-list').append(html);
+                    }).always(function () {
+                        $('#loading').hide();
+                    });
+                };
+
+                GrouponItems();
+
+
+                $(window).scroll(function () {
+                    var scrollTop = $(this).scrollTop();
+                    var scrollHeight = $(document).height();
+                    var windowHeight = $(this).height();
+                    if (scrollTop + windowHeight == scrollHeight) {
+                        if (!hasNext) return;
+                        currentPage++;
+                        GrouponItems();
+                    }
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+
+<div data-am-widget="list_news" class="am-list-news am-list-news-default  home-news-list">
+    <div class="am-list-news-bd">
+        <ul class="am-list" id="itemHtml-list"></ul>
+    </div>
+</div>
+
+<div class="am-panel am-panel-default" id="loading" style="display: none">
+    <div class="am-panel-bd" style="text-align: center">数据加载中...</div>
+</div>
+
+
+<script id="itemHtml" type="text/html">
+
+    {{each items as value i}}
+    <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+        <a href="/weixin/notice/view?id={{value.id}}" class="">
+
+            {{if value.thumbnail!='' }}
+            <div class="am-u-sm-4 am-list-thumb">
+                <img src="{{value.thumbnail}}?width=160&height=100&mode=crop" />
+            </div>
+
+            <div class="am-u-sm-8 am-list-main">
+                <h3 class="am-list-item-hd">{{value.title}}</h3>
+                <div class="am-list-item-text">发布日期:{{value.creationTimeFormat}}</div>
+            </div>
+
+            {{else}}
+
+            <div class="am-u-sm-12 am-list-main">
+                <h3 class="am-list-item-hd">{{value.title}}</h3>
+                <div class="am-list-item-text">发布日期:{{value.creationTimeFormat}}</div>
+            </div>
+
+            {{/if}}
+
+        </a>
+    </li>
+    {{/each}}
+
+</script>
+
+

@@ -1,0 +1,501 @@
+﻿
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "预缴";
+}
+
+@section styles{
+    <style>
+        input[type=button] {
+            -webkit-appearance: none;
+            outline: none;
+        }
+    </style>
+}
+
+@section scripts{
+
+    <script>
+
+
+
+
+        (function () {
+            $(function () {
+
+                Date.prototype.format = function (fmt) {
+                    var o = {
+                        "M+": this.getMonth() + 1,                 //月份
+                        "d+": this.getDate(),                    //日
+                        "h+": this.getHours(),                   //小时
+                        "m+": this.getMinutes(),                 //分
+                        "s+": this.getSeconds(),                 //秒
+                        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                        "S": this.getMilliseconds()             //毫秒
+                    };
+                    if (/(y+)/.test(fmt)) {
+                        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                    }
+                    for (var k in o) {
+                        if (new RegExp("(" + k + ")").test(fmt)) {
+                            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                        }
+                    }
+                    return fmt;
+                }
+
+                /**
+*js中更改日期
+* y年， m月， d日， h小时， n分钟，s秒
+*/
+                Date.prototype.add = function (part, value) {
+                    value *= 1;
+                    if (isNaN(value)) {
+                        value = 0;
+                    }
+                    switch (part) {
+                        case "y":
+                            this.setFullYear(this.getFullYear() + value);
+                            break;
+                        case "m":
+                            this.setMonth(this.getMonth() + value);
+                            break;
+                        case "d":
+                            this.setDate(this.getDate() + value);
+                            break;
+                        case "h":
+                            this.setHours(this.getHours() + value);
+                            break;
+                        case "n":
+                            this.setMinutes(this.getMinutes() + value);
+                            break;
+                        case "s":
+                            this.setSeconds(this.getSeconds() + value);
+                            break;
+                        default:
+
+                    }
+                }
+
+                var progress = $.AMUI.progress;
+
+                app.services.app.weixinService.getMyRooms()
+                    .done(function (result) {
+                        var html = '';
+                        $(result).each(function (idx, obj) {
+                            html += "<li  data-code='" + obj.pRoomCode + "' class='" +
+                                ((obj.isDefault) ? "am-active" : "")
+                                + "'><a href='javascript:void(0)' data-code='" + obj.pRoomCode + "' >" + obj.pRoomFullName + "</a></li>";
+                            if (obj.isDefault) {
+                                $("#room_selector").data('code', obj.pRoomCode);
+                                $("#room_selector").find('span[name="roomName"]').text(obj.pRoomFullName);
+                                getFee(obj.pRoomCode);
+                            }
+                        });
+                        $('#room_selector').find('ul').append(html);
+                    });
+
+                $("#room_selector").delegate('a', 'click', function (e) {
+                    e.preventDefault();
+                    var code = $(this).data('code');
+                    $("#room_selector").data('code', code);
+                    $("#room_selector").find('span[name="roomName"]').text($(this).text());
+                    $(this).parent().parent().find('li').removeClass('am-active');
+                    $(this).parent().attr('class', 'am-active');
+                    $('#room_selector').dropdown('close');
+                    getFee(code);
+                });
+
+
+                function addMonth(month) {
+                    month += "";
+                    var d = new Date(month.substr(0, 4) + "-" + month.substr(4, 2) + "-01");
+                    d.add('m', 1);
+                    return d.format("yyyyMM") + "";
+                }
+
+                function removeMonth(month) {
+                    month += "";
+                    var d = new Date(month.substr(0, 4) + "-" + month.substr(4, 2) + "-01");
+                    d.add('m', -1);
+                    return d.format("yyyyMM") + "";
+                }
+
+                function getFee(PRoomCode) {
+                    //$('#fee-list').empty();
+                    pRoomCode = PRoomCode;
+
+
+                    progress.start();
+                    //MemberId = "1";
+                    //PRoomCode = "01012702";
+                    app.services.app.weixinService.getPRoomPrePayItem(PRoomCode)
+                        .done(function (result) {
+                            if (result.success) {
+
+                                var html = '';
+                                if (result.itemList.length === 0) {
+                                    html = "<div class='am-panel am-panel-default' style='margin-top: 10px;margin-bottom: 10px'><div class='am-panel-bd'>您当前没有欠费</div></div>";
+                                }
+
+                                $(result.itemList).each(function (idx, obj) {
+                                    var line = '';
+                                    switch (obj.type) {
+                                        case 0:
+                                            var beginYm = obj.beginYM.substr(0, 4) + "年" + obj.beginYM.substr(4, 2) + "月";
+                                            line += "<div class='am-panel am-panel-default pay-item' data-type=0 data-id='" + obj.itemID + "' data-money='" + obj.monthPrice + "' data-price='" + obj.monthPrice + "' data-beginym='" + obj.beginYM + "' data-currentym='" + obj.beginYM + "' style='margin-top: 10px; margin-bottom: 10px'>";
+                                            line += "<div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>";
+                                            line += "<div class='am-g'>";
+                                            line += "<div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>";
+                                            line += "<a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'><i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i></a>";
+                                            line += "</div>";
+                                            line += "<div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>";
+                                            line += "<div>";
+                                            line += "<a class='pay-item-expand'>";
+                                            line += "<span style='color: black'>" + obj.itemName + "</span>";
+                                            line += "<span style='color: black; float: right; font-size: 13px; margin-top: 3px'>每期金额:<em style='color:blue'>￥" + obj.monthPrice + "元</em></span>";
+                                            line += "</a>";
+                                            line += "</div>";
+                                            line += "<hr style='margin-top: 5px; margin-bottom: 5px'>";
+                                            line += "<div>";
+                                            line += "<span>预缴期间：" + beginYm + " 至 <span class='endYm'>" + beginYm + "</span></span>";
+                                            line += "</div>";
+                                            line += "<div class='am-g' style=''>";
+                                            line += "<div class='am-u-sm-12'>";
+                                            line += "<span>预缴期数：</span>";
+                                            line += "<span style='max-width: 20px'>";
+                                            line += "<input style='' type='button' value='-' data-role='remove' />";
+                                            line += "<input type='number' style='width: 30px; text-align: center' readonly='readonly' class='yjqs' disabled='disabled' value='1' />";
+                                            line += "<input type='button' value='+' data-role='add' />";
+                                            line += "</span>";
+                                            line += "<span style='color: black; float: right; font-size: 13px; margin-top: 3px'>";
+                                            line += "预缴金额：";
+                                            line += "<input type='number' style='width: 60px; text-align: center; color: #ff6600' disabled='disabled' value='" + obj.monthPrice + "' class='yjje' />";
+                                            line += "</span>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            break;
+                                        case 1: //不定期
+                                            line += "<div class='am-panel am-panel-default pay-item'  data-type=1  data-id='" + obj.itemID + "' data-money='0' style='margin-top: 10px; margin-bottom: 10px'>";
+                                            line += "<div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>";
+                                            line += "<div class='am-g'>";
+                                            line += "<div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>";
+                                            line += "<a class='pay-item-selecter' style='display: block; margin-top: 2px; margin-right: 10px'><i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i></a>";
+                                            line += "</div>";
+                                            line += "<div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>";
+                                            line += "<div><span style='color: black'>" + obj.itemName + "</span>";
+                                            line += "<span style='color: black; float: right; font-size: 13px; margin-top: 3px'>预缴金额：";
+                                            line += "<input type='tel' class='inputmoney' style='width: 60px; text-align: center;color: #ff6600' value='0' />";
+                                            line += "</span>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            line += "</div>";
+                                            break;
+
+                                    }
+
+                                    html += line;
+                                });
+
+                                //html = "<div class='am-panel am-panel-default pay-item' style='margin-top: 10px;margin-bottom: 10px'>             <div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>                 <div class='am-g'>                     <div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>                         <a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'>                             <i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i>                         </a>                     </div>                     <div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>                         <div>                             <a class='pay-item-expand'>                                 <span style='color: black'>费用名称</span>                                 <span style='color: #A5A5A5'>类型</span>                                 <i class='am-icon-chevron-down am-icon-fw' style='color: #CCCCCC; float: right'></i>                             </a>                         </div>                         <hr style='margin-top: 5px; margin-bottom: 5px' />                         <div class='pay-item-subitems' style='display: none'>                                     <div><span>时间</span><span style='float: right; color: #A5A5A5'>￥金额</span></div>                             <hr style='margin-top: 5px; margin-bottom: 5px' />                         </div>                         <div>                             <span>时间</span><span style='float: right; color: #F37B1D'>￥金额</span>                         </div></div></div></div></div><div class='am-panel am-panel-default pay-item' style='margin-top: 10px;margin-bottom: 10px'>             <div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>                 <div class='am-g'>                     <div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>                         <a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'>                             <i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i>                         </a>                     </div>                     <div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>                         <div>                             <a class='pay-item-expand'>                                 <span style='color: black'>费用名称</span>                                 <span style='color: #A5A5A5'>类型</span>                                 <i class='am-icon-chevron-down am-icon-fw' style='color: #CCCCCC; float: right'></i>                             </a>                         </div>                         <hr style='margin-top: 5px; margin-bottom: 5px' />                         <div class='pay-item-subitems' style='display: none'>                                     <div><span>时间</span><span style='float: right; color: #A5A5A5'>￥金额</span></div>                             <hr style='margin-top: 5px; margin-bottom: 5px' />                         </div>                         <div>                             <span>时间</span><span style='float: right; color: #F37B1D'>￥金额</span>                         </div></div></div></div></div>";
+                                $('#fee-list').empty();
+                                $('#fee-list').append(html);
+                                progress.done(true);
+                                updateSelectMoney();
+
+                                $('.pay-item').delegate('.pay-item-selecter', 'click', function (e) {
+                                    var payItem = $(this).parents('.pay-item');
+                                    if (payItem.data('selected') === true) {
+                                        $(this).find('i').css('color', '#CCCCCC');
+                                        $(this).find('i').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                                        payItem.data('selected', false);
+                                        //hideNextLevel(payItem);
+
+                                    } else {
+                                        $(this).find('i').css('color', '#F37B1D');
+                                        $(this).find('i').removeClass('am-icon-circle-o').addClass('am-icon-check-circle-o');
+                                        payItem.data('selected', true);
+                                        //showNextLevel(payItem);
+                                    }
+                                    updateSelectMoney();
+                                });
+
+                                $('.pay-item').delegate('input[type=button][data-role=add]', 'click', function (e) {
+                                    var payItem = $(this).parents('.pay-item');
+                                    var price = parseFloat(payItem.data('price'));
+                                    var yjqsInput = payItem.find('input[type=number][class=yjqs]');
+                                    yjqsInput.val(parseInt(yjqsInput.val()) + 1);
+                                    var money = price * parseInt(yjqsInput.val());
+                                    payItem.data('money', money);
+                                    var yjjeInput = payItem.find('input[type=number][class=yjje]');
+                                    yjjeInput.val(money);
+
+                                    var currentYm = addMonth(payItem.data('currentym'));
+                                    payItem.data('currentym', currentYm);
+                                    payItem.find('span[class=endYm]').text(currentYm.substr(0, 4) + "年" + currentYm.substr(4, 2) + "月");
+                                    updateSelectMoney();
+                                });
+
+                                $('.pay-item').delegate('input[type=button][data-role=remove]', 'click', function (e) {
+                                    var payItem = $(this).parents('.pay-item');
+                                    if (payItem.data('currentym') === payItem.data('beginym')) {
+                                        return;
+                                    }
+
+                                    var price = parseFloat(payItem.data('price'));
+                                    var yjqsInput = payItem.find('input[type=number][class=yjqs]');
+                                    if (yjqsInput.val() <= 1) {
+                                        return;
+                                    }
+                                    yjqsInput.val(parseInt(yjqsInput.val()) - 1);
+                                    var money = price * parseInt(yjqsInput.val());
+                                    payItem.data('money', money);
+                                    var yjjeInput = payItem.find('input[type=number][class=yjje]');
+                                    yjjeInput.val(money);
+                                    var currentYm = removeMonth(payItem.data('currentym'));
+                                    payItem.data('currentym', currentYm);
+                                    payItem.find('span[class=endYm]').text(currentYm.substr(0, 4) + "年" + currentYm.substr(4, 2) + "月");
+                                    updateSelectMoney();
+                                });
+
+                                $('.pay-item').delegate('.inputmoney', 'keyup', function (e) {
+                                    var payItem = $(this).parents('.pay-item');
+                                    var money = payItem.find('input[class=inputmoney]').val();
+                                    if (money == '')
+                                        money = 0;
+                                    payItem.data('money', money);
+                                    updateSelectMoney();
+                                });
+
+                            } else {
+                                progress.done(true);
+                                app.message.warn(result.msg);
+                            }
+
+                        });
+                };
+
+                var money = 0;
+                var feeIDs = new Array();
+
+
+                function showNextLevel(obj) {
+                    var type = parseInt($(obj).data('type'));
+                    var nexttype = parseInt($(obj).data('nexttype'));
+                    $('.pay-item[data-type=' + nexttype + ']').show();
+
+                }
+
+                function hideNextLevel(obj) {
+                    var type = parseInt($(obj).data('type'));
+                    if (type === 0) {
+
+                        $('.pay-item[data-type="1"]').find('i[data-role="select"]').css('color', '#CCCCCC');
+                        $('.pay-item[data-type="1"]').find('i[data-role="select"]').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                        $('.pay-item[data-type="1"]').hide();
+                        $('.pay-item[data-type="1"]').data('selected', false);
+
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').css('color', '#CCCCCC');
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                        $('.pay-item[data-type="2"]').hide();
+                        $('.pay-item[data-type="2"]').data('selected', false);
+                    }
+                    if (type === 1) {
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').css('color', '#CCCCCC');
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                        $('.pay-item[data-type="2"]').hide();
+                        $('.pay-item[data-type="2"]').data('selected', false);
+                    }
+                }
+
+                function updateSelectMoney() {
+                    money = 0;
+                    feeIDs = new Array();
+                    $('.pay-item').each(function (idx, obj) {
+                        if ($(this).data('selected') === true) {
+                            money += parseFloat($(this).data('money'));
+                            feeIDs.push($(this).data('id'));
+                        }
+                    });
+                    $('#money').text('￥ ' + money.toFixed(2) + " ");
+                }
+
+                $('#submit').click(function (e) {
+                    e.preventDefault();
+                    if (money <= 0) {
+                        app.message.warn('请选择缴费项目!');
+                        return;
+                    }
+
+                    //ajax提交支付请求
+                    //先生成订单
+                   
+                    var ids = new Array();
+                    for (var i = 0; i < feeIDs.length; i++) {
+
+                        var itemId = feeIDs[i];
+                        var payItem = $('div[data-id=' + itemId+']');
+                        var type = payItem.data('type');
+                        var money = payItem.data('money');
+                        if (parseFloat(money) == 0)
+                            continue;
+
+                        if (type == 0) {
+                            //定期
+                            ids.push(itemId + "|" + payItem.data('beginym') + "|" + payItem.data('currentym') + "|" + payItem.data('money'));
+                        }
+                        if (type == 1) {
+                            //不定期
+                            ids.push(itemId + "|||" + payItem.data('money'));
+                        }
+
+                    }
+                    console.log(ids);
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.createPayOrderPrePay( pRoomCode,ids.join(','),money)
+                        .done(function (result) {
+                            if (result.success) {
+                                //跳转至支付选择页面
+                                //money = 0.01;
+                                window.location = '/weixin/service/paylist?type=2&money=' + money + "&orderno=" + result.billCode;
+
+                            } else {
+                                app.message.error(result.msg);
+                            }
+                        }).always(function () {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+            });
+        })();
+
+
+    </script>
+}
+
+
+
+<div class="am-panel am-panel-default service-form">
+    <div class="am-dropdown" data-am-dropdown="{justify: '#doc-dropdown-justify'}" style="width: 100%" id="room_selector">
+        <button style="width: 100%" class="am-btn am-btn-default  am-dropdown-toggle" data-am-dropdown-toggle>
+            <span name="roomName">请选择你的商铺</span>
+            <span class="am-icon-caret-down"></span>
+        </button>
+        <ul class="am-dropdown-content">
+            <li class="am-dropdown-header">我的商铺</li>
+        </ul>
+    </div>
+
+    <div class="am-g">
+        <div class="am-u-sm-12" style="text-align: left; color: black; font-size: 1.55rem;margin-top: 5px">
+            <span>本期共缴纳:&nbsp;&nbsp;<a class="am-badge am-badge-warning" id="money">￥0.00</a></span>
+        </div>
+    </div>
+
+    <div id="fee-list">
+
+
+
+    </div>
+
+    <div id="fee-list2" style="display: none">
+
+        <div class="am-panel am-panel-default pay-item" data-id="981" data-money="1830.20" style="margin-top: 10px; margin-bottom: 10px">
+            <div class="am-panel-bd" style="padding-left: 10px; padding-bottom: 0px">
+                <div class="am-g">
+                    <div class="am-u-sm-1" style="text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px">
+                        <a class="pay-item-selecter" style="display: block; margin-top: 17px; margin-right: 10px"><i data-role="select" class="am-icon-circle-o am-icon-fw am-icon-sm" style="color: #CCCCCC;"></i></a>
+                    </div>
+                    <div class="am-u-sm-11" style="text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px">
+                        <div>
+                            <a class="pay-item-expand">
+                                <span style="color: black">公共服务费</span>
+                                <span style="color: black; float: right; font-size: 13px; margin-top: 3px">每期金额:￥100元</span>
+                            </a>
+                        </div>
+                        <hr style="margin-top: 5px; margin-bottom: 5px">
+
+                        <div>
+                            <span>预计期间： 2011年12月 至 <span>2011年12月</span></span>
+                        </div>
+                        <div class="am-g" style="">
+                            <div class="am-u-sm-12">
+                                <span>预计期数：</span>
+                                <span style="max-width: 20px">
+                                    <input type="button" value="-" />
+                                    <input type="number" style="width: 20px; text-align: center" readonly="readonly" value="12" />
+                                    <input type="button" value="+" />
+                                </span>
+                                <span style="color: black; float: right; font-size: 13px; margin-top: 3px">
+                                    预缴金额：
+                                    <input type="number" style="width: 40px; text-align: center; color: #ff6600" value="0" />
+                                </span>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="am-panel am-panel-default pay-item" data-id="981" data-money="1830.20" style="margin-top: 10px; margin-bottom: 10px">
+            <div class="am-panel-bd" style="padding-left: 10px; padding-bottom: 0px">
+                <div class="am-g">
+                    <div class="am-u-sm-1" style="text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px">
+                        <a class="pay-item-selecter" style="display: block; margin-top: 2px; margin-right: 10px"><i data-role="select" class="am-icon-circle-o am-icon-fw am-icon-sm" style="color: #CCCCCC;"></i></a>
+                    </div>
+                    <div class="am-u-sm-11" style="text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px">
+                        <div>
+
+                            <span style="color: black">公共服务费</span>
+                            <span style="color: black; float: right; font-size: 13px; margin-top: 3px">
+                                预缴金额：
+                                <input type="number" style="width: 40px; text-align: center;color: #ff6600" value="0" />
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="am-panel am-panel-default pay-item" data-id="981" data-money="1830.20" style="margin-top: 10px; margin-bottom: 10px">
+            <div class="am-panel-bd" style="padding-left: 10px; padding-bottom: 0px">
+                <div class="am-g">
+                    <div class="am-u-sm-1" style="text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px">
+                        <a class="pay-item-selecter" style="display: block; margin-top: 2px; margin-right: 10px"><i data-role="select" class="am-icon-circle-o am-icon-fw am-icon-sm" style="color: #CCCCCC;"></i></a>
+                    </div>
+                    <div class="am-u-sm-11" style="text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px">
+                        <div>
+
+                            <span style="color: black">公共服务费</span>
+                            <span style="color: black; float: right; font-size: 13px; margin-top: 3px">
+                                预缴金额：
+                                <input type="number" style="width: 40px; text-align: center; color: #ff6600" value="0" />
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="am-g" style="margin-top: 10px; margin-bottom: 30px">
+        <div class="am-u-sm-12">
+            <a href="javascript:void(0)" id="submit" class="am-btn am-btn-danger am-radius am-btn-block service-form-submit" data-text="去付款">去付款</a>
+        </div>
+    </div>
+
+</div>

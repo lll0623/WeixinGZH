@@ -1,0 +1,125 @@
+﻿@model LesoftWuye2.Application.Activitys.Dto.ActivityItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = Model.Title;
+    bool is_join = (bool)ViewData["is_join"];
+}
+
+@section scripts
+{
+
+    <script>
+        (function () {
+            $(function () {
+
+                var memberId = 0;
+
+                $('#submit').click(function (e) {
+                    e.preventDefault();
+
+                    var contact = $('#contact').val();
+                    var mobile = $('#mobile').val();
+
+                    if (contact === "") {
+                        $('#contact').focus();
+                        app.message.warn('请输入姓名!');
+                        return;
+                    }
+                    if (mobile === "") {
+                        $('#mobile').focus();
+                        app.message.warn('请输入手机号码 !');
+                        return;
+                    }
+
+                    if (mobile.length !== 11) {
+                        $('#mobile').focus();
+                        app.message.warn('请输入正确的手机号码 !');
+                        return;
+                    }
+
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.joinActivity({ contact: contact, mobile: mobile, activityId: '@(Model.Id)' })
+                        .done(function (result) {
+                            app.message.success('活动报名成功', '成功', function () {
+                                window.location.reload();
+                            });
+                        }).always(function () {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+
+            });
+        })();
+    </script>
+}
+
+<article class="am-article" style="padding: 10px">
+    <div class="am-article-hd">
+        <h1 class="am-article-title">@Model.Title</h1>
+        <p class="am-article-meta">发布时间：@Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss") <span style="float: right">限定人数：@Model.AllowCount</span></p>
+        <p class="am-article-meta">报名截止时间：@Model.Expireday.ToString("yyyy-MM-dd")<span style="float: right">已报名人数：@Model.JoinCount</span></p>
+    </div>
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+
+    <div class="am-article-bd">
+        @(Html.Raw(Model.Content))
+    </div>
+
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+    <div class="am-article-hd">
+
+        
+        
+        
+    </div>
+    @{
+        if (DateTime.Now.Date > Model.Expireday)
+        {
+            <section class="am-panel am-panel-danger" style="background: lightgray">
+                <div class="am-panel-bd" style="text-align: center;color: black">
+                    活动报名已截止
+                </div>
+            </section>
+        }
+        else
+        {
+            if (Model.JoinCount >= Model.AllowCount)
+            {
+                <section class="am-panel am-panel-danger" style="background: lightgray">
+                    <div class="am-panel-bd" style="text-align: center; color: black">
+                        报名人数已满
+                    </div>
+                </section>
+
+       
+            }
+            else
+            {
+                <div id="join-div" style="@(is_join?"display: none":"")">
+                    <div class="am-input-group">
+                        <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
+                        <input type="text" class="am-form-field" id="contact" placeholder="姓名">
+                    </div>
+
+                    <div class="am-input-group" style="margin-top: 5px">
+                        <span class="am-input-group-label"><i class="am-icon-lock am-icon-fw"></i></span>
+                        <input type="text" class="am-form-field" id="mobile" placeholder="手机号码">
+                    </div>
+
+                    <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">我要报名</button>    
+                </div>
+
+                <section class="am-panel am-panel-danger" id="has-join" style="display: none;background: lightgray">
+                    <div class="am-panel-bd" style="text-align: center; color: black">
+                        您已报名参加该活动
+                    </div>
+                </section>
+            }
+
+        }
+    }
+
+</article>

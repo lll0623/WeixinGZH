@@ -1,0 +1,187 @@
+﻿@using Abp.Authorization.Roles
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<Obs.Roles.Dto.RoleListDto>
+@{
+    ViewBag.ActiveMenu = "Roles"; //The menu item will be active for this page.
+    ViewBag.Title = "系统角色";
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Roles/Index.js")
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">角色管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.Roles.Create" data-toggle="modal" data-target="#RoleCreateModal"><i class="fa fa-plus"></i>添加角色</button>
+                </div>
+
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+
+                                <th class="">角色名称</th>
+                                <th style="width: 50px" class="center">默认</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 200px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var role in Model.Items)
+                            {
+                                <tr>
+
+                                    <td>@role.Name</td>
+                                    <td class="center">
+                                        @{
+                                            if (role.IsDefault)
+                                            {
+                                                <span class='label label-success'>是</span>
+                                            }
+                                            else
+                                            {
+                                                <span class='label label-default'>否</span>
+                                            }
+                                        }
+                                    </td>
+
+                                    <td class="center">@role.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.Roles.Update" data-role="update-row" data-id="@(role.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.Roles.Delete" data-role="delete-row" data-id="@(role.Id)" data-delete-msg="角色『@(role.Name)』" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                        <div class="btn-group">
+                                            <a class="btn btn-default btn-xs " href="javascript:void(0);">更多</a>
+                                            <a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><i class="fa fa-angle-down"></i></a>
+                                            <ul class="dropdown-menu dropdown-blue pull-left">
+                                                <li>
+                                                    <a href="javascript:void(0);" data-role="granted-row" data-id="@(role.Id)">授权</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div class="modal fade" id="RoleCreateModal" tabindex="-1" role="dialog" aria-labelledby="RoleCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="roleCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加角色</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label label-for="Name">角色名称<span class="required">*</span></label>
+                        <input class="form-control" type="text" name="Name" required
+                               maxlength="@AbpRoleBase.MaxNameLength">
+                    </div>
+                    <div class="form-group">
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="colored-blue" value="true" name="isDefault" data-role="excluded">
+                                <span class="text">默认</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="RoleUpdateModal" tabindex="-1" role="dialog" aria-labelledby="RoleCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="roleCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>修改角色</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>角色名称<span class="required">*</span></label>
+                        <input class="form-control" type="text" name="name" required
+                               maxlength="@AbpRoleBase.MaxNameLength">
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="colored-blue" value="true" name="isDefault" data-role="excluded">
+                                <span class="text">默认</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--授权-->
+<div class="modal fade" id="RolePermissionModal" tabindex="-1" role="dialog" aria-labelledby="RoleCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="roleCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>角色授权</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="permission-tree"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+

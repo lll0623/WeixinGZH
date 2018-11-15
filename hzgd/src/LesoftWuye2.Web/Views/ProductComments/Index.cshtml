@@ -1,0 +1,77 @@
+﻿@using Abp.Application.Services.Dto
+
+@using LesoftWuye2.Application.Products
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Products.Dto.ProductCommentListDto>
+@{
+    ViewBag.ActiveMenu = "ProductComments";
+    ViewBag.Title = "商品评论";
+}
+
+@section styles{
+    <style>
+        ul.service-form-uploadimages img {
+            height: 80px;
+            padding-left: 5px;
+            padding-right: 5px;
+            /*padding-top: 5px;*/
+            /*padding-bottom: 5px;*/
+            border: none;
+            margin-bottom: 0px;
+        }
+    </style>
+}
+
+@section scripts
+{
+
+    @Html.IncludeScript("~/Views/ProductComments/Index.js")
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">商品评论管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.Products.Create" data-toggle="modal" data-target="#ProductCreateModal"><i class="fa fa-plus"></i>添加商品评论</button>
+                </div>
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 100px">用户</th>
+                                <th style="width: 200px">商品名称</th>
+                                <th>评论内容</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 100px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.Items)
+                            {
+                                <tr>
+                                    <td>@product.MemberName</td>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.Content</td>
+
+                                    <td class="center">@product.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.Products.Delete" data-role="delete-row" data-id="@(product.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

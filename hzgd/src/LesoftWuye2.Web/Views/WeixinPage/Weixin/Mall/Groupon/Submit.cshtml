@@ -1,0 +1,192 @@
+﻿@using Abp.Application.Services.Dto
+@model LesoftWuye2.Application.Malls.Dto.GrouponDetail
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "拼团";
+    int type = (int)ViewData["type"];
+    int num = (int)ViewData["num"];
+    long joinGrouponId = (long)ViewData["joinGrouponId"];
+}
+
+@section styles
+{
+    <style>
+        .littdivcss {
+            width: 10px;
+            height: 4px;
+            transform: skewX(30deg);
+            float: left;
+        }
+
+        .littdivpaddingcss {
+            width: 13px;
+            height: 3px;
+            transform: skewX(30deg);
+            float: left;
+        }
+
+        .littdivcss:nth-child(4n+1) {
+            background: #ff6600;
+        }
+
+        .littdivcss:nth-child(4n+3) {
+            background: #0199CB;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                var littlediv = "<div class='littdivcss'></div><div class='littdivpaddingcss'></div>";
+                var docwidth = $(document).width();
+                var numdiv = docwidth % 23 == 0 ? docwidth / 23 : (docwidth / 23) - 1;
+                for (var i = 0; i < numdiv; i++) {
+                    $("#container").append(littlediv);
+                }
+
+
+                var progress = $.AMUI.progress;
+                var addressId = 0;
+                var getSubmitAddress = function () {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    var selAddress = app.utils.getCookieValue('select-address');
+                    var selectAddressId = 0;
+                    if (selAddress != null && !isNaN(selAddress)) {
+                        selectAddressId = parseInt(selAddress);
+                    }
+
+                    app.services.app.weixinService.getAddressForSubmit(selectAddressId).done(function (result) {
+                        if (result == null) {
+                            $('#no-address').show();
+                        } else {
+                            //当前地址id写入cookie,来实现返回页面传值
+                            app.utils.setCookieValue('select-address', result.id);
+                            addressId = result.id;
+
+
+                            var html = template('address-info', result);
+                            document.getElementById('address-info-contair').innerHTML = html;
+                            $('#has-address').show();
+
+
+                        }
+
+                    }).always(function () {
+                        progress.done(true);
+                        $('#main-container').show();
+                    });
+                };
+
+                getSubmitAddress();
+
+
+                $('#submitOrder').click(function () {
+
+                    var data = {};
+                    data.productId = '@Model.ProductId';
+                    data.grouponId = '@Model.Id';
+                    data.grouponOrderId = '@joinGrouponId';
+                    data.type = '@type';
+                    data.num = '@num';
+                    data.addressId = addressId;
+                    data.clientRemark = $('#remark').val();
+
+
+                    app.services.app.weixinService.submitOrder(data).done(function (result) {
+
+                     window.location = '/weixin/service/paylist?type=1&money=' + result.amount + "&orderno=" + result.orderNo;
+                    
+                    
+
+                    }).always(function () {
+
+                    });
+
+                });
+
+            });
+        })();
+
+
+    </script>
+}
+
+<div class="am-g" style="border: 1px; background-color: white; margin-top: 10px; padding-top: 5px; padding-bottom: 10px;display: none" id="no-address">
+    <a href="/weixin/mall/address/select" style="display: block">
+        <i class="am-icon-plus-square am-icon-sm" style="color: #ff6600; margin-left: 10px; font-size: 1.3rem"></i>
+        <span style="margin-left: 5px; color: black">手动添加地址</span>
+        <i class="am-icon-chevron-right am-icon-sm" style="color: lightgray; margin-right: 10px; font-size: 1.3rem; float: right; margin-top: 5px"></i>
+    </a>
+</div>
+
+<div class="am-g" style="background-color: white; margin-top: 10px; padding-top: 5px; padding-bottom: 10px;display: none" id="has-address">
+    <a href="/weixin/mall/address/select" style="display: block">
+        <div class="am-g">
+            <div class="am-u-sm-1">
+                <i class="am-icon-map-marker am-icon-sm" style="color: #ff6600; margin-left: 10px; font-size: 1.3rem; margin-top: 18px"></i>
+            </div>
+            <div class="am-u-sm-9">
+                <div class="am-inline" id="address-info-contair">
+                    <script id="address-info" type="text/html">
+                        <span style="margin-left: 5px; color: black; font-size: 18px">{{contact}}</span>
+                        <span style="margin-left: 5px; color: black; font-size: 15px">{{mobile}}</span>
+                        <br />
+                        <span style="margin-left: 5px; color: black; font-size: 13px">{{provinceName}}</span>
+                        <span style="margin-left: 5px; color: black; font-size: 13px">{{cityName}}</span>
+                        <span style="margin-left: 5px; color: black; font-size: 13px">{{districtName}}</span>
+                        <span style="margin-left: 5px; color: black; font-size: 13px">{{address}}</span>
+                    </script>
+                </div>
+            </div>
+            <div class="am-u-sm-1">
+                <i class="am-icon-chevron-right am-icon-sm" style="color: lightgray; margin-right: 10px; font-size: 1.3rem; float: right; margin-top: 18px"></i>
+            </div>
+        </div>
+    </a>
+</div>
+
+
+<div class="am-g" style="border: 1px; background-color: white; margin-top: 0px">
+
+    <div id="container">
+    </div>
+</div>
+
+<div class="am-g" style="border: 1px; background-color: white; margin-top: 10px">
+
+    <div class="am-u-sm-3 am-list-thumb" style="padding: 0px">
+        <img class="am-thumbnail" src="@(Model.Thumbnail)?width=100&height=100&mode=crop" style="border: none; margin: 5px; width: 80px; height: 80px; text-align: center" />
+    </div>
+
+    <div class="am-u-sm-9 am-list-main">
+        <p class="am-list-item-hd" style="font-size: 13px; text-align: left; height: 38px; overflow: hidden; word-wrap: break-word; margin-bottom: 5px">@(Model.Name)</p>
+        <div class="am-list-item-text" style="text-align: left"><span>价格:</span> <span style="color: #ff6600; font-size: 15px">￥@(type == 0 ? Model.Price : Model.SalePrice)</span></div>
+        <div class="am-list-item-text" style="text-align: left"><span>数量:</span> <span style="color: black; font-size: 15px">@(num)</span></div>
+    </div>
+</div>
+
+<div class="am-g" style="border: 1px; background-color: white; margin-top: 10px;padding: 10px">
+    <textarea style="width: 100%" placeholder="请输入订单备注" maxlength="100" id="remark"></textarea>
+</div>
+
+
+<div class="am-g" style="border: 1px; position: fixed; bottom: 0; background-color: white;height: 60px">
+    <div class="am-u-sm-8" style="padding: 0px; padding-top: 5px;">
+        <div style="float: right;margin-right: 20px">
+            <span>实付款:</span>
+            <strong style="color:  #ff6600">￥@(num * (type == 0 ? Model.Price : Model.SalePrice))</strong>
+        </div>
+
+    </div>
+    <div class="am-u-sm-4" style="padding: 0px; text-align: center;background-color: #ff6600">
+        <a style="color: white;display: block; height: 60px; vertical-align: middle;padding-top: 6px" href="javascript:void(0);" id="submitOrder">立即支付</a>
+    </div>
+</div>

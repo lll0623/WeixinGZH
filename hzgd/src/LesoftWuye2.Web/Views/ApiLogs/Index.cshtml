@@ -1,0 +1,129 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.ApiLogs
+@using LesoftWuye2.Application.ApiLogs
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.ApiLogs.Dto.ApiLogListDto>
+@{
+    ViewBag.ActiveMenu = "ApiLogs";
+    ViewBag.Title = "API调用日志";
+    List<ComboboxItemDto> projects = ViewData["projects"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+
+}
+@section scripts
+    {
+    @Html.IncludeScript("~/Views/ApiLogs/Index.js")
+
+    <script>
+
+
+
+
+    </script>
+}
+
+
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">API调用日志</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" id="clearall"><i class="fa fa-plus"></i>清除日志</button>
+                </div>
+            </div>
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 200px">接口名称</th>
+                                <th>请求参数</th>
+                                <th style="width: 70px" class='center'>结果</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 50px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var apiLog in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        @apiLog.Name
+                                    </td>
+                                    <td>@apiLog.Request</td>
+                                    <td class='center'>
+                                        @if (apiLog.Success)
+                                        {
+                                            <span class='label label-success'>成功</span>
+                                        }
+                                        else
+                                        {
+                                            <span class='label label-default'>失败</span>
+                                        }
+                                    </td>
+                                    <td class="center">@apiLog.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.ApiLogs.Update" data-role="update-row" data-id="@(apiLog.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>详情</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="ApiLogUpdateModal" tabindex="-1" role="dialog" aria-labelledby="ApiLogCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+            <form name="apiLogUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>API调用详情</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class='form-group'>
+                                <label label-for='title'>接口名称<span class='required'>*</span></label><input class='form-control' type='text' name='name' readonly="readonly" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class='form-group'>
+                                <label label-for='title'>请求参数<span class='required'>*</span></label><input class='form-control' type='text' name='request' readonly="readonly" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>返回值<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="update_content" style="height: 300px; width: 100%;" readonly="readonly"></textarea>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

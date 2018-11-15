@@ -1,0 +1,348 @@
+﻿@using Abp.Authorization.Users
+@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Application.Configuration.Dto.SettingsEditDto
+@{
+    ViewBag.ActiveMenu = "Settings"; //The menu item will be active for this page.
+    ViewBag.Title = "参数设置";
+}
+@section scripts
+{
+@Html.IncludeScript("~/Content/js/file-input/bootstrap-filestyle.min.js")
+@Html.IncludeScript("~/Content/js/ajaxfileupload.js")
+    @Html.IncludeScript("~/Views/Settings/Index.js")
+}
+
+@section styles{
+
+}
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">参数设置</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" id="saveSettings"><i class="fa fa-plus"></i>保存配置</button>
+                </div>
+
+            </div>
+            <div class="widget-body">
+                <div class="widget-main ">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs tabs-flat" id="myTab11">
+                            <li class="active">
+                                <a data-toggle="tab" href="#home11">
+                                    物业系统
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#profile11">
+                                    微信公众号
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#alipay">
+                                    支付宝接口
+                                </a>
+                            </li>
+                            <li style="display: none" >
+                                <a data-toggle="tab" href="#yapay">
+                                    银盛支付配置
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#mall">
+                                    商城配置
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content tabs-flat">
+                            <div id="home11" class="tab-pane in active">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label label-for="Name">物业系统api地址<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Wuye-ApiAddress" value="@Model.Wuye.ApiAddress">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label label-for="Name">账套代号<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Wuye-AccountCode" value="@Model.Wuye.AccountCode">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label label-for="Name">域名<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Wuye-Host" value="@Model.Wuye.Host">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label style="padding-left: 0px">
+                                                    <input type="checkbox" class="colored-blue" id="Wuye-EnabledPayFee" @((Model.Wuye.EnabledPayFee ?? "") == "true" ? "checked='checked'" : "")>
+                                                    <span class="text">启用缴费功能</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="profile11" class="tab-pane">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label label-for="Name">Token<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Weixin-Token" value="@Model.Weixin.Token">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label label-for="Name">AppId<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Weixin-AppId" value="@Model.Weixin.AppId">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label label-for="Name">AppSecret<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Weixin-AppSecret" value="@Model.Weixin.AppSecret">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label label-for="Name">原始Id<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Weixin-OriginalId" value="@Model.Weixin.OriginalId">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label label-for="Name">商户号<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Weixin-MchId" value="@Model.Weixin.MchId">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label label-for="Name">支付密钥<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="Weixin-PayKey" value="@Model.Weixin.PayKey">
+                                        </div>
+                                    </div>
+                                </div>
+                              <div class="alert alert-success">
+                                    <strong>微信菜单配置</strong> 创建菜单前，请先保存配置.
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label style="padding-left: 0px">
+                                                    <input type="checkbox" class="colored-blue" id="Weixin-MenuService"  @((Model.Weixin.MenuService??"")=="true"?"checked='checked'":"") >
+                                                    <span class="text">物业服务</span>
+                                                    <span>&nbsp;&nbsp;模板:</span>
+                                                    <select class="" id="Weixin-ServiceTemplate" >
+                                                        <option value="">默认</option>
+                                                        <option value="SHOPPING-CENTER-001" @((Model.Weixin.ServiceTemplate ?? "")== "SHOPPING-CENTER-001" ? "selected='selected'" : "")>购物中心001</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label style="padding-left: 0px">
+                                                    <input type="checkbox" class="colored-blue"  id="Weixin-MenuMall"  @((Model.Weixin.MenuMall ?? "")=="true"?"checked='checked'":"") >
+                                                    <span class="text">商城</span>
+                                                    <span>&nbsp;&nbsp;模板:</span>
+                                                    <select class="" id="Weixin-MallTemplate">
+                                                        <option>默认</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label style="padding-left: 0px">
+                                                    <input type="checkbox" class="colored-blue" id="Weixin-MenuMy" @((Model.Weixin.MenuMy ?? "") == "true" ? "checked='checked'" : "")>
+                                                    <span class="text">我的</span>
+                                                    <span>&nbsp;&nbsp;模板:</span>
+                                                    <select class="" id="Weixin-MyTemplate">
+                                                        <option>默认</option>
+                                                        <option value="SHOPPING-CENTER-001" @((Model.Weixin.MyTemplate ?? "") == "SHOPPING-CENTER-001" ? "selected='selected'" : "")>购物中心001</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button class="btn btn-danger btn-sm" id="createWeixinMenu">创建微信菜单</button>
+                                        <button class="btn btn-danger btn-sm" id="initTemplateMsg">初始化模版消息</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        <div id="alipay" class="tab-pane">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name"><span class="required">*</span>APPID</label>
+                                        <input class="form-control" type="text" id="Alipay-APPID" value="@Model.Alipay.APPID">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name"><span class="required">*</span>PID</label>
+                                        <input class="form-control" type="text" id="Alipay-PID" value="@Model.Alipay.PID">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name"><span class="required">*</span>支付宝RSA公钥</label>
+                                        <input class="form-control" type="text" id="Alipay-ALIPAY_PUBLIC_KEY" value="@Model.Alipay.ALIPAY_PUBLIC_KEY">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name"><span class="required">*</span>应用RSA私钥</label>
+                                        <input class="form-control" type="text" id="Alipay-APP_PRIVATE_KEY" value="@Model.Alipay.APP_PRIVATE_KEY">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="yapay" class="tab-pane">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label label-for="Name">商户号<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="YsPay-PartnerId" value="@Model.YsPay.PartnerId">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label label-for="Name">商户名称<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="YsPay-SellerName" value="@Model.YsPay.SellerName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label label-for="Name">正式密码<span class="required">*</span></label>
+                                            <input class="form-control" type="text" id="YsPay-KeyPassword" value="@Model.YsPay.KeyPassword">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div id="mall" class="tab-pane">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name">商品服务标签<span class="required">*</span></label>
+                                        <input class="form-control" type="text" id="Mall-ServiceTag" value="@Model.Mall.ServiceTag">
+                                        <p class="help-block">多个服务标签，用，号进行分割</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name">广告位图片（1）<span class="required">*</span></label><br/>
+                                        <input type="hidden" name="thumbnail" id="thumbnail" value="@(Model.Mall.AdImage)" data-role="excluded">
+                                        <img src="@(string.IsNullOrEmpty(Model.Mall.AdImage) ? "/Content/img/placehold/640x150.png" : Model.Mall.AdImage + "?width=640&height=150&mode=crop")" id="thumbnailImg" style="width: 320px; height: 75px"/>
+                                        &nbsp;&nbsp;<input id="uploadImage" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader.ajaxupload();">
+                                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage" onclick="tUploader.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name">广告位链接（2）<span class="required">*</span></label>
+                                        <input class="form-control" type="text" id="Mall-AdUrl" value="@Model.Mall.AdUrl">
+                                        <p class="help-block">拼团或者其他第3方网页链接</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name">广告位图片（2）<span class="required">*</span></label><br />
+                                        <input type="hidden" name="thumbnail2" id="thumbnail2" value="@(Model.Mall.AdImage2)" data-role="excluded">
+                                        <img src="@(string.IsNullOrEmpty(Model.Mall.AdImage2) ? "/Content/img/placehold/640x150.png" : Model.Mall.AdImage2 + "?width=640&height=150&mode=crop")" id="thumbnailImg2" style="width: 320px; height: 75px" />
+                                        &nbsp;&nbsp;<input id="uploadImage2" name="uploadImage2" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader2.ajaxupload();">
+                                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage2" onclick="tUploader2.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name">广告位链接（2）<span class="required">*</span></label>
+                                        <input class="form-control" type="text" id="Mall-AdUrl2" value="@Model.Mall.AdUrl2">
+                                        <p class="help-block">拼团或者其他第3方网页链接</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label label-for="Name">拼团玩法说明<span class="required">*</span></label>
+                                        <textarea class="form-control" rows="10" id="Mall-GrouponDescription">@Model.Mall.GrouponDescription</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

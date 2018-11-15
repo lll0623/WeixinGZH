@@ -1,0 +1,134 @@
+﻿@using LesoftWuye2.Core.MallSlideImages
+@using LesoftWuye2.Application.MallSlideImages
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.MallSlideImages.Dto.MallSlideImageListDto>
+@{
+    ViewBag.ActiveMenu = "MallSlideImages";
+    ViewBag.Title = "商城轮播图";
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/file-input/bootstrap-filestyle.min.js")
+    @Html.IncludeScript("~/Content/js/ajaxfileupload.js")
+    @Html.IncludeScript("~/Views/MallSlideImages/Index.js")
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">轮播图管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.MallSlideImages.Create" data-toggle="modal" data-target="#MallSlideImageCreateModal"><i class="fa fa-plus"></i>添加轮播图</button>
+                </div>
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th >缩略图</th>
+                                <th class='center' style="width: 70px">排序号</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 130px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var slideimage in Model.Items)
+                            {
+                                <tr>
+                                    <td >
+                                        <img src="@(slideimage.Thumbnail)?width=320&height=128&mode=crop" />
+                                    </td>
+                                    <td class='center'>@slideimage.Sort</td>
+                                    <td class="center">@slideimage.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.MallSlideImages.Update" data-role="update-row" data-id="@(slideimage.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.MallSlideImages.Delete" data-role="delete-row" data-id="@(slideimage.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div class="modal fade" id="MallSlideImageCreateModal" tabindex="-1" role="dialog" aria-labelledby="MallSlideImageCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="slideimageCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加轮播图</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class='form-group'>
+                        <label>缩略图<span class='required'>*</span></label>
+                        <br/>
+                        <input type="hidden" name="thumbnail" id="thumbnail" data-role="excluded">
+                        <img src="/Content/img/placehold/640x300.png" id="thumbnailImg" style="width: 320px; height: 150px"/>
+                        &nbsp;&nbsp;<input id="uploadImage" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader.ajaxupload();">
+                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage" onclick="tUploader.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+
+                    </div>
+                    <div class='form-group'><label label-for='Url'>链接地址</label><input class='form-control' type='text' name='Url'></div>
+                    <div class='form-group'><label label-for='Sort'>排序号<span class='required'>*</span></label><input class='form-control' type='number' name='Sort' required></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="MallSlideImageUpdateModal" tabindex="-1" role="dialog" aria-labelledby="MallSlideImageCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="slideimageUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>修改轮播图</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class='form-group'>
+                        <label>缩略图<span class='required'>*</span></label>
+                        <br/>
+                        <input type="hidden" name="thumbnail" id="thumbnail2" data-role="excluded">
+                        <img src="/Content/img/placehold/640x300.png" id="thumbnailImg2" style="width: 320px; height: 150px"/>
+                        &nbsp;&nbsp;<input id="uploadImage2" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader2.ajaxupload();">
+                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage2" onclick="tUploader2.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+
+                    </div>
+                    <div class='form-group'><label label-for='url'>链接地址</label><input class='form-control' type='text' name='url'></div>
+                    <div class='form-group'><label label-for='sort'>排序号</label><input class='form-control' type='number' name='sort'></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

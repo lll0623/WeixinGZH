@@ -1,0 +1,263 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Activitys
+@using LesoftWuye2.Application.Activitys
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Activitys.Dto.ActivityListDto>
+@{
+    ViewBag.ActiveMenu = "Activitys";
+    ViewBag.Title = "小区活动";
+    List<ComboboxItemDto> projects = ViewData["projects"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+}
+@section scripts
+{
+
+    @Html.IncludeScript("~/Content/js/file-input/bootstrap-filestyle.min.js")
+    @Html.IncludeScript("~/Content/js/ajaxfileupload.js")
+    @Html.IncludeScript("~/Content/js/kindeditor/kindeditor-min.js")
+    @Html.IncludeScript("~/Content/js/kindeditor/lang/zh_CN.js")
+
+
+    @Html.IncludeScript("~/Views/Activitys/Index.js")
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">小区活动管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.Activitys.Create" data-toggle="modal" data-target="#ActivityCreateModal"><i class="fa fa-plus"></i>添加小区活动</button>
+                </div>
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                        <tr role="row">
+                            <th style="width: 300px">所属小区</th>
+                            <th>活动标题</th>
+                            <th style="width: 120px" class="center">截止报名日期</th>
+                            <th style="width: 70px" class='center'>报名人数</th>
+                            <th style="width: 70px" class='center'>排序号</th>
+                            <th style="width: 150px" class="center">创建时间</th>
+                            <th style="width: 220px" class="center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var activity in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+                                        if (activity.AllProjects)
+                                        {
+                                            <span class='label label-success'>所有小区</span>
+                                        }
+                                        else
+                                        {
+                                            foreach (var projectName in activity.ProjectNames ?? new List<string>())
+                                            {
+                                                <span class='label label-default'>@projectName</span>
+                                            }
+                                        }
+                                    }
+                                </td>
+                                <td>@activity.Title</td>
+                                <td class='center'>
+                                    @activity.Expireday.ToString("yyyy-MM-dd")
+                                    @(Html.Raw(DateTime.Now.Date > activity.Expireday ? "<span class='badge badge-danger'>截</span>" : "") )
+                                </td>
+                                <td class='center'><span style="color: blue">@(activity.JoinCount)</span>/<span style="color: red">@activity.AllowCount</span></td>
+                                <td class='center'>@activity.Sort</td>
+                                <td class="center">@activity.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td class="button-holder center">
+                                    <a data-role-name="Pages.Activitys" href="/Activitys/Person/@(activity.Id)" class="btn btn-default btn-xs"><i class="fa fa-user"></i>报名人员</a>
+                                    <a data-role-name="Pages.Activitys.Update" data-role="update-row" data-id="@(activity.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                    <a data-role-name="Pages.Activitys.Delete" data-role="delete-row" data-id="@(activity.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--添加-->
+<div class="modal fade" id="ActivityCreateModal" tabindex="-1" role="dialog" aria-labelledby="ActivityCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary  modal-lg" role="document">
+        <div class="modal-content">
+            <form name="activityCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加小区活动</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class='form-group'>
+                                <label label-for='title'>活动标题<span class='required'>*</span></label><input class='form-control' type='text' name='title' required maxlength='@LesoftWuye2.Core.Newss.News.MaxTitleLength'>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="form-group">
+                                <label></label>
+                                <div class="checkbox">
+                                    <label style="padding-left: 0px">
+                                        <input type="checkbox" class="colored-blue" value="true" name="allProjects" data-role="excluded">
+                                        <span class="text">不区分小区</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label label-for='title'>所属小区</label>
+                        <select multiple="multiple" style="width: 100%;" class="select2" name="projects" id="projects_create" data-placeholder="点击选择小区">
+                            @{
+
+                                foreach (var itemDto in projects)
+                                {
+                                    <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                }
+                            }
+                        </select>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='title'>活动截止报名日期<span class='required'>*</span></label>
+                                <input class='form-control date-picker' data-date-format='yyyy-mm-dd' type='text' name='expireday' required>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='title'>允许参加人数<span class='required'>*</span></label>
+                                <input class='form-control' type='number' name='allowCount' required >
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label>缩略图</label>
+                        <br />
+                        <input type="hidden" name="thumbnail" id="thumbnail" data-role="excluded">
+                        <img src="/Content/img/placehold/160x100.png" id="thumbnailImg" style="width: 160px; height: 100px" />
+                        &nbsp;&nbsp;<input id="uploadImage" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader.ajaxupload();">
+                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage" onclick="tUploader.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>内容<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="create_content" style="height: 250px; width: 100%; visibility: hidden;"></textarea>
+                    </div>
+                    <div class='form-group'><label label-for='Sort'>排序号<span class='required'>*</span></label><input class='form-control' type='number' name='Sort' required></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="ActivityUpdateModal" tabindex="-1" role="dialog" aria-labelledby="ActivityCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary  modal-lg" role="document">
+        <div class="modal-content">
+            <form name="activityUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>修改小区活动</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class='form-group'>
+                                <label label-for='title'>活动标题<span class='required'>*</span></label><input class='form-control' type='text' name='title' required maxlength='@LesoftWuye2.Core.Newss.News.MaxTitleLength'>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="form-group">
+                                <label></label>
+                                <div class="checkbox">
+                                    <label style="padding-left: 0px">
+                                        <input type="checkbox" class="colored-blue" value="true" name="allProjects" data-role="excluded">
+                                        <span class="text">不区分小区</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label label-for='title'>所属小区</label>
+                        <select multiple="multiple" style="width: 100%;" class="select2" name="projects" id="projects_update" data-placeholder="点击选择小区">
+                            @{
+                                foreach (var itemDto in projects)
+                                {
+                                    <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                }
+                            }
+                        </select>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='title'>活动截止报名日期<span class='required'>*</span></label>
+                                <input class='form-control date-picker' data-date-format='yyyy-mm-dd' type='text' name='expireday' required>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class='form-group'>
+                                <label label-for='title'>允许参加人数<span class='required'>*</span></label>
+                                <input class='form-control' type='number' name='allowCount' required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label>缩略图</label>
+                        <br />
+                        <input type="hidden" name="thumbnail" id="thumbnail2" data-role="excluded">
+                        <img src="/Content/img/placehold/160x100.png" id="thumbnailImg2" style="width: 160px; height: 100px" />
+                        &nbsp;&nbsp;<input id="uploadImage2" name="uploadImage" type="file" class="filestyle" style="white-space: nowrap; display: inline" data-icon="false" data-buttonText="上传图片" data-classButton="btn btn-success btn-xs" data-input="false" onchange="tUploader2.ajaxupload();">
+                        &nbsp;&nbsp;<a href="javascript:void(0)" id="removeImage2" onclick="tUploader2.remove();" style="display: none" class="btn  btn-danger btn-xs">移除图片</a>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>内容<span class="required">*</span></label>
+                        <textarea data-role="excluded" class="form-control" name="content" id="update_content" style="height: 300px; width: 100%; visibility: hidden;"></textarea>
+                    </div>
+                    <div class='form-group'><label label-for='sort'>排序号<span class='required'>*</span></label><input class='form-control' type='number' name='sort' required></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

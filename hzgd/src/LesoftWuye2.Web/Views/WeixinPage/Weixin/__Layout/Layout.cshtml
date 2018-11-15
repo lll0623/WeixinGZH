@@ -1,0 +1,63 @@
+﻿@using Abp.Web.Mvc.Extensions
+<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+
+    <title>@(ViewBag.Title)</title>
+    @Html.IncludeStyle("~/Content/frontpage/css/amazeui.min.css")
+    @Html.IncludeStyle("~/Content/frontpage/css/app.css")
+    @Html.IncludeStyle("~/Content/frontpage/js/sweetalert/sweet-alert.css")
+    @RenderSection("styles", required: false)
+    <style>
+        .am-header-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1010;
+        }
+
+        .service-form-submit {
+            background-color: #ff6600;
+            border-color: #ff6600;
+        }
+
+    
+    </style>
+</head>
+
+<body>
+
+
+    <div id="main-container">
+        @RenderBody()
+    </div>
+    @Html.IncludeScript("~/Content/frontpage/js/jquery.min.js")
+    @Html.IncludeScript("~/Content/frontpage/js/amazeui.min.js")
+    @Html.IncludeScript("~/Content/frontpage/js/sweetalert/sweet-alert.min.js")
+    @Html.IncludeScript("~/Content/frontpage/js/template.js")
+    @Html.IncludeScript("~/Views/WeixinPage/Weixin/app.js")
+    @Html.IncludeScript("~/Views/WeixinPage/Weixin/services.js")
+    @RenderSection("scripts", required: false)
+    <script>
+
+        (function () {
+            $(function () {
+
+            });
+        })();
+
+
+
+    </script>
+</body>
+
+</html>

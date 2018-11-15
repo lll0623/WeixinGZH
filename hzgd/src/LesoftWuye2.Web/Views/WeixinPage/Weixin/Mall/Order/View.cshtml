@@ -1,0 +1,178 @@
+﻿@using Abp.Application.Services.Dto
+@model LesoftWuye2.Application.Malls.Dto.OrderDetail
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "订单详情";
+
+}
+
+@section styles
+{
+    <style>
+
+    </style>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                $('#confirmReceived').click(function () {
+                    app.message.confirm("确认收货", "询问", function (isConfirmed) {
+                        if (isConfirmed) {
+                            app.services.app.weixinService.confirmReceived('@Model.Id')
+                                .done(function (result) {
+                                    window.location.reload();
+                                });
+                        }
+                    });
+
+                });
+
+            });
+        })();
+
+
+    </script>
+}
+
+<div class="am-g" style="border: 1px; background-color: #ff6600; padding: 10px;color: white">
+    <p>@Model.StatusText</p>
+    @{
+        if (Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.HasShip)
+        {
+            @*<span style="font-size: 10px">10天后系统将自动确认收货</span>*@
+            <a href="javascript:void(0);" id="confirmReceived" style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px" class="am-btn am-btn-success am-radius am-btn-xs am-fr">确认收货</a>
+        }
+
+        if (Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.Received)
+        {
+            <span style="font-size: 10px">请对订单商品进行评价</span>
+            <a href="/weixin/mall/order/comment?id=@Model.Id" style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px" class="am-btn am-btn-success am-radius am-btn-xs am-fr">评价</a>
+        }
+
+        if (Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.WaitingPay)
+        {
+            <a href="/weixin/service/paylist?type=1&money=@Model.Amount&orderno=@Model.OrderNo" style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px" class="am-btn am-btn-success am-radius am-btn-xs am-fr">去支付</a>
+        }
+    }
+</div>
+
+
+<div class="am-g" style="background-color: white; margin-top: 10px; padding-top: 5px; padding-bottom: 10px;" id="has-address">
+    <a href="javascript:void(0);" style="display: block">
+        <div class="am-g">
+            <div class="am-u-sm-1">
+                <i class="am-icon-map-marker am-icon-sm" style="color: #ff6600; margin-left: 10px; font-size: 1.3rem; margin-top: 18px"></i>
+            </div>
+            <div class="am-u-sm-11">
+                <div class="am-inline" id="address-info-contair">
+
+                    <span style="margin-left: 5px; color: black; font-size: 18px">@Model.Contact</span>
+                    <span style="margin-left: 5px; color: black; font-size: 15px">@Model.Mobile</span>
+                    <br />
+                    <span style="margin-left: 5px; color: black; font-size: 13px">@Model.Address</span>
+
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+
+
+<div class="am-g" style="border: 1px; background-color: white; margin-top: 10px">
+    <a href="/weixin/mall/groupon/view?id=@(Model.GrouponId)">
+        <div class="am-u-sm-3 am-list-thumb" style="padding: 0px">
+            <img class="am-thumbnail" src="@(Model.Thumbnail)?width=100&height=100&mode=crop" style="border: none; margin: 5px; width: 80px; height: 80px; text-align: center" />
+        </div>
+
+        <div class="am-u-sm-9 am-list-main">
+            <p class="am-list-item-hd" style="color: black; font-size: 13px; text-align: left; height: 38px; overflow: hidden; word-wrap: break-word; margin-bottom: 5px">@(Model.ProductName)</p>
+            <div class="am-list-item-text" style="text-align: left"><span>数量:</span> <span style="color: black; font-size: 15px">@(Model.Num)</span></div>
+        </div>
+
+    </a>
+
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-dashed"/>
+
+    @{
+        if (Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.IsReading ||
+            Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.HasShip ||
+             Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.Cancel ||
+            Model.Status == LesoftWuye2.Core.Mall.Orders.OrderStatus.Received)
+        {
+            
+            if (Model.RefundStatus == LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.None)
+            {
+                <a href="/weixin/mall/refund/apply?id=@(Model.Id)" style="margin-right: 10px; margin-bottom: 10px" class="am-btn am-btn-danger am-radius am-btn-xs am-fr">申请退款</a>
+            }
+
+            if (Model.RefundStatus == LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.Processing)
+            {
+                <a href="/weixin/mall/refund/view?id=@(Model.Id)" style="margin-right: 10px; margin-bottom: 10px" class="am-btn am-btn-warning am-radius am-btn-xs am-fr">退款审核中</a>
+            }
+
+            if (Model.RefundStatus == LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.Accept)
+            {
+                <a href="/weixin/mall/refund/view?id=@(Model.Id)" style="margin-right: 10px; margin-bottom: 10px" class="am-btn am-btn-warning am-radius am-btn-xs am-fr">退款申请通过，退款中</a>
+            }
+
+            if (Model.RefundStatus == LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.Done)
+            {
+                <a href="/weixin/mall/refund/view?id=@(Model.Id)" style="margin-right: 10px; margin-bottom: 10px" class="am-btn am-btn-warning am-radius am-btn-xs am-fr">退款申请通过，退款完成</a>
+            }
+
+            if (Model.RefundStatus == LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.Reject)
+            {
+                <a href="/weixin/mall/refund/view?id=@(Model.Id)" style="margin-right: 10px; margin-bottom: 10px" class="am-btn am-btn-warning am-radius am-btn-xs am-fr">退款申请未通过</a>
+            }
+
+        }
+    }
+
+    @{
+        if (Model.Type == LesoftWuye2.Core.Mall.Orders.OrderType.Groupon && Model.GrouponStatus != LesoftWuye2.Core.Mall.Orders.GrouponStatus.None)
+        {
+            <a href="/weixin/mall/groupon/order?id=@(Model.GrouponOrderId)" style="margin-right: 10px; margin-bottom: 10px" class="am-btn am-btn-warning am-radius am-btn-xs am-fr">查看团详情</a>
+        }
+    }
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+
+    <div class="am-g" style="border: 1px; background-color: white; margin-bottom: 10px">
+
+        <span class="am-fr" style="margin-right: 20px">实付:<strong style="color: #ff6600">￥@(Model.Amount)</strong></span>
+
+    </div>
+
+</div>
+
+@{
+    if (!string.IsNullOrEmpty(Model.ClientRemark))
+    {
+        <div class="am-g" style="border: 1px; background-color: white; margin-top: 10px; padding-left: 10px">
+            <p style="font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 5px"><span>备注:</span>&nbsp;@Model.ClientRemark</p>
+        </div>
+    }
+}
+
+
+
+<div class="am-g" style="border: 1px; background-color: white; margin-top: 10px; padding-left: 10px">
+    <p style="font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 5px"><span>订单编号:</span>&nbsp;@Model.OrderNo</p>
+    <p style="font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 5px"><span>支付方式:</span>&nbsp;@Model.PayChannel</p>
+    <p style="font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 5px"><span>下单时间:</span>&nbsp;@Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+    @{
+        if (Model.RefundsPayTime.HasValue)
+        {
+            <p style="font-size: 13px; color: red; margin-bottom: 5px; margin-top: 5px"><span>退款时间:</span>&nbsp;@Model.RefundsPayTime.Value.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            <p style="font-size: 13px; color: red; margin-bottom: 5px; margin-top: 5px"><span>退款单号:</span>&nbsp;@Model.RefundsTradeNo</p>
+        }
+    }
+</div>
+
+
+

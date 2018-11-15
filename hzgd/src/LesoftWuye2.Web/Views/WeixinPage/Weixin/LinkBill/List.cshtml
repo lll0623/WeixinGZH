@@ -1,0 +1,69 @@
+﻿@model List<string>
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = ViewData["title"];
+}
+
+@section scripts
+{
+    <script>
+        (function() {
+            $(function() {
+
+                var progress = $.AMUI.progress;
+                var loadRooms = function() {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getEventItem(0,'@(ViewData["EType"])', '@(ViewData["EDType"])', 1, 10)
+                                .done(function(result) {
+                                    if (result.success) {
+
+                                        var html = '';
+
+                                        $(result.info).each(function(idx, obj) {
+                                            var line = '';
+
+                                            line += "<section class='am-panel am-panel-default' onclick=\"window.location.href='/weixin/linkbill/view?&EType=@(ViewData["EType"])&EDType=@(ViewData["EDType"])&BillCode=" + obj.billCode + "'\">";
+                                            line += "    <header class='am-panel-hd'>";
+                                            line += "<h3 class='am-panel-title'>单据编号：" + obj.billCode + "</h3>";
+                                            line += "</header>";
+                                            line += "<div class='am-panel-bd'>";
+                                            line += "<div>" + obj.content + "</div>";
+                                            line += "</div>";
+                                            line += "<footer class='am-panel-footer' style='text-align: right'>单据时间:" + obj.billDate + "</footer>";
+                                            line += "</section>";
+
+
+
+                                            html += line;
+                                        });
+                                        $('#items-list').empty();
+                                        $('#items-list').append(html);
+                                        progress.done(true);
+                                        $('#main-container').show();
+                                    } else {
+                                        progress.done(true);
+                                        $('#main-container').show();
+                                        app.message.warn(result.msg);
+                                    }
+
+                                });
+                };
+
+                loadRooms();
+
+
+            });
+        })();
+
+    </script>
+}
+
+<div id="items-list">
+
+</div>
+
+
+
+

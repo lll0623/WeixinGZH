@@ -1,0 +1,42 @@
+﻿@model LesoftWuye2.Web.Models.Layout.BreadcrumbViewModel
+@if (Model.Items != null)
+{
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            @{
+                foreach (var item in Model.Items)
+                {
+                    if (!item.IsActive)
+                    {
+                        <li>
+                            @{
+                                if (!string.IsNullOrEmpty(item.Icon))
+                                {
+                                    <i class="@item.Icon"></i>
+                                }
+                            }
+                            <a href="@(item.Link)">@(item.Name)</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="active">@item.Name</li>
+                    }
+                }
+            }
+        </ul>
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

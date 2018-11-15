@@ -1,0 +1,109 @@
+﻿@using {$NameSpace$}.Core.{$EntityName$}s
+@using {$NameSpace$}.Application.{$EntityName$}s
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<{$NameSpace$}.Application.{$EntityName$}s.Dto.{$EntityName$}ListDto>
+    @{
+    ViewBag.ActiveMenu = "{$EntityName$}s";
+    ViewBag.Title = "{$EntityDescription$}";
+    }
+    @section scripts
+    {
+    @Html.IncludeScript("~/Views/{$EntityName$}s/Index.js")
+    }
+
+    <!--列表-->
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="widget">
+                <div class="widget-header">
+                    <span class="widget-caption">{$EntityDescription$}管理</span>
+                    <div class="widget-buttons">
+                        <button class="btn btn-primary btn-sm" data-role-name="Pages.{$EntityName$}s.Create" data-toggle="modal" data-target="#{$EntityName$}CreateModal"><i class="fa fa-plus"></i>添加{$EntityDescription$}</button>
+                    </div>
+                </div>
+
+
+                <div class="widget-body no-padding">
+                    <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                    <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                        <table class="table table-bordered table-hover table-striped data-list">
+                            <thead class="bordered-themeprimary">
+                                <tr role="row">
+                                    {$TableThread$}
+                                    <th style="width: 150px" class="center">创建时间</th>
+                                    <th style="width: 200px" class="center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var {$EntityName1$} in Model.Items)
+                                {
+                                <tr>
+                                    {$TableBody$}
+                                    <td class="center">@{$EntityName1$}.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.{$EntityName$}s.Update" data-role="update-row" data-id="@({$EntityName1$}.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.{$EntityName$}s.Delete" data-role="delete-row" data-id="@({$EntityName1$}.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @(Html.Raw(ViewData["___paging"]))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--添加-->
+    <div class="modal fade" id="{$EntityName$}CreateModal" tabindex="-1" role="dialog" aria-labelledby="{$EntityName$}CreateModalLabel" data-backdrop="static">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <form name="{$EntityName1$}CreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span><i class="fa fa-plus">&nbsp;</i>添加{$EntityDescription$}</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        {$CreateModal$}
+                    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+    </div>
+</form>
+            </div>
+        </div>
+    </div>
+
+    <!--修改-->
+    <div class="modal fade" id="{$EntityName$}UpdateModal" tabindex="-1" role="dialog" aria-labelledby="{$EntityName$}CreateModalLabel" data-backdrop="static">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <form name="{$EntityName1$}UpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                    <input name="id" type="hidden" />
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span><i class="fa fa-plus">&nbsp;</i>修改{$EntityDescription$}</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        {$UpdateModal$}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+

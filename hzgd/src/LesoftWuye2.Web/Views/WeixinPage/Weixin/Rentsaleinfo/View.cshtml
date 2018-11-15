@@ -1,0 +1,60 @@
+﻿@using Abp.Web.Mvc.Extensions
+@using LesoftWuye2.Application.Rentsaleinfos.Dto
+@model LesoftWuye2.Application.Rentsaleinfos.Dto.RentsaleinfoItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = Model.Title;
+}
+
+
+@section scripts
+{
+
+    <script>
+  
+
+    </script>
+}
+
+
+
+
+<article class="am-article" style="padding: 10px">
+    <div class="am-article-hd">
+        <h1 class="am-article-title">@Model.Title</h1>
+        <p class="am-article-meta">发布时间：@Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+    </div>
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+
+    <div class="am-article-bd">
+        <blockquote>
+            <p>联系人：@(Model.Contact)</p>
+            <p>联系电话：@(Model.Mobile) <a href="tel:@(Model.Mobile)" class="am-btn am-btn-link"><i class="am-icon-phone am-icon-fw"></i>拨打电话</a></p>
+        </blockquote>
+
+        @(Html.Raw(Model.Content))
+    </div>
+    @{
+        if ((Model.Images ?? new List<string>()).Count > 0)
+        {
+            <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+        }
+    }
+
+    <ul data-am-widget="gallery" class="am-gallery am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-gallery-overlay" data-am-gallery="{ pureview: true }" style="padding: 0">
+        @{
+            foreach (var image in Model.Images ?? new List<string>())
+            {
+                <li>
+                    <div class="am-gallery-item">
+                        <a href="@image" class="">
+                            <img src="@(image)?width=320&mode=crop"/>
+                        </a>
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+
+
+</article>

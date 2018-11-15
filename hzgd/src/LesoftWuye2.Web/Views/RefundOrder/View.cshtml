@@ -1,0 +1,154 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Estateinfos
+@using LesoftWuye2.Application.Estateinfos
+@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Application.RefundOrders.Dto.RefundOrderItemDto
+@{
+    ViewBag.ActiveMenu = "RefundOrders";
+    ViewBag.Title = "退款查看";
+}
+
+@section styles{
+    @Html.IncludeStyle("~/Content/js/viewer/css/viewer.min.css")
+    <style>
+        #images img {
+            margin-right:10px
+        }
+    </style>
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/viewer/js/viewer.min.js")
+    @Html.IncludeScript("~/Views/RefundOrder/View.js")
+}
+
+<input type="hidden" id="orderId" value="@Model.Id" />
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="well invoice-container">
+            <div class="row">
+                <div class="col-xs-4">
+                    <h3 class="">
+                        <i class="fa fa-check"></i>
+                        退款详情
+                        @{
+                            if (Model.Status == LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.Processing)
+                            {
+                                <a class="btn btn-link" id="accept" style="color: blue!important">同意退款</a>
+                                <a class="btn btn-link" id="reject" style="color: red!important">不同意退款</a>
+                            }
+                        }
+                        
+                    </h3>
+                      
+                </div>
+                <div class="col-xs-8 text-right">
+                    <div>
+                        <span>订单号:</span>
+                        <strong>@(Model.OrderNo)</strong>
+                        <span> | </span>
+                        <span>申请时间:</span>
+                        <strong>@(Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"))</strong>
+                        <span> | </span>
+                        <span>退款状态:</span>
+                        <strong style="color: blue"> @(Model.StatusDesc) </strong>
+                    </div>
+                    <div class="horizontal-space">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="/Order/View?id=@Model.OrderId">查看订单详情</a>
+                            <h6>联系电话: @(Model.Mobile)</h6>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col-xs-5 col-xs-offset-2 text-right">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h6 style="color: red"><strong>￥@(Model.RefundMoney)元</strong> </h6>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                   支付金额: @Model.Amount
+                                </li>
+                                <li>
+                                    退款金额: @Model.RefundMoney
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- / end client details section -->
+
+
+           
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h6>退款说明</h6>
+                                </div>
+                                <div class="panel-body">
+                                    <span>@Model.Remark</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- / end client details section -->
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h6>相关图片</h6>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-xs-12" id="images">
+                                @{
+                                    foreach (var image in Model.Images)
+                                    {
+                                        <img data-original='@(image)' src='@(image)?width=128&height=128&mode=crop' />
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+
+
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 60px"><h5 class="no-margin-bottom text-center">缩略图</h5></th>
+                    <th><h5 class="no-margin-bottom">商品名称</h5></th>
+                    <th><h5 class="no-margin-bottom">数量</h5></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="@(Model.Thumbnail)?width=50&height=50&mode=crop"/>  </td>
+                        <td><a href="#">@Model.Name</a></td>
+                        <td class="text-center">@Model.Num</td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+            <hr class="wide" />
+          
+
+        </div>
+    </div>
+</div>
+

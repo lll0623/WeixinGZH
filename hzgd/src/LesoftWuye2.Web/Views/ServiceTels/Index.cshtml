@@ -1,0 +1,117 @@
+﻿@using LesoftWuye2.Core.ServiceTels
+@using LesoftWuye2.Application.ServiceTels
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.ServiceTels.Dto.ServiceTelListDto>
+@{
+    ViewBag.ActiveMenu = "ServiceTels";
+    ViewBag.Title = "服务电话";
+}
+@section scripts
+    {
+    @Html.IncludeScript("~/Views/ServiceTels/Index.js")
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">服务电话管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.ServiceTels.Create" data-toggle="modal" data-target="#ServiceTelCreateModal"><i class="fa fa-plus"></i>添加服务电话</button>
+                </div>
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th >名称</th>
+                                <th style="width: 150px">电话号码</th>
+                                <th style="width: 70px" class='center'>排序号</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 130px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var servicetel in Model.Items)
+                            {
+                                <tr>
+                                    <td >@servicetel.Name</td>
+                                    <td >@servicetel.Tel</td>
+                                    <td class='center'>@servicetel.Sort</td>
+                                    <td class="center">@servicetel.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.ServiceTels.Update" data-role="update-row" data-id="@(servicetel.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.ServiceTels.Delete" data-role="delete-row" data-id="@(servicetel.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div class="modal fade" id="ServiceTelCreateModal" tabindex="-1" role="dialog" aria-labelledby="ServiceTelCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="servicetelCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加服务电话</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class='form-group'><label label-for='Name'>名称<span class='required'>*</span></label><input class='form-control' type='text' name='Name' required maxlength='@LesoftWuye2.Core.ServiceTels.ServiceTel.MaxNameLength'></div>
+                    <div class='form-group'><label label-for='Tel'>电话号码<span class='required'>*</span></label><input class='form-control' type='text' name='Tel' required maxlength='@LesoftWuye2.Core.ServiceTels.ServiceTel.MaxTelLength'></div>
+                    <div class='form-group'><label label-for='Sort'>排序号<span class='required'>*</span></label><input class='form-control' type='number' name='Sort' required></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="ServiceTelUpdateModal" tabindex="-1" role="dialog" aria-labelledby="ServiceTelCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="servicetelUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>修改服务电话</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class='form-group'><label label-for='name'>名称<span class='required'>*</span></label><input class='form-control' type='text' name='name' required maxlength='@LesoftWuye2.Core.ServiceTels.ServiceTel.MaxNameLength'></div>
+                    <div class='form-group'><label label-for='tel'>电话号码<span class='required'>*</span></label><input class='form-control' type='text' name='tel' required maxlength='@LesoftWuye2.Core.ServiceTels.ServiceTel.MaxTelLength'></div>
+                    <div class='form-group'><label label-for='sort'>排序号</label><input class='form-control' type='number' name='sort'></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,64 @@
+﻿@using System.Web.Optimization
+@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Web.Models.Account.LoginFormViewModel
+
+@{
+    Layout = null;
+    SetAntiForgeryCookie();
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>系统登录</title>
+
+    <meta name="description" content="login page" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/Content/img/favicon.png" type="image/x-icon">
+
+    @Styles.Render("~/Bundles/login/css")
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="login-container animated fadeInDown">
+        <div class="loginbox bg-white">
+            <div class="loginbox-title">SIGN IN</div>
+            <form id="LoginForm" class="form-horizontal" action="@(Url.Action("Login", "Account"))?returnUrl=@(Model.ReturnUrl)" method="POST">
+                <div class="loginbox-textbox" style="margin-top: 10px">
+                    <input type="text" class="form-control" placeholder="账号"  id="EmailAddressInput"/>
+                </div>
+                <div class="loginbox-textbox">
+                    <input type="password" class="form-control" placeholder="密码" id="PasswordInput"/>
+                </div>
+                <div class="loginbox-textbox" style="padding-top: 0px;margin-bottom: 10px">
+                    <div class="checkbox pull-right" style="margin:0">
+                        <label>
+                            <input type="checkbox"  id="RememberMeInput">
+                            <span class="text">记住登录</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="loginbox-submit" style="margin-top: 25px">
+                    <input type="submit" id="LoginButton" class="btn btn-primary btn-block" value="登入">
+                </div>
+            </form>
+        </div>
+        <div class="logobox">
+        </div>
+    </div>
+    @Scripts.Render("~/Bundles/vendor/js/login")
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

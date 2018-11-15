@@ -1,0 +1,74 @@
+﻿
+.login-area .profile>span {
+    min-width: 80px
+}
+
+
+.search-panel .search-logic {
+    padding-right: 5px;
+}
+
+.search-panel .search-title {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-bottom: 0px;
+    font-size: 12px;
+    color: gray;
+    text-align: center
+}
+
+.search-panel .search-field {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.search-panel .search-field-first {
+    padding-right: 0px;
+}
+
+.search-panel .search-row {
+    margin-bottom: 5px
+}
+
+.search-panel .search-value {
+    padding-left: 5px;
+    padding-right: 0px;
+}
+
+
+.data-list>thead>tr>th.center{
+    text-align: center
+}
+
+.data-list>tbody>tr>td.center{
+    text-align: center
+}
+
+.data-list>thead>tr>th.right{
+    text-align: center
+}
+
+.data-list>tbody>tr>td.right{
+    text-align: center
+}
+
+
+.data-list>tbody>tr>td {
+    vertical-align: middle
+}
+
+.data-list>tbody>tr>td, 
+.data-list>tbody>tr>th, 
+.data-list>tfoot>tr>td, 
+.data-list>tfoot>tr>th, 
+.data-list>thead>tr>td, 
+.data-list>thead>tr>th {
+    padding: 6px
+}
+
+.form-group .required{
+    color: red
+}
+
+
+.datepicker{z-index:1151 !important;}

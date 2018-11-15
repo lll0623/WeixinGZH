@@ -1,0 +1,225 @@
+﻿@using Abp.Application.Services.Dto
+@model LesoftWuye2.Application.Malls.Dto.OrderDetail
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "申请退款";
+
+}
+
+@section styles
+{
+    <style>
+        .am-article-meta {
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .field-title {
+            color: gray;
+            font-size: 13px;
+        }
+
+        .field-value {
+            margin-left: 10px;
+            color: black;
+            font-size: 13px;
+        }
+
+        .field-item {
+            border-width: 0 0 1px 0;
+            border-style: solid;
+            border-color: lightgray;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+        wx.config({
+            debug: false,  // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@(ViewData["AppId"])', // 必填，公众号的唯一标识
+            timestamp: '@(ViewData["Timestamp"])', // 必填，生成签名的时间戳
+            nonceStr: '@(ViewData["NonceStr"])', // 必填，生成签名的随机串
+            signature: '@(ViewData["Signature"])', // 必填，签名，见附录1
+            jsApiList: ['uploadImage', 'chooseImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+        wx.ready(function () {
+            $('#image-0').show();
+        });
+    </script>
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                $('#confirmReceived').click(function () {
+                    app.message.confirm("确认收货", "询问", function (isConfirmed) {
+                        if (isConfirmed) {
+                            app.services.app.weixinService.confirmReceived('@Model.Id')
+                                .done(function (result) {
+                                    window.location.reload();
+                                });
+                        }
+                    });
+
+                });
+
+
+                var imglist = new Array();
+                $('#image-0').click(function () {
+
+                    wx.chooseImage({
+                        success: function (res) {
+                            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                            if (imglist.length + localIds.length > 4) {
+                                abp.message.warn("最多上传4张图片!");
+                                return;
+                            }
+
+                            for (var i = 0; i < localIds.length; i++) {
+                                wx.uploadImage({
+                                    localId: localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
+                                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                                    success: function (res) {
+                                        var serverId = res.serverId; // 返回图片的服务器端ID
+                                        $.post(
+                                            "/File/UploadImageFromWeixinJssdk",
+                                            { serverId: serverId },
+                                            function (result) {
+                                                console.log(result);
+                                                if (result.success) {
+                                                    var imageUrl = result.result.host + "/Upload/Images/" + result.result.fileName;
+                                                    var newImage = "<li data-url='" + imageUrl + "' ><img class='am-thumbnail'  src='" + imageUrl + "?width=128&height=128&mode=crop" + "' /></li>";
+                                                    $('#image-groups li').eq(0).before(newImage);
+                                                    if ($('#image-groups li').length >= 5) {
+                                                        $('#image-0').hide();
+                                                    }
+                                                } else {
+                                                    app.message.error(result.error.message);
+                                                }
+                                            });
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                });
+
+                $('#image-groups').delegate('li[data-url]', 'click', function (e) {
+                    e.preventDefault();
+                    var obj = $(this);
+                    app.message.confirm("确认移除图片", "询问", function (isConfirmed) {
+                        if (isConfirmed) {
+                            $(obj).remove();
+                            if ($('#image-groups li').length < 5) {
+                                $('#image-0').show();
+                            }
+                        }
+                    });
+                });
+
+
+                $('#submit').click(function (e) {
+                    e.preventDefault();
+
+
+                    var data = {};
+                    data.id = '@Model.Id';
+                    data.type = $('#type').val();
+                    data.remark = $('#remark').val();
+                    data.images = [];
+
+                    $('#image-groups li').each(function (idx, obj) {
+                        if (!$(obj).data('url')) return;
+                        data.images.push($(obj).data('url'));
+                    });
+                    
+                   
+
+                    if (data.remark === "") {
+                        $('#remark').focus();
+                        app.message.warn('请输入退款说明!');
+                        return;
+                    }
+
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.refundApply(data)
+                        .done(function (result) {
+
+                            
+                            app.message.success('退款申请提交成功', '成功', function () {
+                                app.gotoPage('/weixin/mall/refund/view?id=@(Model.Id)');
+                            });
+
+                         
+
+                        }).always(function () {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+            });
+        })();
+
+
+    </script>
+}
+
+<div class="am-panel am-panel-default" style="margin: 5px">
+    <div class="am-panel-bd" style="padding: 10px">
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">退款类型</span></div>
+            <div class="am-u-sm-10" style="padding: 0px; padding-left: 10px">
+                <select id="type" style="width: 100%; border: none; margin-bottom: 3px; font-size: 13px">
+                    <option value="1">我要退款(无需退货)</option>
+                    <option value="2">我要退货</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">退款金额</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="amount" style="color: red"><b>@(Model.Amount)</b></span></div>
+        </div>
+        <div class="am-g field-item" style="border: none">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">退款说明</span></div>
+        </div>
+        <div class="am-g field-item">
+            <textarea id="remark" style="border: none; width: 100%; font-size: 13px" rows="3" placeholder="请您详细填写退款说明。（最多200字）"></textarea>
+        </div>
+        <div class="am-g field-item" style="border: none">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">联系电话</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="mobile"><b>@Model.Mobile</b></span></div>
+        </div>
+    </div>
+</div>
+
+<div class="am-panel am-panel-default" style="margin: 5px">
+    <div class="am-panel-bd" style="padding: 10px">
+        <small class="service-form-tip">上传凭证(最多4张)</small>
+        <ul class="am-avg-sm-4 service-form-uploadimages" id="image-groups" style="margin-bottom: 10px;margin-top: 5px">
+
+            <li id="image-0">
+                <div class="am-form-group am-form-file ">
+                    <img class="am-thumbnail" src="/Content/frontpage/i/shangchuan.png" />
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">提交</button>
+    </div>
+</div>

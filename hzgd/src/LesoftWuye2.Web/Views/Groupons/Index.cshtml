@@ -1,0 +1,223 @@
+﻿@using Abp.Application.Services.Dto
+@using LesoftWuye2.Core.Groupons
+@using LesoftWuye2.Application.Groupons
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Groupons.Dto.GrouponListDto>
+@{
+    ViewBag.ActiveMenu = "Groupons";
+    ViewBag.Title = "团购";
+
+    List<ComboboxItemDto> products = ViewData["products"] as List<ComboboxItemDto> ?? new List<ComboboxItemDto>();
+}
+@section styles
+{
+    @Html.IncludeStyle("~/Content/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css");
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Content/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js")
+    @*@Html.IncludeScript("~/Content/js/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js")*@
+    @Html.IncludeScript("~/Views/Groupons/Index.js")
+
+
+}
+
+<!--列表-->
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-caption">团购管理</span>
+                <div class="widget-buttons">
+                    <button class="btn btn-primary btn-sm" data-role-name="Pages.Groupons.Create" data-toggle="modal" data-target="#GrouponCreateModal"><i class="fa fa-plus"></i>添加团购</button>
+                </div>
+            </div>
+
+
+            <div class="widget-body no-padding">
+                <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                    <table class="table table-bordered table-hover table-striped data-list">
+                        <thead class="bordered-themeprimary">
+                            <tr role="row">
+                                <th style="width: 160px" class='center'>缩略图</th>
+                                <th>名称</th>
+                                <th style="width: 60px" class='center'>状态</th>
+                                <th style="width: 150px" class='center'>团购时间范围</th>
+                                <th style="width: 60px" class='center'>团购价</th>
+                                <th style="width: 80px" class='center'>要求人数</th>
+                                <th style="width: 80px" class='center'>有效天数</th>
+                                <th style="width: 150px" class="center">创建时间</th>
+                                <th style="width: 200px" class="center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var groupon in Model.Items)
+                            {
+                                <tr>
+                                    <td class='center'>
+
+                                        <img src="@(groupon.Thumbnail)?width=160&height=75&mode=crop" />
+                                    </td>
+                                    <td>
+                                        @groupon.Name<br /><br />
+                                        <span>@(ViewData["host"])/weixin/mall/groupon/view?id=@(groupon.Id)</span>
+                                    </td>
+
+
+
+                                    <td class='center'>
+                                        @{
+                                            if (groupon.StartTime<=DateTime.Now && DateTime.Now<groupon.ExpireTime )
+                                            {
+                                                <span class='label label-success'>有效</span>
+                                            }
+                                            else
+                                            {
+                                                <span class='label label-default'>无效</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td class='center'>
+                                        @groupon.StartTime.ToString("yyyy-MM-dd HH:mm")<br/>@groupon.ExpireTime.ToString("yyyy-MM-dd HH:mm")
+                                    </td>
+                                    <td class='center'>@groupon.Price</td>
+                                    <td class='center'>@groupon.RequireCount</td>
+                                    <td class='center'>@groupon.ValidDay</td>
+                                    <td class="center">@groupon.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.Groupons.Update" data-role="update-row" data-id="@(groupon.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.Groupons.Delete" data-role="delete-row" data-id="@(groupon.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                                            }
+                        </tbody>
+                    </table>
+                    @(Html.Raw(ViewData["___paging"]))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加-->
+<div class="modal fade" id="GrouponCreateModal" tabindex="-1" role="dialog" aria-labelledby="GrouponCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="grouponCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>添加团购</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class='form-group'>
+                        <label label-for='supplierId'>团购商品<span class='required'>*</span></label>
+                        <select style="width: 100%;" name="productId" required>
+                            <option value=""></option>
+                            @{
+                                foreach (var itemDto in products)
+                                {
+                                    <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    @*<div class='form-group'>
+                        <div class='checkbox'>
+                            <label><input type='checkbox' class='colored-blue' value='true' name='IsSale' data-role='excluded'><span class='text'>是否团购中</span></label>
+                        </div>
+                    </div>*@
+                    <div class='form-group'>
+                        <label label-for='Price'>团购价格<span class='required'>*</span></label>
+                        <input class='form-control' data-bv-numeric="true" step="0.01" name='price' required>
+                    </div>
+                    <div class='form-group'>
+                        <label label-for='Summary'>团购说明</label>
+                        <textarea class='form-control' name='Summary' rows="5"></textarea>
+                    </div>
+
+                    <div class='form-group'>
+                        <label label-for='RequireCount'>要求人数<span class='required'>*</span></label><input class='form-control' type='number' name='RequireCount' required>
+                    </div>
+                    <div class='form-group'>
+                        <label label-for='ExpireTime'>团购开始时间<span class='required'>*</span></label>
+                        <input class='form-control' type='text' name='StartTime' id="StartTime_New" required>
+                    </div>
+                    <div class='form-group'>
+                        <label label-for='ExpireTime'>团购结束时间<span class='required'>*</span></label>
+                        <input class='form-control'  type='text' name='ExpireTime' id="ExpireTime_New" required>
+                    </div>
+                    <div class='form-group'>
+                        <label label-for='ValidDay'>拼团有效天数<span class='required'>*</span></label><input class='form-control' type='number' name='ValidDay' required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="GrouponUpdateModal" tabindex="-1" role="dialog" aria-labelledby="GrouponCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-primary" role="document">
+        <div class="modal-content">
+            <form name="grouponUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                <input name="id" type="hidden" />
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span><i class="fa fa-plus">&nbsp;</i>修改团购</span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class='form-group'>
+                        <label label-for='supplierId'>团购商品<span class='required'>*</span></label>
+                        <select style="width: 100%;" name="productId" required>
+                            <option value=""></option>
+                            @{
+                                foreach (var itemDto in products)
+                                {
+                                    <option value="@itemDto.Value">@itemDto.DisplayText</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    @*<div class='form-group'>
+                        <div class='checkbox'>
+                            <label><input type='checkbox' class='colored-blue' value='true' name='isSale' data-role='excluded'><span class='text'>是否团购中</span></label>
+                        </div>
+                    </div>*@
+                    <div class='form-group'>
+                        <label label-for='price'>团购价格<span class='required'>*</span></label>
+                        <input class='form-control' data-bv-numeric="true" step="0.01" name='price' required>
+                    </div>
+                    <div class='form-group'>
+                        <label label-for='summary'>团购说明</label>
+
+                        <textarea class='form-control' rows="5" name='summary'></textarea>
+                    </div>
+                    <div class='form-group'><label label-for='requireCount'>要求人数</label><input class='form-control' type='number' name='requireCount'></div>
+
+                    <div class='form-group'><label label-for='startTime'>团购开始时间<span class='required'>*</span></label><input class='form-control ' type='text' name='startTime' id="StartTime_Edit" required></div>
+                    <div class='form-group'><label label-for='expireTime'>团购结束时间<span class='required'>*</span></label><input class='form-control '  type='text' name='expireTime' id="ExpireTime_Edit" required></div>
+                    <div class='form-group'><label label-for='validDay'>拼团有效天数</label><input class='form-control' type='number' name='validDay'></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                    <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

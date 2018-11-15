@@ -1,0 +1,164 @@
+﻿@using Abp.Application.Services.Dto
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "添加地址";
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function() {
+            $(function() {
+
+                var progress = $.AMUI.progress;
+                var getProvinces = function() {
+
+                    app.services.app.weixinService.getProvinces().done(function(result) {
+                        var html = '<option value="0">请选择省份</option>';
+                        for (var i = 0; i < result.length; i++) {
+                            html += '<option value="' + result[i].value + '">' + result[i].displayText + '</option>';
+                        }
+                        $('#provinceId').html(html);
+                    });
+                };
+
+                $('#provinceId').change(function() {
+                    var provinceId = $(this).val();
+                    $('#districtId').html('<option value="0">请选择县区</option>');
+
+                    app.services.app.weixinService.getCities(provinceId).done(function(result) {
+                        var html = '<option value="0">请选择城市</option>';
+                        for (var i = 0; i < result.length; i++) {
+                            html += '<option value="' + result[i].value + '">' + result[i].displayText + '</option>';
+                        }
+                        $('#cityId').html(html);
+                    });
+                });
+
+                $('#cityId').change(function() {
+                    var provinceId = $(this).val();
+                    app.services.app.weixinService.getDistricts(provinceId).done(function(result) {
+                        var html = '<option value="0">请选择县区</option>';
+                        for (var i = 0; i < result.length; i++) {
+                            html += '<option value="' + result[i].value + '">' + result[i].displayText + '</option>';
+                        }
+                        $('#districtId').html(html);
+                    });
+                });
+
+
+                $('#submit').click(function(e) {
+                    e.preventDefault();
+
+                    var data = {};
+                    data.provinceId = $('#provinceId').val();
+                    data.cityId = $('#cityId').val();
+                    data.districtId = $('#districtId').val();
+                    data.address = $('#address').val();
+                    data.mobile = $('#mobile').val();
+                    data.contact = $('#contact').val();
+                    data.isDefault = $('#isDefault').is(':checked');
+
+
+                    if (data.contact.length === 0) {
+                        app.message.warn('请输入联系人');
+                        return;
+                    }
+
+                    if (data.mobile.length === 0) {
+                        app.message.warn('请输入联系手机号码');
+                        return;
+                    }
+
+                    if (data.mobile.length !== 11) {
+                        app.message.warn('请输入正确手机号码');
+                        return;
+                    }
+
+                    if (data.provinceId == 0 || data.cityId == 0 || data.districtId == 0) {
+                        app.message.warn('请选择省/市/县区');
+                        return;
+                    }
+
+                    if (data.address.length === 0) {
+                        app.message.warn('请输入详细地址');
+                        return;
+                    }
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.addAddress(data)
+                        .done(function(result) {
+                            app.message.success('添加收货地址成功', '成功', function () {
+                                //window.location.href = '/Mall/AddressList';
+                                history.go(-1);
+                            });
+
+                        }).always(function () {
+                            console.log('always');
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+                getProvinces();
+
+            });
+        })();
+
+    </script>
+}
+
+<div class="am-g" style="margin-top: 10px">
+    <div class="am-u-sm-12 am-form-group" style="margin-bottom: .5rem">
+        <input type="text" class="" id="contact" placeholder="收货人" style="width: 100%">
+    </div>
+</div>
+
+<div class="am-g" style="">
+    <div class="am-u-sm-12 am-form-group" style="margin-bottom: .5rem">
+        <input type="tel" class="" id="mobile" placeholder="收货人手机号码" style="width: 100%">
+    </div>
+</div>
+
+<div class="am-g">
+
+    <div class="am-u-sm-4 am-form-group" style="margin-bottom: .5rem">
+        <select id="provinceId">
+            <option value="0">请选择省份</option>
+        </select>
+    </div>
+
+    <div class="am-u-sm-4 am-form-group" style="margin-bottom: .5rem">
+        <select id="cityId">
+            <option value="0">请选择城市</option>
+        </select>
+    </div>
+    <div class="am-u-sm-4 am-form-group" style="margin-bottom: .5rem">
+        <select id="districtId">
+            <option value="0">请选择县区</option>
+        </select>
+    </div>
+</div>
+
+<div class="am-g" style="">
+    <div class="am-u-sm-12 am-form-group" style="margin-bottom: .5rem">
+        <input type="text" class="" id="address" placeholder="详细地址" style="width: 100%">
+    </div>
+</div>
+
+<div class="am-g" style="padding-left: 1rem">
+    <label class="am-u-sm-12  am-checkbox am-warning" style="">
+        <input type="checkbox" id="isDefault" data-am-ucheck>
+        设置为默认地址
+    </label>
+</div>
+
+
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <button type="button" class="am-btn am-btn-warning am-radius am-btn-block" id="submit">提交</button>
+    </div>
+</div>

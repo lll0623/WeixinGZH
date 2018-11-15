@@ -1,0 +1,104 @@
+﻿@using Abp.Application.Services.Dto
+@model LesoftWuye2.Application.Weixin.Dto.RefundViewDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "退款详情";
+
+}
+
+@section styles
+{
+    <style>
+        .am-article-meta {
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .field-title {
+            color: gray;
+            font-size: 13px;
+        }
+
+        .field-value {
+            margin-left: 10px;
+            color: black;
+            font-size: 13px;
+        }
+
+        .field-item {
+            border-width: 0 0 1px 0;
+            border-style: solid;
+            border-color: lightgray;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+
+   
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+               
+
+            });
+        })();
+
+
+    </script>
+}
+
+<div class="am-panel am-panel-default" style="margin: 5px">
+    <div class="am-panel-bd" style="padding: 10px">
+        <div class="am-g field-item" style="border: none">
+            <div class="am-u-sm-10" style="padding: 0px;"><strong style="color:red">@(Model.StatusDesc)</strong></div>
+          
+        </div>
+
+        @{
+            if (Model.Status == LesoftWuye2.Core.Mall.RefundOrders.RefundStatus.Done)
+            {
+                <div class="am-g field-item" style="border: none">
+                    <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">退款金额</span></div>
+                    <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="mobile"><b>@Model.RefundMoney</b></span></div>
+                </div>
+            }
+        }
+    
+    </div>
+</div>
+
+<div class="am-panel am-panel-default" style="margin: 5px">
+    <div class="am-panel-bd" style="padding: 10px">
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">退款类型</span></div>
+            <div class="am-u-sm-10" style="padding: 0px;color:blue"><span class="field-value" id="mobile"><b style="color:blue">@Model.TypeDesc</b></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">退款说明</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="mobile"><b>@Model.Remark</b></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">退款金额</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="mobile"><b>@Model.RefundMoney</b></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">商品名称</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="mobile"><b>@Model.Name</b></span></div>
+        </div>
+        <div class="am-g field-item">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">订单编号</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="mobile"><b>@Model.OrderNo</b></span></div>
+        </div>
+        <div class="am-g field-item" style="border: none">
+            <div class="am-u-sm-2" style="padding: 0px"><span class="field-title">申请时间</span></div>
+            <div class="am-u-sm-10" style="padding: 0px"><span class="field-value" id="mobile"><b>@Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</b></span></div>
+        </div>
+    </div>
+</div>

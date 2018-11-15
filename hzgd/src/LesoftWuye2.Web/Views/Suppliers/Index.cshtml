@@ -1,0 +1,109 @@
+﻿
+@using LesoftWuye2.Application.Suppliers
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.Suppliers.Dto.SupplierListDto>
+    @{
+    ViewBag.ActiveMenu = "Suppliers";
+    ViewBag.Title = "供应商";
+    }
+    @section scripts
+    {
+    @Html.IncludeScript("~/Views/Suppliers/Index.js")
+    }
+
+    <!--列表-->
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="widget">
+                <div class="widget-header">
+                    <span class="widget-caption">供应商管理</span>
+                    <div class="widget-buttons">
+                        <button class="btn btn-primary btn-sm" data-role-name="Pages.Suppliers.Create" data-toggle="modal" data-target="#SupplierCreateModal"><i class="fa fa-plus"></i>添加供应商</button>
+                    </div>
+                </div>
+
+
+                <div class="widget-body no-padding">
+                    <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                    <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                        <table class="table table-bordered table-hover table-striped data-list">
+                            <thead class="bordered-themeprimary">
+                                <tr role="row">
+                                    <th class=''>名称</th>
+                                    <th style="width: 150px" class="center">创建时间</th>
+                                    <th style="width: 200px" class="center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var supplier in Model.Items)
+                                {
+                                <tr>
+                                    <td>@supplier.Name</td>
+                                    <td class="center">@supplier.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.Suppliers.Update" data-role="update-row" data-id="@(supplier.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.Suppliers.Delete" data-role="delete-row" data-id="@(supplier.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @(Html.Raw(ViewData["___paging"]))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--添加-->
+    <div class="modal fade" id="SupplierCreateModal" tabindex="-1" role="dialog" aria-labelledby="SupplierCreateModalLabel" data-backdrop="static">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <form name="supplierCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span><i class="fa fa-plus">&nbsp;</i>添加供应商</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class='form-group'><label label-for='Name'>名称<span class='required'>*</span></label><input class='form-control' type='text' name='Name' required maxlength='@LesoftWuye2.Core.Suppliers.Supplier.MaxNameLength' ></div>
+                    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+    </div>
+</form>
+            </div>
+        </div>
+    </div>
+
+    <!--修改-->
+    <div class="modal fade" id="SupplierUpdateModal" tabindex="-1" role="dialog" aria-labelledby="SupplierCreateModalLabel" data-backdrop="static">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <form name="supplierUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                    <input name="id" type="hidden" />
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span><i class="fa fa-plus">&nbsp;</i>修改供应商</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class='form-group'><label label-for='name'>名称<span class='required'>*</span></label><input class='form-control' type='text' name='name' required maxlength='@LesoftWuye2.Core.Suppliers.Supplier.MaxNameLength' ></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+

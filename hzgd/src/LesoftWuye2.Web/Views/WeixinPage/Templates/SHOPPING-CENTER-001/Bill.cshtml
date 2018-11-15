@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta http-equiv='Content-Language' content='zh-CN'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <meta HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=utf-8'>
+    <meta http-equiv="Refresh" content="3; url=@(ViewData["url2"])" />
+    <title>数据授权中</title>
+    <style>
+        .spinner {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin: 100px auto;
+        }
+
+        .double-bounce1, .double-bounce2 {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #67CF22;
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            -webkit-animation: bounce 2.0s infinite ease-in-out;
+            animation: bounce 2.0s infinite ease-in-out;
+        }
+
+        .double-bounce2 {
+            -webkit-animation-delay: -1.0s;
+            animation-delay: -1.0s;
+        }
+
+        @@-webkit-keyframes bounce {
+            0%, 100% {
+                -webkit-transform: scale(0.0);
+            }
+
+            50% {
+                -webkit-transform: scale(1.0);
+            }
+        }
+
+        @@keyframes bounce {
+            0%, 100% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            }
+
+            50% {
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class='spinner'>
+    <div class='double-bounce1'></div>
+    <div class='double-bounce2'></div>
+</div>
+<center>
+    <h3>数据授权中,请稍候...</h3>
+</center>
+    <iframe width="0px" height="0px" src="@(ViewData["url1"])"></iframe>
+</body>
+</html>

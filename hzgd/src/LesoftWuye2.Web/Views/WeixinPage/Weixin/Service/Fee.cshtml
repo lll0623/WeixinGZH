@@ -1,0 +1,276 @@
+﻿
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "欠费查询";
+    bool EnabledPayFee = Convert.ToBoolean(ViewData["EnabledPayFee"]);  
+ }
+
+@section scripts{
+
+    <script>
+
+
+        (function() {
+            $(function() {
+
+                var progress = $.AMUI.progress;
+
+                app.services.app.weixinService.getMyRooms()
+                      .done(function (result) {
+                          var html = '';
+                          $(result).each(function (idx, obj) {
+                              html += "<li  data-code='" + obj.pRoomCode + "' class='" +
+                                  ((obj.isDefault) ? "am-active" : "")
+                                  + "'><a href='javascript:void(0)' data-code='" + obj.pRoomCode + "' >" + obj.pRoomFullName + "</a></li>";
+                              if (obj.isDefault) {
+                                  $("#room_selector").data('code', obj.pRoomCode);
+                                  $("#room_selector").find('span[name="roomName"]').text(obj.pRoomFullName);
+                                  getFee(obj.pRoomCode);
+                              }
+                          });
+                          $('#room_selector').find('ul').append(html);
+                      });
+
+                $("#room_selector").delegate('a', 'click', function(e) {
+                    e.preventDefault();
+                    var code = $(this).data('code');
+                    $("#room_selector").data('code', code);
+                    $("#room_selector").find('span[name="roomName"]').text($(this).text());
+                    $(this).parent().parent().find('li').removeClass('am-active');
+                    $(this).parent().attr('class', 'am-active');
+                    $('#room_selector').dropdown('close');
+                    getFee(code);
+                });
+
+
+                function getFee(PRoomCode) {
+                    $('#fee-list').empty();
+                    pRoomCode = PRoomCode;
+
+
+                    progress.start();
+                    //MemberId = "1";
+                    //PRoomCode = "01012702";
+                    app.services.app.weixinService.getNoPayFeeByMember(PRoomCode)
+                        .done(function(result) {
+                            if (result.success) {
+
+                                var html = '';
+                                if (result.info.length === 0) {
+                                    html = "<div class='am-panel am-panel-default' style='margin-top: 10px;margin-bottom: 10px'><div class='am-panel-bd'>您当前没有欠费</div></div>";
+                                }
+                                $(result.info).each(function(idx, obj) {
+                                    var line = '';
+                                    line += "<div class='am-panel am-panel-default pay-item' data-id='"+obj.id +"' data-money='" + obj.count.substr(0, obj.count.length - 2) + "' style='margin-top: 10px;margin-bottom: 10px'>";
+                                    line += "<div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>";
+                                    line += "<div class='am-g'>";
+                                    line += "<div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>";
+                                    line += "<a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'>";
+                                    line += "<i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i>";
+                                    line += "</a></div>";
+                                    line += "<div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>";
+                                    line += "<div><a class='pay-item-expand'>";
+                                    line += "<span style='color: black'>" + obj.name + "</span>";
+                                    //line += "<span style='color: #A5A5A5'>" + obj.memberName + "</span>";
+                                    line += "<i class='am-icon-chevron-down am-icon-fw' style='color: #CCCCCC; float: right'></i>";
+                                    line += "</a></div>";
+                                    line += "<hr style='margin-top: 5px; margin-bottom: 5px' />";
+                                    line += "<div class='pay-item-subitems' style='display: none'>";
+                                    $(obj.items).each(function(idx1, obj1) {
+                                        line += "<div><span>" + obj1.feeBDate + " 至 " + obj1.feeEDate + "</span><span style='float: right; color: #A5A5A5'>￥" + obj1.feeCount.substr(0, obj1.feeCount.length-2) + "</span></div>";
+                                    });
+
+                                    line += "<hr style='margin-top: 5px; margin-bottom: 5px' />";
+                                    line += "</div><div>";
+                                    if (obj.bDate == '' && obj.eDate == '') {
+                                        line += "<span style='float: right; color: #F37B1D'>￥" + obj.count.substr(0, obj.count.length - 2) + "</span>";
+                                    }
+                                    else
+                                        line += "<span>" + obj.bDate + " 至 " + obj.eDate + "</span><span style='float: right; color: #F37B1D'>￥" + obj.count.substr(0, obj.count.length - 2) + "</span>";
+                                    line += "</div></div></div></div></div>";
+
+                                    html += line;
+                                });
+
+                                //html = "<div class='am-panel am-panel-default pay-item' style='margin-top: 10px;margin-bottom: 10px'>             <div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>                 <div class='am-g'>                     <div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>                         <a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'>                             <i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i>                         </a>                     </div>                     <div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>                         <div>                             <a class='pay-item-expand'>                                 <span style='color: black'>费用名称</span>                                 <span style='color: #A5A5A5'>类型</span>                                 <i class='am-icon-chevron-down am-icon-fw' style='color: #CCCCCC; float: right'></i>                             </a>                         </div>                         <hr style='margin-top: 5px; margin-bottom: 5px' />                         <div class='pay-item-subitems' style='display: none'>                                     <div><span>时间</span><span style='float: right; color: #A5A5A5'>￥金额</span></div>                             <hr style='margin-top: 5px; margin-bottom: 5px' />                         </div>                         <div>                             <span>时间</span><span style='float: right; color: #F37B1D'>￥金额</span>                         </div></div></div></div></div><div class='am-panel am-panel-default pay-item' style='margin-top: 10px;margin-bottom: 10px'>             <div class='am-panel-bd' style='padding-left: 10px; padding-bottom: 0px'>                 <div class='am-g'>                     <div class='am-u-sm-1' style='text-align: center; color: black; font-size: 1.5rem; margin-bottom: 10px; padding-right: 10px'>                         <a class='pay-item-selecter' style='display: block; margin-top: 17px; margin-right: 10px'>                             <i data-role='select' class='am-icon-circle-o am-icon-fw am-icon-sm' style='color: #CCCCCC;'></i>                         </a>                     </div>                     <div class='am-u-sm-11' style='text-align: left; color: black; font-size: 1.5rem; margin-bottom: 10px'>                         <div>                             <a class='pay-item-expand'>                                 <span style='color: black'>费用名称</span>                                 <span style='color: #A5A5A5'>类型</span>                                 <i class='am-icon-chevron-down am-icon-fw' style='color: #CCCCCC; float: right'></i>                             </a>                         </div>                         <hr style='margin-top: 5px; margin-bottom: 5px' />                         <div class='pay-item-subitems' style='display: none'>                                     <div><span>时间</span><span style='float: right; color: #A5A5A5'>￥金额</span></div>                             <hr style='margin-top: 5px; margin-bottom: 5px' />                         </div>                         <div>                             <span>时间</span><span style='float: right; color: #F37B1D'>￥金额</span>                         </div></div></div></div></div>";
+                                $('#fee-list').empty();
+                                $('#fee-list').append(html);
+                                progress.done(true);
+                                updateSelectMoney();
+
+                                $('#fee-list .pay-item').delegate('a.pay-item-expand', 'click', function(e) {
+                                    console.log("pay-item-expand click");
+                                    var payItem = $(this).parents('.pay-item');
+                                    if (payItem.data('expand') === true) {
+                                        $(this).find('i').removeClass('am-icon-chevron-up').addClass('am-icon-chevron-down');
+                                        payItem.find('.pay-item-subitems').hide();
+                                        payItem.data('expand', false);
+
+                                    } else {
+                                        payItem.find('.pay-item-subitems').show();
+                                        $(this).find('i').removeClass('am-icon-chevron-down').addClass('am-icon-chevron-up');
+                                        payItem.data('expand', true);
+                                    }
+                                });
+
+                                $('.pay-item').delegate('.pay-item-selecter', 'click', function(e) {
+                                    var payItem = $(this).parents('.pay-item');
+                                    if (payItem.data('selected') === true) {
+                                        $(this).find('i').css('color', '#CCCCCC');
+                                        $(this).find('i').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                                        payItem.data('selected', false);
+                                        hideNextLevel(payItem);
+
+                                    } else {
+                                        $(this).find('i').css('color', '#F37B1D');
+                                        $(this).find('i').removeClass('am-icon-circle-o').addClass('am-icon-check-circle-o');
+                                        payItem.data('selected', true);
+                                        showNextLevel(payItem);
+                                    }
+                                    updateSelectMoney();
+                                });
+
+                                
+
+                            } else {
+                                progress.done(true);
+                                app.message.warn(result.msg);
+                            }
+
+                        });
+                };
+
+                var money = 0;
+                var feeIDs = new Array();
+
+
+                function showNextLevel(obj) {
+                    var type = parseInt($(obj).data('type'));
+                    var nexttype = parseInt($(obj).data('nexttype'));
+                    $('.pay-item[data-type=' + nexttype + ']').show();
+
+                }
+
+                function hideNextLevel(obj) {
+                    var type = parseInt($(obj).data('type'));
+                    if (type === 0) {
+
+                        $('.pay-item[data-type="1"]').find('i[data-role="select"]').css('color', '#CCCCCC');
+                        $('.pay-item[data-type="1"]').find('i[data-role="select"]').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                        $('.pay-item[data-type="1"]').hide();
+                        $('.pay-item[data-type="1"]').data('selected', false);
+
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').css('color', '#CCCCCC');
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                        $('.pay-item[data-type="2"]').hide();
+                        $('.pay-item[data-type="2"]').data('selected', false);
+                    }
+                    if (type === 1) {
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').css('color', '#CCCCCC');
+                        $('.pay-item[data-type="2"]').find('i[data-role="select"]').removeClass('am-icon-check-circle-o').addClass('am-icon-circle-o');
+                        $('.pay-item[data-type="2"]').hide();
+                        $('.pay-item[data-type="2"]').data('selected', false);
+                    }
+                }
+
+                function updateSelectMoney() {
+                    money = 0;
+                    feeIDs = new Array();
+                    $('.pay-item').each(function(idx, obj) {
+                        if ($(this).data('selected') === true) {
+                            money += parseFloat($(this).data('money'));
+                            feeIDs.push($(this).data('id'));
+                        }
+                    });
+                    $('#money').text('￥ ' + money.toFixed(2) + " ");
+                }
+
+                $('#submit').click(function (e) {
+                    e.preventDefault();
+                    if (money <= 0) {
+                        app.message.warn('请选择缴费项目!');
+                        return;
+                    }
+
+                    //ajax提交支付请求
+                    //先生成订单
+                    console.log(feeIDs);
+                    var ids = new Array();
+                    for (var i = 0; i < feeIDs.length; i++) {
+                        var kvs = (feeIDs[i]+'').split('|');
+                        for (var j = 0; j < kvs.length; j++) {
+                            if (kvs[j].length === 0) continue;
+                            ids.push(kvs[j]);
+                        }
+                    }
+                    console.log(ids);
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.createPayBill(ids.join(','),pRoomCode, money)
+                        .done(function (result) {
+                            if (result.success) {
+                                //跳转至支付选择页面
+                                window.location = '/weixin/service/paylist?type=0&money=' + money + "&orderno=" + result.billCode;
+
+                            } else {
+                                app.message.error(result.msg);
+                            }
+                        }).always(function () {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+            });
+        })();
+
+
+    </script>
+}
+
+
+
+    <div class="am-panel am-panel-default service-form">
+        <div class="am-dropdown" data-am-dropdown="{justify: '#doc-dropdown-justify'}" style="width: 100%" id="room_selector">
+            <button style="width: 100%" class="am-btn am-btn-default  am-dropdown-toggle" data-am-dropdown-toggle>
+                <span name="roomName">请选择你的商铺</span>
+                <span class="am-icon-caret-down"></span>
+            </button>
+            <ul class="am-dropdown-content">
+                <li class="am-dropdown-header">我的商铺</li>
+            </ul>
+        </div>
+
+        <div class="am-g">
+            <div class="am-u-sm-8" style="text-align: left; color: black; font-size: 1.55rem; margin-top: 5px;@(EnabledPayFee?"":"display: none")  ">
+                <span>本期共缴纳:&nbsp;&nbsp;<a class="am-badge am-badge-warning" id="money">￥0.00</a></span>
+            </div>
+            @{
+                if (EnabledPayFee)
+                {
+                    <div class="am-u-sm-4" style="text-align: right;margin-top: 5px;">
+                        <a href="/weixin/service/preparefee" style="padding: 0px;font-size: 1.4rem; " class="am-btn am-btn-link">我要预缴&gt;&gt;</a>
+                    </div>
+                }
+            }
+
+            
+        </div>
+
+        <div id="fee-list">
+
+        </div>
+
+        @{
+            if (EnabledPayFee)
+            {
+                <div class="am-g" style="margin-top: 10px; margin-bottom: 30px">
+                    <div class="am-u-sm-12">
+                        <a href="javascript:void(0)" id="submit" class="am-btn am-btn-danger am-radius am-btn-block service-form-submit" data-text="去付款">去付款</a>
+                    </div>
+                </div>
+            }
+        }
+        
+
+    </div>

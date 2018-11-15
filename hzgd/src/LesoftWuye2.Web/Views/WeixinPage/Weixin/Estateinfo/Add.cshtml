@@ -1,0 +1,228 @@
+﻿@using Abp.Web.Mvc.Extensions
+@model  List<Abp.Application.Services.Dto.ComboboxItemDto>
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "发布信息";
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Content/frontpage/js/lrz.bundle.js")
+
+    <script>
+        (function () {
+            $(function () {
+
+                var memberId = 0;
+
+                $("#type_selector").delegate('a', 'click', function (e) {
+                    e.preventDefault();
+                    var type = $(this).data('type');
+                    $("#type_selector").data('type', type);
+                    $("#type_selector").find('span[name="typeName"]').text($(this).text());
+                    $(this).parent().parent().find('li').removeClass('am-active');
+                    $(this).parent().attr('class', 'am-active');
+                    $('#type_selector').dropdown('close');
+                });
+
+                $('#upload-image').change(function () {
+                    //判断是否有选择上传文件
+                    var imgPath = $(this).val();
+                    if (imgPath === "") {
+                        app.message.warn("请选择上传图片！");
+                        return;
+                    }
+
+                    //判断上传文件的后缀名
+                    var strExtension = imgPath.substr(imgPath.lastIndexOf('.') + 1).toLowerCase();
+                    if (strExtension !== 'jpg' && strExtension !== 'gif' && strExtension !== 'png' && strExtension !== 'bmp') {
+                        app.message.warn("请选择上传图片！");
+                        return;
+                    }
+
+                    // this.files[0] 是用户选择的文件
+                    lrz(this.files[0], { width: 1024 })
+                        .then(function (rst) {
+                            return rst;
+                        })
+                        .then(function (rst) {
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('POST', '/File/UploadImage');
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    // 上传成功
+                                    var result = $.parseJSON(xhr.responseText);
+                                    if (result.success) {
+                                        var imageUrl = result.result.host + "/Upload/Images/" + result.result.fileName;
+                                        var newImage = "<li data-url='" + imageUrl + "' ><img class='am-thumbnail'  src='" + imageUrl + "?width=128&height=128&mode=crop" + "' /></li>";
+                                        $('#image-groups li').eq(0).before(newImage);
+                                        if ($('#image-groups li').length >= 5) {
+                                            $('#image-0').hide();
+                                        }
+                                    } else {
+                                        app.message.warn(result.error.message, "图片上传失败!");
+                                    }
+
+                                } else {
+
+                                }
+                            };
+
+                            xhr.onerror = function () {
+                                app.message.warn(response.error.message, "图片上传失败!");
+                            };
+
+                            // 添加参数
+                            rst.formData.append('fileLen', rst.fileLen);
+
+                            // 触发上传
+                            xhr.send(rst.formData);
+                            return rst;
+                        })
+                        .catch(function (err) {
+                            alert(err);
+                        });
+                });
+
+
+
+                $('#image-groups').delegate('li[data-url]', 'click', function (e) {
+                    e.preventDefault();
+                    var obj = $(this);
+                    app.message.confirm("确认移除图片", "询问", function (isConfirmed) {
+                        if (isConfirmed) {
+                            $(obj).remove();
+                            if ($('#image-groups li').length < 5) {
+                                $('#image-0').show();
+                            }
+                        }
+                    });
+                });
+
+
+                $('#submit').click(function (e) {
+                    e.preventDefault();
+               
+                    var type = $('#type_selector').data('type');
+                    var title = $('#title').val();
+                    var contact = $('#contact').val();
+                    var mobile = $('#mobile').val();
+                    var content = $('#content').val();
+                    var isSale = false;
+                    var fileAddress = new Array();
+
+                    if (type === '') {
+                        app.message.warn('请选择类型!');
+                        return;
+                    }
+
+                    $('#image-groups li').each(function (idx, obj) {
+                        if (!$(obj).data('url')) return;
+                        fileAddress.push($(obj).data('url'));
+                    });
+
+                    if (title === "") {
+                        $('#title').focus();
+                        app.message.warn('请输入标题!');
+                        return;
+                    }
+                    if (contact === "") {
+                        $('#contact').focus();
+                        app.message.warn('请输入联系人!');
+                        return;
+                    }
+                    if (mobile === "") {
+                        $('#mobile').focus();
+                        app.message.warn('请输入手机号码 !');
+                        return;
+                    }
+
+                    if (mobile.length !== 11) {
+                        $('#mobile').focus();
+                        app.message.warn('请输入正确的手机号码 !');
+                        return;
+                    }
+
+                    if (content === "") {
+                        $('#content').focus();
+                        app.message.warn('请输入内容!');
+                        return;
+                    }
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.createEstateinfo({ estateinfoTypeId: type, title: title, contact: contact, mobile: mobile, content: content, images: fileAddress, isSale: isSale })
+                        .done(function (result) {
+                            app.message.success('发布信息成功', '成功', function () {
+                                history.go(-1);
+                            });
+                        }).always(function () {
+                            app.ui.clearButtonBusy($('#submit'));
+                        });
+
+                });
+
+
+            });
+        })();
+
+    </script>
+}
+
+<div class="am-panel am-panel-default service-form">
+    <form class="am-form">
+        <div class="am-dropdown" data-am-dropdown="{justify: '#doc-dropdown-justify'}" style="width: 100%" data-type="" id="type_selector">
+            <button style="width: 100%" class="am-btn am-btn-default  am-dropdown-toggle" data-am-dropdown-toggle>
+                <span name="typeName">请选择类型</span>
+                <span class="am-icon-caret-down"></span>
+            </button>
+            <ul class="am-dropdown-content">
+                <li class="am-dropdown-header">请选择发布商品类型</li>
+                @{
+                    foreach (var dto in Model)
+                    {
+                        <li><a data-type="@dto.Value" href='javascript:void(0)'>@dto.DisplayText</a></li>
+                    }
+                }
+                
+            </ul>
+        </div>
+
+        <input class="am-form-field am-input-sm" style="margin-top: 10px" type="text" id="title" placeholder="请输入标题">
+
+        <input class="am-form-field am-input-sm" style="margin-top: 10px" type="text" id="contact" placeholder="请输入联系人">
+
+        <input class="am-form-field am-input-sm" style="margin-top: 10px" type="number" id="mobile" placeholder="请输入手机号码" maxlength="11">
+        
+        <div class="am-form-group service-form-input" style="margin-top: 10px">
+            <textarea class="" rows="5" id="content" style="width: 100%;border: 0" placeholder="请输入详细内容"></textarea>
+        </div>
+
+        @*<div class="am-form-group" style="float: right;margin-right: 20px">
+            <label class="am-radio-inline">
+                <input type="radio" name="isSale" value="1" data-am-ucheck checked="checked"> 上架
+            </label>
+            <label class="am-radio-inline">
+                <input type="radio" name="isSale" value="0" data-am-ucheck> 下架
+            </label>
+        </div>*@
+
+        <!--<hr/>-->
+
+        <ul class="am-avg-sm-4 service-form-uploadimages" id="image-groups" style="margin-bottom: 10px">
+
+            <li id="image-0">
+                <div class="am-form-group am-form-file ">
+                    <img class="am-thumbnail" src="/Content/frontpage/i/shangchuan.png" />
+                    <input id="upload-image" type="file">
+                </div>
+            </li>
+        </ul>
+    </form>
+</div>
+<small class="service-form-tip">请上传相关图片(选填)</small>
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">提交</button>
+    </div>
+</div>

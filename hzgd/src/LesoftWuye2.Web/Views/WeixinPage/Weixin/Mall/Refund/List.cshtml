@@ -1,0 +1,93 @@
+﻿@using Abp.Application.Services.Dto
+
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "退款/货";
+    int type = (int)ViewData["type"];
+}
+
+@section scripts
+{
+    <script>
+
+
+        (function () {
+            $(function () {
+
+                var progress = $.AMUI.progress;
+                var GrouponItems = function () {
+                    progress.start();
+                    $('#main-container').hide();
+
+                    app.services.app.weixinService.getRefundOrders('@type', {}).done(function (result) {
+
+                        var html = template('groupItemHtml', result);
+                        document.getElementById('groupItem-list').innerHTML = html;
+
+                    }).always(function () {
+                        progress.done(true);
+                        $('#main-container').show();
+                    });
+                };
+
+                GrouponItems();
+
+            });
+        })();
+
+      
+
+    </script>
+}
+
+<div data-am-widget="tabs" class="am-tabs am-tabs-d2" style="margin: 0px">
+    <ul data-am-sticky class="am-tabs-nav am-cf">
+        <li class="@(type==0?"am-active":"")"><a onclick="window.location = '/weixin/mall/refund/list?type=0'">全部</a></li>
+        <li class="@(type==1?"am-active":"")"><a onclick="window.location = '/weixin/mall/refund/list?type=1'">处理中</a></li>
+
+    </ul>
+    <div class="am-tabs-bd">
+        <div id="groupItem-list">
+
+        </div>
+
+    </div>
+</div>
+
+<script id="groupItemHtml" type="text/html">
+
+    {{each items as value i}}
+
+    <div class="am-g" style="border: 1px; background-color: white; margin-top: 10px">
+        <a href="/weixin/mall/refund/view?id={{value.orderId}}">
+            <div class="am-u-sm-3 am-list-thumb" style="padding: 0px">
+                <img class="am-thumbnail" src="{{value.thumbnail}}?width=100&height=100&mode=crop" style="border: none; margin: 5px; width: 80px; height: 80px; text-align: center" />
+            </div>
+
+            <div class="am-u-sm-9 am-list-main">
+                <p class="am-list-item-hd" style="margin-top: 10px; color: black; font-size: 13px; text-align: left; height: 38px; overflow: hidden; word-wrap: break-word; margin-bottom: 5px">{{value.name}}</p>
+                <div class="am-list-item-text" style="text-align: left">
+                    <span style="color: #ff6600; font-size: 15px; float: right">{{value.statusDesc}}</span>
+                </div>
+            </div>
+
+        </a>
+        <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
+
+        <div class="am-g" style="border: 1px; background-color: white; margin-bottom: 10px; margin-right: 0px">
+            <div class="am-list-item-text" style="text-align: right;margin-right:10px">
+                <span style="color: gray; font-size: 13px">实付</span>
+                <span style="color: #000000; font-size: 13px">￥{{value.amount}}</span>
+                &nbsp;&nbsp;<span style="color: gray; font-size: 13px">退款金额</span>
+                <span style="color: #ff6600; font-size: 13px">￥{{value.refundMoney}}</span>
+            </div>
+
+        </div>
+    </div>
+
+    {{/each}}
+
+</script>
+
+
+

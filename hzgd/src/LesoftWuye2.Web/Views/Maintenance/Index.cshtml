@@ -1,0 +1,106 @@
+﻿@using Abp.Authorization.Users
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<Obs.Caching.Dto.CacheDto>
+@{
+    ViewBag.ActiveMenu = "Maintenance"; //The menu item will be active for this page.
+    ViewBag.Title = "系统维护";
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Maintenance/Index.js")
+}
+
+@section styles{
+    <style>
+        .web-log-view {
+            font-family: "Courier New";
+            overflow-x: scroll;
+            overflow-y: scroll;
+            height: 100%;
+            white-space: nowrap;
+        }
+
+            .web-log-view span.log-line {
+                margin-bottom: 5px;
+                display: block;
+            }
+
+                .web-log-view span.log-line span.label {
+                    width: 50px;
+                    display: inline-block;
+                }
+    </style>
+}
+
+<div class="widget-body">
+    <div class="widget-main ">
+        <div class="tabbable">
+            <ul class="nav nav-tabs tabs-flat" id="myTab11">
+                <li class="active">
+                    <a data-toggle="tab" href="#home11">
+                        缓存管理
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#profile11">
+                        系统日志
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content tabs-flat">
+                <div id="home11" class="tab-pane in active">
+                    <div class="row margin-bottom-10">
+                        <div class="col-xs-6">
+                            <p>您可以在此页面上清除应用程序缓存。</p>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <button class="btn blue" id="clearAllCaches"><i class="fa fa-refresh"></i>全部清除</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-striped table-hover table-bordered">
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.Items)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span>@item.Name</span>
+                                                    <button class="btn btn-xs blue pull-right" data-role="clearCahce" data-name="@item.Name">
+                                                        清除
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="profile11" class="tab-pane">
+                    <div class="row margin-bottom-10">
+                        <div class="col-xs-6">
+                            <p>在本页面你可以看到最新的日志或下载所有日志(打包为zip文件)。</p>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <button class="btn blue" id="downAllLog"><i class="fa fa-download"></i>下载所有日志</button>
+                            <button class="btn blue" id="refreshLog"><i class="fa fa-refresh"></i>刷新</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="web-log-view full-height" id="logs">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

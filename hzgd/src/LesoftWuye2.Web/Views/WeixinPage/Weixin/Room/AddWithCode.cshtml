@@ -1,0 +1,144 @@
+﻿@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Application.Newss.Dto.NewsItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "扫码添加商铺";
+}
+@section styles
+{
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+
+        var role = '';
+
+        wx.config({
+            debug: false,  // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@(ViewData["AppId"])', // 必填，公众号的唯一标识
+            timestamp: '@(ViewData["Timestamp"])', // 必填，生成签名的时间戳
+            nonceStr: '@(ViewData["NonceStr"])', // 必填，生成签名的随机串
+            signature: '@(ViewData["Signature"])', // 必填，签名，见附录1
+            jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+        wx.ready(function () {
+            wx.scanQRCode({
+                needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                success: function (res) {
+                    
+                    //取出二维码中的Role
+                    role=JSON.parse(res.resultStr).Role;
+
+                    app.services.app.weixinService.getPRoomInfoByQRCode(encodeURIComponent(res.resultStr)).done(function (result) {
+
+                        if (result.success) {
+                            var html = '';
+                            var cnt = 0;
+                            $(result.pRooms).each(function (idx, obj) {
+                                var line = '';
+                                    line += "<li data-name='" + obj.pRoomFullName + "' data-code='" + obj.pRoomCode + "' data-projectcode='" + obj.pProjectCode + "'>";
+                                    line += "<i data-role='select' class='am-icon-circle-o am-icon-fw' style='color: #0894ec'></i>";
+                                    //line += "<span class='am-badge am-badge-danger'><a data-role='delete' style='color: white'>删除</a></span>";
+                                    line += "<span><span>" + obj.pRoomFullName + "</span> <br /><i style='font-size: .9rem;color: #666'>单元编号:" + obj.pRoomCode + "</i></span></li>";
+                                    cnt++;
+                                    html += line;
+                            });
+
+                            if (cnt === 0) {
+                                app.message.warn('找不到相应的商铺信息!');
+                                return;
+                            }
+
+                            $('#room-list').empty();
+                            $('#room-list').append(html);
+                            
+                            $('#step_2').show();
+
+                        } else {
+
+                            app.message.warn(result.msg);
+                            return;
+
+                        }
+                    });
+
+                }
+            });
+        });
+
+
+    </script>
+}
+@section scripts
+{
+    <script>
+        (function () {
+            $(function () {
+
+                var roomCode = '';
+                var roomName = '';
+
+                $('#room-list').delegate('li', 'click', function (e) {
+                    e.preventDefault();
+                    var code = $(this).data('code');
+                    $('#room-list li i[data-role="select"]').attr('class', 'am-icon-circle-o am-icon-fw');
+                    $('#room-list li').attr('data-select', 'false');
+
+
+                    $('#room-list li[data-code="' + code + '"] i[data-role="select"]').attr('class', 'am-icon-check-circle-o am-icon-fw');
+                    $('#room-list li[data-code="' + code + '"]').attr('data-select', 'true');
+                });
+
+                $('#step_2_submit').click(function (e) {
+                    e.preventDefault();
+
+                    var item = $('#room-list li[data-select="true"]');
+                    roomCode = $(item).data('code');
+                    roomName = $(item).data('name');
+                    if (!$(item).data('code')) {
+                        app.message.warn("请选择需要绑定的商铺!");
+                        return;
+                    }
+                  
+
+                    //添加房号
+                    app.services.app.weixinService.memberAddPRoom(roomCode, role)
+                            .done(function (result) {
+                                if (result.success) {
+                                    app.message.success('添加商铺', '成功', function () {
+                                        window.location.href = '/weixin/room/list';
+                                    });
+                                } else {
+                                    app.message.warn(result.msg);
+                                }
+
+                            }).always(function () {
+
+                            });
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+<div>
+    
+    <div id="step_2" style="display: none;margin-top: 10px">
+
+        <form class="am-form">
+            <fieldset>
+                <legend>选择绑定房间</legend>
+                <ul class="am-list am-list-static am-list-border" style="margin-top: 0" id="room-list"></ul>
+            </fieldset>
+        </form>
+
+        <div class="am-g">
+            <div class="am-u-sm-12">
+                <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="step_2_submit">下一步</button>
+            </div>
+        </div>
+
+    </div>
+</div>

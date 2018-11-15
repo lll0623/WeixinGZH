@@ -1,0 +1,209 @@
+﻿@using Abp.Web.Mvc.Extensions
+@using LesoftWuye2.Application.Estateinfos.Dto
+@model LesoftWuye2.Application.Estateinfos.Dto.EstateinfoItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = Model.Title;
+}
+
+
+@section scripts
+{
+
+    <script>
+
+        var memberId = 0;
+        var memberName = 0;
+
+
+        (function() {
+            $(function() {
+
+
+
+                $('#submit').click(function(e) {
+                    e.preventDefault();
+                   
+                    var content = $('#content').val();
+
+                    if (content === "") {
+                        $('#content').focus();
+                        app.message.warn('请输入评论内容!');
+                        return;
+                    }
+
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.createEstateinfoComment({ estateinfoId: '@(Model.Id)', content: content })
+                        .done(function (result) {
+                            app.message.success('发布评论成功', '成功', function () {
+                                window.location.reload();
+                            });
+                        }).always(function () {
+                            app.ui.clearButtonBusy($('#submit'));
+                        }); 
+
+
+                });
+
+                $('#saveSale').click(function(e) {
+                    e.preventDefault();
+                   
+                    app.message.confirm("确认上架该商品?", "询问", function(isConfirmed) {
+                        if (isConfirmed) {
+                            app.ui.setButtonBusy($('#saveSale'));
+                            app.services.app.weixinService.setEstateinfoSale('@(Model.Id)')
+                                .done(function(result) {
+                                    //app.message.success('操作成功!',"提示", function () {
+                                        window.location.reload();
+                                    //});
+                                }).always(function() {
+                                    app.ui.clearButtonBusy($('#saveSale'));
+                                });
+
+                        }
+                    });
+
+                });
+
+                $('#saveUnSale').click(function(e) {
+                    e.preventDefault();
+                    
+
+                    app.message.confirm("确认下架该商品?", "询问", function(isConfirmed) {
+                        if (isConfirmed) {
+                            app.ui.setButtonBusy($('#saveUnSale'));
+                            app.services.app.weixinService.setEstateinfoUnSale('@(Model.Id)')
+                                .done(function(result) {
+                                    //app.message.success('操作成功!', "提示", function () {
+                                        window.location.reload();
+                                    //});
+                                }).always(function() {
+                                    app.ui.clearButtonBusy($('#saveUnSale'));
+                                });
+
+                        }
+                    });
+
+                });
+
+            });
+        })();
+
+    </script>
+}
+
+
+
+
+<article class="am-article" style="padding: 10px">
+    <div class="am-article-hd">
+        <h1 class="am-article-title">@Model.Title</h1>
+        <p class="am-article-meta">发布时间：@Model.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+    </div>
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default"/>
+
+    <div class="am-article-bd">
+        <blockquote>
+            <p>联系人：@(Model.Contact)</p>
+            <p>联系电话：@(Model.Mobile) <a href="tel:@(Model.Mobile)" class="am-btn am-btn-link"><i class="am-icon-phone am-icon-fw"></i>拨打电话</a>
+            </p>
+        </blockquote>
+
+        @(Html.Raw(Model.Content))
+    </div>
+    @{
+        if ((Model.Images ?? new List<string>()).Count > 0)
+        {
+            <hr data-am-widget="divider" style="" class="am-divider am-divider-default"/>
+        }
+    }
+
+    <ul data-am-widget="gallery" class="am-gallery am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-gallery-overlay" data-am-gallery="{ pureview: true }" style="padding: 0">
+        @{
+            foreach (var image in Model.Images ?? new List<string>())
+            {
+                <li>
+                    <div class="am-gallery-item">
+                        <a href="@image" class="">
+                            <img src="@(image)?width=320&mode=crop"/>
+                        </a>
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+
+    @{
+        if ((Model.Comments ?? new List<EstateinfoCommentListDto>()).Count > 0)
+        {
+            <hr data-am-widget="divider" style="" class="am-divider am-divider-default"/>
+        }
+    }
+
+
+
+    <div>
+        @{
+            int idx = 0;
+            foreach (var commentListDto in Model.Comments ?? new List<EstateinfoCommentListDto>())
+            {
+                <article class="am-comment @(idx++%2 == 1 ? "am-comment-flip" : "")" style="margin-bottom: 10px">
+                    <a href="#">
+                        <img src="/Content/frontpage/i/jr_man.png" alt="" class="am-comment-avatar" width="48" height="48"/>
+                    </a>
+
+                    <div class="am-comment-main">
+                        <header class="am-comment-hd">
+                            <!--<h3 class="am-comment-title">评论标题</h3>-->
+                            <div class="am-comment-meta">
+                                <a href="#link-to-user" class="am-comment-author">@(commentListDto.MemberName)</a>
+                                评论于 <time>@(commentListDto.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"))</time>
+                            </div>
+                        </header>
+
+                        <div class="am-comment-bd">
+                            @(commentListDto.Content)
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+
+
+
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default"/>
+
+    <section class="am-panel am-panel-default">
+        <header class="am-panel-hd">
+            <h5 class="am-panel-title">发表评论</h5>
+        </header>
+        <div class="am-panel-bd" style="padding: 0">
+            <div class="am-form-group service-form-input" style="">
+                <textarea class="" rows="5" id="content" style="width: 100%; border: 0" placeholder="请输入评论内容"></textarea>
+            </div>
+            <div class="am-g">
+                <div class="am-u-sm-12">
+                    <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">提交评论</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</article>
+
+
+<div class="am-g">
+    <div class="am-u-sm-12">
+        @{
+            if (!Model.IsSale)
+            {
+                <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="saveSale">上架</button>
+            }
+            else
+            {
+                <button type="button" class="am-btn am-btn-danger am-radius am-btn-block service-form-submit" id="saveUnSale">下架</button>
+            }
+        }
+    </div>
+</div>

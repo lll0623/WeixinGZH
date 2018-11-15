@@ -1,0 +1,11 @@
+﻿@model LesoftWuye2.Application.FeeServices.Dto.FeeServiceItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title ="有偿服务";
+}
+
+<article class="am-article" style="padding: 10px">
+    <div class="am-article-bd">
+       @(Html.Raw(Model.Content))
+    </div>
+</article>

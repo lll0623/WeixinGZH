@@ -1,0 +1,1364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A73FE32A-F8E7-4EF1-A234-1554A32E47AF}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LesoftWuye2.Web</RootNamespace>
+    <AssemblyName>LesoftWuye2.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>14.0</OldToolsVersion>
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Abp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.1.0.0.0\lib\net452\Abp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.AutoMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.AutoMapper.1.0.0.0\lib\net452\Abp.AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Castle.Log4Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Castle.Log4Net.1.0.0.0\lib\net452\Abp.Castle.Log4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.EntityFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.EntityFramework.1.0.0.0\lib\net452\Abp.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.EntityFramework.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.EntityFramework.Common.1.0.0.0\lib\net452\Abp.EntityFramework.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.HangFire, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.HangFire.1.0.0.0\lib\net452\Abp.HangFire.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Owin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Owin.1.0.0.0\lib\net452\Abp.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Web.1.0.0.0\lib\net452\Abp.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Web.Api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Web.Api.1.0.0.0\lib\net452\Abp.Web.Api.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Web.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Web.Common.1.0.0.0\lib\net452\Abp.Web.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Web.Mvc.1.0.0.0\lib\net452\Abp.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Web.SignalR, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Web.SignalR.1.0.0.0\lib\net452\Abp.Web.SignalR.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Zero, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Zero.1.0.0.0\lib\net452\Abp.Zero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Abp.Zero.EntityFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Abp.Zero.EntityFramework.1.0.0.0\lib\net452\Abp.Zero.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.LoggingFacility.3.3.0\lib\net45\Castle.Facilities.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.DynamicFilters, Version=2.3.0.0, Culture=neutral, PublicKeyToken=146423a1b8d60775, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.DynamicFilters.2.3.0\lib\net40\EntityFramework.DynamicFilters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.0.5\lib\net20\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Exceptionless, Version=4.0.1906.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Exceptionless.4.0.1906\lib\net45\Exceptionless.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Exceptionless.Log4net, Version=4.0.1906.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Exceptionless.Log4net.4.0.1906\lib\net45\Exceptionless.Log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.5\lib\net45\Hangfire.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.5\lib\net45\Hangfire.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HibernatingRhinos.Profiler.Appender, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0774796e73ebf640, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFrameworkProfiler.3.0.3103.0\lib\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ImageProcessor, Version=2.4.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageProcessor.2.4.5.0\lib\net45\ImageProcessor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ImageProcessor.Web, Version=4.6.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageProcessor.Web.4.6.6.0\lib\net45\ImageProcessor.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Obs.Application">
+      <HintPath>..\Libs\Obs.Application.dll</HintPath>
+    </Reference>
+    <Reference Include="Obs.Core">
+      <HintPath>..\Libs\Obs.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Obs.EntityFramework">
+      <HintPath>..\Libs\Obs.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Senparc.Weixin, Version=4.12.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.4.12.3\lib\net45\Senparc.Weixin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Senparc.Weixin.MP, Version=14.4.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.MP.14.4.7\lib\net45\Senparc.Weixin.MP.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0.5\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Abp\Framework\scripts\abp.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.blockUI.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.jquery.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.jtable.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.moment.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.signalr.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.spin.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.sweet-alert.js" />
+    <Content Include="Abp\Framework\scripts\libs\abp.toastr.js" />
+    <Content Include="Abp\Framework\scripts\libs\angularjs\abp.ng.js" />
+    <Content Include="Abp\Framework\scripts\libs\requirejs\plugins\service.js" />
+    <Content Include="Abp\Framework\scripts\utils\ie10fix.js" />
+    <Content Include="Abp\Framework\styles\abp.css" />
+    <Content Include="Abp\Framework\styles\abp.min.css" />
+    <Content Include="Abp\Framework\styles\abp.mixings.css" />
+    <Content Include="Abp\Framework\styles\abp.mixings.min.css" />
+    <Content Include="Abp\Framework\styles\utils\ie10fix.css" />
+    <Content Include="App_Start\EntityFrameworkProfilerBootstrapper.vb" />
+    <Content Include="Content\css\4095-rtl.min.css" />
+    <Content Include="Content\css\animate.min.css" />
+    <Content Include="Content\css\app.css" />
+    <Content Include="Content\css\beyond-rtl.min.css" />
+    <Content Include="Content\css\beyond.min.css" />
+    <Content Include="Content\css\bootstrap-rtl.min.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\dataTables.bootstrap.css" />
+    <Content Include="Content\css\demo.min.css" />
+    <Content Include="Content\css\font-awesome.min.css" />
+    <Content Include="Content\css\skins\azure.min.css" />
+    <Content Include="Content\css\skins\black.min.css" />
+    <Content Include="Content\css\skins\blue.min.css" />
+    <Content Include="Content\css\skins\darkblue.min.css" />
+    <Content Include="Content\css\skins\darkred.min.css" />
+    <Content Include="Content\css\skins\deepblue.min.css" />
+    <Content Include="Content\css\skins\gray.min.css" />
+    <Content Include="Content\css\skins\green.min.css" />
+    <Content Include="Content\css\skins\orange.min.css" />
+    <Content Include="Content\css\skins\pink.min.css" />
+    <Content Include="Content\css\skins\purple.min.css" />
+    <Content Include="Content\css\skins\teal.min.css" />
+    <Content Include="Content\css\typicons.min.css" />
+    <Content Include="Content\css\weather-icons.min.css" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\fonts\typicons.svg" />
+    <Content Include="Content\fonts\weathericons-regular-webfont.svg" />
+    <Content Include="Content\frontpage\css\admin.css" />
+    <Content Include="Content\frontpage\css\amazeui.css" />
+    <Content Include="Content\frontpage\css\amazeui.flat.css" />
+    <Content Include="Content\frontpage\css\amazeui.flat.min.css" />
+    <Content Include="Content\frontpage\css\amazeui.min.css" />
+    <Content Include="Content\frontpage\css\app.css" />
+    <Content Include="Content\frontpage\css\color.min.css" />
+    <Content Include="Content\frontpage\i\alipay-logo.png" />
+    <Content Include="Content\frontpage\i\alipay.png" />
+    <Content Include="Content\frontpage\i\app-icon72x72%402x.png" />
+    <Content Include="Content\frontpage\i\bar1.jpg" />
+    <Content Include="Content\frontpage\i\bar2.jpg" />
+    <Content Include="Content\frontpage\i\bar3.jpg" />
+    <Content Include="Content\frontpage\i\bm_icon1.png" />
+    <Content Include="Content\frontpage\i\bm_icon10.png" />
+    <Content Include="Content\frontpage\i\bm_icon11.png" />
+    <Content Include="Content\frontpage\i\bm_icon2.png" />
+    <Content Include="Content\frontpage\i\bm_icon3.png" />
+    <Content Include="Content\frontpage\i\bm_icon5.png" />
+    <Content Include="Content\frontpage\i\bm_icon6.png" />
+    <Content Include="Content\frontpage\i\bm_icon7.png" />
+    <Content Include="Content\frontpage\i\bm_icon8.png" />
+    <Content Include="Content\frontpage\i\bm_icon9.png" />
+    <Content Include="Content\frontpage\i\contact.png" />
+    <Content Include="Content\frontpage\i\default-headimg.jpg" />
+    <Content Include="Content\frontpage\i\examples\admin-chrome.png" />
+    <Content Include="Content\frontpage\i\examples\admin-firefox.png" />
+    <Content Include="Content\frontpage\i\examples\admin-ie.png" />
+    <Content Include="Content\frontpage\i\examples\admin-opera.png" />
+    <Content Include="Content\frontpage\i\examples\admin-safari.png" />
+    <Content Include="Content\frontpage\i\examples\adminPage.png" />
+    <Content Include="Content\frontpage\i\examples\blogPage.png" />
+    <Content Include="Content\frontpage\i\examples\landing.png" />
+    <Content Include="Content\frontpage\i\examples\landingPage.png" />
+    <Content Include="Content\frontpage\i\examples\loginPage.png" />
+    <Content Include="Content\frontpage\i\examples\sidebarPage.png" />
+    <Content Include="Content\frontpage\i\favicon.png" />
+    <Content Include="Content\frontpage\i\feedback.png" />
+    <Content Include="Content\frontpage\i\home-icon-1.png" />
+    <Content Include="Content\frontpage\i\home-icon-2.png" />
+    <Content Include="Content\frontpage\i\home-icon-3.png" />
+    <Content Include="Content\frontpage\i\home-icon-4.png" />
+    <Content Include="Content\frontpage\i\home-icon-5.png" />
+    <Content Include="Content\frontpage\i\home-icon-6.png" />
+    <Content Include="Content\frontpage\i\home-icon-7.png" />
+    <Content Include="Content\frontpage\i\home-icon-8.png" />
+    <Content Include="Content\frontpage\i\imghold-128x128.png" />
+    <Content Include="Content\frontpage\i\imghold-160x100.png" />
+    <Content Include="Content\frontpage\i\jr_man.png" />
+    <Content Include="Content\frontpage\i\jr_wumen.png" />
+    <Content Include="Content\frontpage\i\live_weixin.png" />
+    <Content Include="Content\frontpage\i\more.png" />
+    <Content Include="Content\frontpage\i\my-item-bg.png" />
+    <Content Include="Content\frontpage\i\my\ic_flea_market.png" />
+    <Content Include="Content\frontpage\i\my\ic_house_rental.png" />
+    <Content Include="Content\frontpage\i\my\ic_likes.png" />
+    <Content Include="Content\frontpage\i\my\ic_my_group.png" />
+    <Content Include="Content\frontpage\i\my\ic_personal_pending_pay.png" />
+    <Content Include="Content\frontpage\i\my\ic_puzzle_group.png" />
+    <Content Include="Content\frontpage\i\my\ic_receipt_of_goods.png" />
+    <Content Include="Content\frontpage\i\my\ic_to_be_comment.png" />
+    <Content Include="Content\frontpage\i\my\ic_to_be_shipped.png" />
+    <Content Include="Content\frontpage\i\shangchuan.png" />
+    <Content Include="Content\frontpage\i\startup-640x1096.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_forum_normal.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_forum_pressed.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_mall_normal.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_mall_pressed.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_more.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_myself_normal.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_myself_pressed.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_work_normal.png" />
+    <Content Include="Content\frontpage\i\toobar\icon_work_pressed.png" />
+    <Content Include="Content\frontpage\i\upload-img.png" />
+    <Content Include="Content\frontpage\i\weixin.png" />
+    <Content Include="Content\frontpage\i\切图lxwy.png" />
+    <Content Include="Content\frontpage\i\扳手.png" />
+    <Content Include="Content\frontpage\js\ajaxfileupload.js" />
+    <Content Include="Content\frontpage\js\amazeui.ie8polyfill.js" />
+    <Content Include="Content\frontpage\js\amazeui.ie8polyfill.min.js" />
+    <Content Include="Content\frontpage\js\amazeui.js" />
+    <Content Include="Content\frontpage\js\amazeui.min.js" />
+    <Content Include="Content\frontpage\js\amazeui.widgets.helper.js" />
+    <Content Include="Content\frontpage\js\amazeui.widgets.helper.min.js" />
+    <Content Include="Content\frontpage\js\color.min.js" />
+    <Content Include="Content\frontpage\js\jquery-star-rating\rating.css" />
+    <Content Include="Content\frontpage\js\jquery-star-rating\rating.js" />
+    <Content Include="Content\frontpage\js\lrz.bundle.js" />
+    <Content Include="Content\frontpage\js\sweetalert\ie9.css" />
+    <Content Include="Content\frontpage\js\sweetalert\sweet-alert.css" />
+    <Content Include="Content\frontpage\js\sweetalert\sweet-alert.html" />
+    <Content Include="Content\frontpage\js\sweetalert\sweet-alert.js" />
+    <Content Include="Content\frontpage\js\sweetalert\sweet-alert.min.js" />
+    <Content Include="Content\frontpage\js\template.js" />
+    <Content Include="Content\img\alipay.png" />
+    <Content Include="Content\img\placehold\640x150.png" />
+    <Content Include="Content\img\placehold\640x400.png" />
+    <Content Include="Content\img\weixin.png" />
+    <Content Include="Content\img\ysepay.ico" />
+    <Content Include="Content\js\bootstrap-datetimepicker\css\bootstrap-datetimepicker.css" />
+    <Content Include="Content\js\bootstrap-datetimepicker\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\bootstrap-datetimepicker.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ar.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.az.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.bg.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.bn.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ca.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.cs.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.da.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.de.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ee.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.el.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.es.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.fi.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.fr.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.he.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.hr.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.hu.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.hy.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.id.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.is.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.it.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ja.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ka.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ko.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.lt.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.lv.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ms.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.nb.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.nl.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.no.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.pl.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.pt-BR.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.pt.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ro.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.rs-latin.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.rs.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ru.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.sk.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.sl.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.sv.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.sw.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.th.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.tr.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.ua.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.uk.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.zh-CN.js" />
+    <Content Include="Content\js\bootstrap-datetimepicker\js\locales\bootstrap-datetimepicker.zh-TW.js" />
+    <Content Include="Content\mall\css\admin.css" />
+    <Content Include="Content\mall\css\amazeui.css" />
+    <Content Include="Content\mall\css\amazeui.flat.css" />
+    <Content Include="Content\mall\css\amazeui.flat.min.css" />
+    <Content Include="Content\mall\css\amazeui.min.css" />
+    <Content Include="Content\mall\css\app.css" />
+    <Content Include="Content\mall\css\color.min.css" />
+    <Content Include="Content\mall\i\640x150.png" />
+    <Content Include="Content\mall\i\app-icon72x72%402x.png" />
+    <Content Include="Content\mall\i\bar1.jpg" />
+    <Content Include="Content\mall\i\bar2.jpg" />
+    <Content Include="Content\mall\i\bar3.jpg" />
+    <Content Include="Content\mall\i\bm_icon1.png" />
+    <Content Include="Content\mall\i\bm_icon10.png" />
+    <Content Include="Content\mall\i\bm_icon11.png" />
+    <Content Include="Content\mall\i\bm_icon2.png" />
+    <Content Include="Content\mall\i\bm_icon3.png" />
+    <Content Include="Content\mall\i\bm_icon5.png" />
+    <Content Include="Content\mall\i\bm_icon6.png" />
+    <Content Include="Content\mall\i\bm_icon7.png" />
+    <Content Include="Content\mall\i\bm_icon8.png" />
+    <Content Include="Content\mall\i\bm_icon9.png" />
+    <Content Include="Content\mall\i\contact.png" />
+    <Content Include="Content\mall\i\default-headimg.jpg" />
+    <Content Include="Content\mall\i\examples\admin-chrome.png" />
+    <Content Include="Content\mall\i\examples\admin-firefox.png" />
+    <Content Include="Content\mall\i\examples\admin-ie.png" />
+    <Content Include="Content\mall\i\examples\admin-opera.png" />
+    <Content Include="Content\mall\i\examples\admin-safari.png" />
+    <Content Include="Content\mall\i\examples\adminPage.png" />
+    <Content Include="Content\mall\i\examples\blogPage.png" />
+    <Content Include="Content\mall\i\examples\landing.png" />
+    <Content Include="Content\mall\i\examples\landingPage.png" />
+    <Content Include="Content\mall\i\examples\loginPage.png" />
+    <Content Include="Content\mall\i\examples\sidebarPage.png" />
+    <Content Include="Content\mall\i\favicon.png" />
+    <Content Include="Content\mall\i\feedback.png" />
+    <Content Include="Content\mall\i\home-icon-1.png" />
+    <Content Include="Content\mall\i\home-icon-2.png" />
+    <Content Include="Content\mall\i\home-icon-3.png" />
+    <Content Include="Content\mall\i\home-icon-4.png" />
+    <Content Include="Content\mall\i\home-icon-5.png" />
+    <Content Include="Content\mall\i\home-icon-6.png" />
+    <Content Include="Content\mall\i\home-icon-7.png" />
+    <Content Include="Content\mall\i\home-icon-8.png" />
+    <Content Include="Content\mall\i\imghold-128x128.png" />
+    <Content Include="Content\mall\i\imghold-160x100.png" />
+    <Content Include="Content\mall\i\jr_man.png" />
+    <Content Include="Content\mall\i\jr_wumen.png" />
+    <Content Include="Content\mall\i\my-item-bg.png" />
+    <Content Include="Content\mall\i\pingtuan_bar_home.png" />
+    <Content Include="Content\mall\i\pingtuan_bar_sc.png" />
+    <Content Include="Content\mall\i\pingtuan_bar_share.png" />
+    <Content Include="Content\mall\i\shangchuan.png" />
+    <Content Include="Content\mall\i\startup-640x1096.png" />
+    <Content Include="Content\mall\i\upload-img.png" />
+    <Content Include="Content\mall\i\切图lxwy.png" />
+    <Content Include="Content\mall\i\周边商圈.png" />
+    <Content Include="Content\mall\i\家政.png" />
+    <Content Include="Content\mall\i\房屋出售.png" />
+    <Content Include="Content\mall\i\拼团.png" />
+    <Content Include="Content\mall\i\跳蚤市场.png" />
+    <Content Include="Content\mall\i\问号.png" />
+    <Content Include="Content\mall\js\ajaxfileupload.js" />
+    <Content Include="Content\mall\js\amazeui.ie8polyfill.js" />
+    <Content Include="Content\mall\js\amazeui.ie8polyfill.min.js" />
+    <Content Include="Content\mall\js\amazeui.js" />
+    <Content Include="Content\mall\js\amazeui.min.js" />
+    <Content Include="Content\mall\js\amazeui.widgets.helper.js" />
+    <Content Include="Content\mall\js\amazeui.widgets.helper.min.js" />
+    <Content Include="Content\mall\js\color.min.js" />
+    <Content Include="Content\mall\js\handlebars.min.js" />
+    <Content Include="Content\mall\js\iscroll.min.js" />
+    <Content Include="Content\mall\js\jquery.min.js" />
+    <Content Include="Content\mall\js\listloading.min.js" />
+    <Content Include="Content\mall\js\lrz.bundle.js" />
+    <Content Include="Content\mall\js\sweetalert\ie9.css" />
+    <Content Include="Content\mall\js\sweetalert\sweet-alert.css" />
+    <Content Include="Content\mall\js\sweetalert\sweet-alert.html" />
+    <Content Include="Content\mall\js\sweetalert\sweet-alert.js" />
+    <Content Include="Content\mall\js\sweetalert\sweet-alert.min.js" />
+    <Content Include="Content\mall\js\template.js" />
+    <Content Include="Content\js\viewer\css\viewer.min.css" />
+    <Content Include="Content\js\viewer\js\viewer-jquery.min.js" />
+    <Content Include="Content\js\viewer\js\viewer.min.js" />
+    <Content Include="Content\mall\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\mall\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\mall\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\mall\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\mall\fonts\FontAwesome.otf" />
+    <Content Include="Content\mall\js\sweetalert\sweet-alert.scss" />
+    <Content Include="Abp\Framework\styles\abp.mixings.less" />
+    <Content Include="Abp\Framework\styles\abp.mixings.css.map" />
+    <Content Include="Abp\Framework\styles\abp.less" />
+    <Content Include="Abp\Framework\styles\abp.css.map" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
+    <Content Include="apiclient_cert.p12">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Scripts\jquery-2.2.0.intellisense.js" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Scripts\jquery-2.2.0.js" />
+    <Content Include="Scripts\jquery-2.2.0.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery.blockUI.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Views\Activitys\Person.js" />
+    <Content Include="Views\ApiLogs\Index.js" />
+    <Content Include="Views\Categorys\Index.js" />
+    <Content Include="Views\FeeServices\Index.js" />
+    <Content Include="Views\RefundOrder\Index.js" />
+    <Content Include="Views\RefundOrder\View.js" />
+    <Content Include="Views\Order\Index.js" />
+    <Content Include="Views\Order\View.js" />
+    <Content Include="Views\ForumPost\View.js" />
+    <Content Include="Views\ForumPost\Index.js" />
+    <Content Include="Views\Plates\Index.js" />
+    <Content Include="Views\Groupons\Index.js" />
+    <Content Include="Views\ProductComments\Index.js" />
+    <Content Include="Views\Products\SlideImages.js" />
+    <Content Include="Views\Products\Index.js" />
+    <Content Include="Views\Rentsaleinfos\Index.js" />
+    <Content Include="Views\Estateinfos\Index.js" />
+    <Content Include="Views\RentsaleinfoTypes\Index.js" />
+    <Content Include="Views\EstateinfoTypes\Index.js" />
+    <Content Include="Content\frontpage\js\handlebars.min.js" />
+    <Content Include="Content\frontpage\js\jquery.min.js" />
+    <Content Include="Content\img\attach-blue.png" />
+    <Content Include="Content\img\attach-green.png" />
+    <Content Include="Content\img\attach-red.png" />
+    <Content Include="Content\img\attach-yellow.png" />
+    <Content Include="Content\img\avatars\adam-jansen.jpg" />
+    <Content Include="Content\img\avatars\bing.png" />
+    <Content Include="Content\img\avatars\divyia.jpg" />
+    <Content Include="Content\img\avatars\Javi-Jimenez.jpg" />
+    <Content Include="Content\img\avatars\John-Smith.jpg" />
+    <Content Include="Content\img\avatars\Matt-Cheuvront.jpg" />
+    <Content Include="Content\img\avatars\Nicolai-Larson.jpg" />
+    <Content Include="Content\img\avatars\Osvaldus-Valutis.jpg" />
+    <Content Include="Content\img\avatars\Sergey-Azovskiy.jpg" />
+    <Content Include="Content\img\avatars\Stephanie-Walter.jpg" />
+    <Content Include="Content\img\favicon.png" />
+    <Content Include="Content\img\jquery.minicolors.png" />
+    <Content Include="Content\img\logo-inverted.png" />
+    <Content Include="Content\img\logo-rtl.png" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\placehold\128x128.png" />
+    <Content Include="Content\img\placehold\160x100.png" />
+    <Content Include="Content\img\placehold\640x300.png" />
+    <Content Include="Content\img\sort_asc.png" />
+    <Content Include="Content\img\sort_asc_disabled.png" />
+    <Content Include="Content\img\sort_both.png" />
+    <Content Include="Content\img\sort_desc.png" />
+    <Content Include="Content\img\sort_desc_disabled.png" />
+    <Content Include="Content\img\temp1.png" />
+    <Content Include="Content\js\ajaxfileupload.js" />
+    <Content Include="Content\js\app.js" />
+    <Content Include="Content\js\beyond.js" />
+    <Content Include="Content\js\beyond.min.js" />
+    <Content Include="Content\js\bootbox\bootbox.js" />
+    <Content Include="Content\js\bootstrap.min.js" />
+    <Content Include="Content\js\charts\chartjs\Chart.js" />
+    <Content Include="Content\js\charts\chartjs\chartjs-init.js" />
+    <Content Include="Content\js\charts\easypiechart\easypiechart-init.js" />
+    <Content Include="Content\js\charts\easypiechart\jquery.easypiechart.js" />
+    <Content Include="Content\js\charts\flot\flot-init.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.crosshair.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.orderBars.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.pie.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.resize.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.selection.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.stack.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.time.js" />
+    <Content Include="Content\js\charts\flot\jquery.flot.tooltip.js" />
+    <Content Include="Content\js\charts\morris\morris-init.js" />
+    <Content Include="Content\js\charts\morris\morris.js" />
+    <Content Include="Content\js\charts\morris\raphael-2.0.2.min.js" />
+    <Content Include="Content\js\charts\sparkline\jquery.sparkline.js" />
+    <Content Include="Content\js\charts\sparkline\sparkline-init.js" />
+    <Content Include="Content\js\colorpicker\jquery.minicolors.js" />
+    <Content Include="Content\js\datatable\assets\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Content\js\datatable\datatables-init.js" />
+    <Content Include="Content\js\datatable\dataTables.bootstrap.min.js" />
+    <Content Include="Content\js\datatable\dataTables.tableTools.min.js" />
+    <Content Include="Content\js\datatable\jquery.dataTables.min.js" />
+    <Content Include="Content\js\datatable\ZeroClipboard.js" />
+    <Content Include="Content\js\datetime\bootstrap-datepicker.js" />
+    <Content Include="Content\js\datetime\bootstrap-timepicker.js" />
+    <Content Include="Content\js\datetime\daterangepicker.js" />
+    <Content Include="Content\js\datetime\moment.js" />
+    <Content Include="Content\js\editors\summernote\summernote.js" />
+    <Content Include="Content\js\editors\wysiwyg\bootstrap-wysiwyg.js" />
+    <Content Include="Content\js\editors\wysiwyg\jquery.hotkeys.js" />
+    <Content Include="Content\js\editors\wysiwyg\prettify.js" />
+    <Content Include="Content\js\file-input\bootstrap-filestyle.min.js" />
+    <Content Include="Content\js\file-input\bootstrap.file-input.js" />
+    <Content Include="Content\js\fuelux\spinner\fuelux.spinner.min.js" />
+    <Content Include="Content\js\fuelux\treeview\tree-custom.min.js" />
+    <Content Include="Content\js\fuelux\treeview\treeview-init.js" />
+    <Content Include="Content\js\fuelux\wizard\wizard-custom.js" />
+    <Content Include="Content\js\fullcalendar\fullcalendar.js" />
+    <Content Include="Content\js\jquery-2.0.3.min.js" />
+    <Content Include="Content\js\jquery-ui-1.10.4.custom.js" />
+    <Content Include="Content\js\jstree\jstree.js" />
+    <Content Include="Content\js\jstree\jstree.min.js" />
+    <Content Include="Content\js\jstree\themes\default-dark\32px.png" />
+    <Content Include="Content\js\jstree\themes\default-dark\40px.png" />
+    <Content Include="Content\js\jstree\themes\default-dark\style.css" />
+    <Content Include="Content\js\jstree\themes\default-dark\style.min.css" />
+    <Content Include="Content\js\jstree\themes\default-dark\throbber.gif" />
+    <Content Include="Content\js\jstree\themes\default\32px.png" />
+    <Content Include="Content\js\jstree\themes\default\40px.png" />
+    <Content Include="Content\js\jstree\themes\default\style.css" />
+    <Content Include="Content\js\jstree\themes\default\style.min.css" />
+    <Content Include="Content\js\jstree\themes\default\throbber.gif" />
+    <Content Include="Content\js\kindeditor\kindeditor-all-min.js" />
+    <Content Include="Content\js\kindeditor\kindeditor-all.js" />
+    <Content Include="Content\js\kindeditor\kindeditor-min.js" />
+    <Content Include="Content\js\kindeditor\kindeditor.js" />
+    <Content Include="Content\js\kindeditor\lang\ar.js" />
+    <Content Include="Content\js\kindeditor\lang\en.js" />
+    <Content Include="Content\js\kindeditor\lang\ko.js" />
+    <Content Include="Content\js\kindeditor\lang\zh_CN.js" />
+    <Content Include="Content\js\kindeditor\lang\zh_TW.js" />
+    <Content Include="Content\js\kindeditor\license.txt" />
+    <Content Include="Content\js\kindeditor\plugins\anchor\anchor.js" />
+    <Content Include="Content\js\kindeditor\plugins\autoheight\autoheight.js" />
+    <Content Include="Content\js\kindeditor\plugins\baidumap\baidumap.js" />
+    <Content Include="Content\js\kindeditor\plugins\baidumap\index.html" />
+    <Content Include="Content\js\kindeditor\plugins\baidumap\map.html" />
+    <Content Include="Content\js\kindeditor\plugins\clearhtml\clearhtml.js" />
+    <Content Include="Content\js\kindeditor\plugins\code\code.js" />
+    <Content Include="Content\js\kindeditor\plugins\code\prettify.css" />
+    <Content Include="Content\js\kindeditor\plugins\code\prettify.js" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\emoticons.js" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\0.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\1.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\10.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\100.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\101.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\102.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\103.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\104.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\105.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\106.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\107.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\108.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\109.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\11.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\110.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\111.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\112.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\113.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\114.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\115.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\116.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\117.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\118.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\119.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\12.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\120.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\121.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\122.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\123.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\124.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\125.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\126.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\127.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\128.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\129.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\13.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\130.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\131.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\132.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\133.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\134.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\14.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\15.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\16.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\17.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\18.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\19.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\2.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\20.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\21.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\22.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\23.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\24.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\25.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\26.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\27.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\28.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\29.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\3.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\30.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\31.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\32.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\33.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\34.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\35.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\36.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\37.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\38.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\39.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\4.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\40.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\41.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\42.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\43.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\44.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\45.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\46.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\47.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\48.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\49.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\5.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\50.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\51.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\52.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\53.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\54.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\55.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\56.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\57.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\58.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\59.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\6.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\60.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\61.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\62.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\63.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\64.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\65.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\66.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\67.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\68.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\69.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\7.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\70.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\71.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\72.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\73.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\74.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\75.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\76.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\77.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\78.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\79.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\8.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\80.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\81.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\82.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\83.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\84.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\85.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\86.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\87.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\88.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\89.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\9.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\90.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\91.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\92.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\93.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\94.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\95.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\96.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\97.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\98.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\99.gif" />
+    <Content Include="Content\js\kindeditor\plugins\emoticons\images\static.gif" />
+    <Content Include="Content\js\kindeditor\plugins\filemanager\filemanager.js" />
+    <Content Include="Content\js\kindeditor\plugins\filemanager\images\file-16.gif" />
+    <Content Include="Content\js\kindeditor\plugins\filemanager\images\file-64.gif" />
+    <Content Include="Content\js\kindeditor\plugins\filemanager\images\folder-16.gif" />
+    <Content Include="Content\js\kindeditor\plugins\filemanager\images\folder-64.gif" />
+    <Content Include="Content\js\kindeditor\plugins\filemanager\images\go-up.gif" />
+    <Content Include="Content\js\kindeditor\plugins\flash\flash.js" />
+    <Content Include="Content\js\kindeditor\plugins\image\image.js" />
+    <Content Include="Content\js\kindeditor\plugins\image\images\align_left.gif" />
+    <Content Include="Content\js\kindeditor\plugins\image\images\align_right.gif" />
+    <Content Include="Content\js\kindeditor\plugins\image\images\align_top.gif" />
+    <Content Include="Content\js\kindeditor\plugins\image\images\refresh.png" />
+    <Content Include="Content\js\kindeditor\plugins\insertfile\insertfile.js" />
+    <Content Include="Content\js\kindeditor\plugins\lineheight\lineheight.js" />
+    <Content Include="Content\js\kindeditor\plugins\link\link.js" />
+    <Content Include="Content\js\kindeditor\plugins\map\map.html" />
+    <Content Include="Content\js\kindeditor\plugins\map\map.js" />
+    <Content Include="Content\js\kindeditor\plugins\media\media.js" />
+    <Content Include="Content\js\kindeditor\plugins\multiimage\images\image.png" />
+    <Content Include="Content\js\kindeditor\plugins\multiimage\images\select-files-en.png" />
+    <Content Include="Content\js\kindeditor\plugins\multiimage\images\select-files-zh_CN.png" />
+    <Content Include="Content\js\kindeditor\plugins\multiimage\images\swfupload.swf" />
+    <Content Include="Content\js\kindeditor\plugins\multiimage\multiimage.js" />
+    <Content Include="Content\js\kindeditor\plugins\pagebreak\pagebreak.js" />
+    <Content Include="Content\js\kindeditor\plugins\plainpaste\plainpaste.js" />
+    <Content Include="Content\js\kindeditor\plugins\preview\preview.js" />
+    <Content Include="Content\js\kindeditor\plugins\quickformat\quickformat.js" />
+    <Content Include="Content\js\kindeditor\plugins\table\table.js" />
+    <Content Include="Content\js\kindeditor\plugins\template\html\1.html" />
+    <Content Include="Content\js\kindeditor\plugins\template\html\2.html" />
+    <Content Include="Content\js\kindeditor\plugins\template\html\3.html" />
+    <Content Include="Content\js\kindeditor\plugins\template\template.js" />
+    <Content Include="Content\js\kindeditor\plugins\wordpaste\wordpaste.js" />
+    <Content Include="Content\js\kindeditor\themes\common\anchor.gif" />
+    <Content Include="Content\js\kindeditor\themes\common\blank.gif" />
+    <Content Include="Content\js\kindeditor\themes\common\flash.gif" />
+    <Content Include="Content\js\kindeditor\themes\common\loading.gif" />
+    <Content Include="Content\js\kindeditor\themes\common\media.gif" />
+    <Content Include="Content\js\kindeditor\themes\common\rm.gif" />
+    <Content Include="Content\js\kindeditor\themes\default\background.png" />
+    <Content Include="Content\js\kindeditor\themes\default\default.css" />
+    <Content Include="Content\js\kindeditor\themes\default\default.png" />
+    <Content Include="Content\js\kindeditor\themes\qq\editor.gif" />
+    <Content Include="Content\js\kindeditor\themes\qq\qq.css" />
+    <Content Include="Content\js\kindeditor\themes\simple\simple.css" />
+    <Content Include="Content\js\knob\jquery.knob.js" />
+    <Content Include="Content\js\nestable\jquery.nestable.min.js" />
+    <Content Include="Content\js\select2\select2.js" />
+    <Content Include="Content\js\skins.min.js" />
+    <Content Include="Content\js\slider\jQRangeSlider\jQAllRangeSliders-withRuler-min.js" />
+    <Content Include="Content\js\slider\jquery.nouislider.js" />
+    <Content Include="Content\js\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Content\js\tagsinput\bootstrap-tagsinput.js" />
+    <Content Include="Content\js\textarea\jquery.autosize.js" />
+    <Content Include="Content\js\toastr\toastr.js" />
+    <Content Include="Content\js\validation\bootstrapValidator.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="log4net.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\typicons.eot" />
+    <Content Include="Content\fonts\typicons.ttf" />
+    <Content Include="Content\fonts\typicons.woff" />
+    <Content Include="Content\fonts\weathericons-regular-webfont.eot" />
+    <Content Include="Content\fonts\weathericons-regular-webfont.ttf" />
+    <Content Include="Content\fonts\weathericons-regular-webfont.woff" />
+    <Content Include="Content\frontpage\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\frontpage\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\frontpage\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\frontpage\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\frontpage\fonts\FontAwesome.otf" />
+    <Content Include="Content\frontpage\js\sweetalert\sweet-alert.scss" />
+    <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\deploy.pubxml" />
+    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\others\html5shiv.js" />
+    <Content Include="Scripts\others\respond.min.js" />
+    <Content Include="Scripts\others\respond.src.js" />
+    <Content Include="Scripts\others\spinjs\jquery.spin.js" />
+    <Content Include="Scripts\others\spinjs\spin.js" />
+    <Content Include="Scripts\sweetalert\ie9.css" />
+    <Content Include="Scripts\sweetalert\sweet-alert.css" />
+    <Content Include="Scripts\sweetalert\sweet-alert.html" />
+    <Content Include="Scripts\sweetalert\sweet-alert.js" />
+    <Content Include="Scripts\sweetalert\sweet-alert.min.js" />
+    <Content Include="Views\Account\Login.js" />
+    <Content Include="Views\Activitys\Index.js" />
+    <Content Include="Views\LifeInfos\Index.js" />
+    <Content Include="Views\LifeInfoTypes\Index.js" />
+    <Content Include="Views\Maintenance\Index.js" />
+    <Content Include="Views\AuditLogs\Index.js" />
+    <Content Include="Views\NewsProjects\Index.js" />
+    <Content Include="Views\Newss\Index.js" />
+    <Content Include="Views\Notices\Index.js" />
+    <Content Include="Views\Projects\Index.js" />
+    <Content Include="Views\PropertyCitys\Index.js" />
+    <Content Include="Views\Propertys\Index.js" />
+    <Content Include="Views\PropertyTypes\Index.js" />
+    <Content Include="Views\Roles\Index.js" />
+    <Content Include="Views\MallSlideImages\Index.js" />
+    <Content Include="Views\WeixinPage\Templates\readme.txt" />
+    <Content Include="Views\WeixinSubscribes\Index.js" />
+    <Content Include="Views\Substations\Index.js" />
+    <Content Include="Views\ServiceTels\Index.js" />
+    <Content Include="Views\Settings\Index.js" />
+    <Content Include="Views\SlideImages\Index.js" />
+    <Content Include="Views\Suppliers\Index.js" />
+    <Content Include="Views\Users\Index.js" />
+    <Content Include="Views\WeixinPage\Weixin\app.js" />
+    <Content Include="Views\WeixinPage\Weixin\services.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\EntityFrameworkProfilerBootstrapper.cs" />
+    <Compile Include="App_Start\LesoftWuye2NavigationProvider.cs" />
+    <Compile Include="App_Start\LesoftWuye2WebModule.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivityController.cs" />
+    <Compile Include="Controllers\ActivityProjectController.cs" />
+    <Compile Include="Controllers\ApiLogController.cs" />
+    <Compile Include="Controllers\FeeServiceController.cs" />
+    <Compile Include="Controllers\RefundOrderController.cs" />
+    <Compile Include="Controllers\WeixinSubscribeController.cs" />
+    <Compile Include="Controllers\WeixinPageController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\ForumPostController.cs" />
+    <Compile Include="Controllers\PlateController.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\GrouponController.cs" />
+    <Compile Include="Controllers\ForumController.cs" />
+    <Compile Include="Controllers\MallController.cs" />
+    <Compile Include="Controllers\ProductCommentsController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\MallSlideImageController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\YsPayController.cs" />
+    <Compile Include="Controllers\RentsaleinfoController.cs" />
+    <Compile Include="Controllers\RentsaleinfoTypeController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\LifeInfoController.cs" />
+    <Compile Include="Controllers\LifeInfoProjectController.cs" />
+    <Compile Include="Controllers\EstateinfoTypeController.cs" />
+    <Compile Include="Controllers\LifeInfoTypeController.cs" />
+    <Compile Include="Controllers\MaintenanceController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\EstateinfoController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\NewsProjectController.cs" />
+    <Compile Include="Controllers\NoticeController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\PropertyCityController.cs" />
+    <Compile Include="Controllers\PropertyController.cs" />
+    <Compile Include="Controllers\PropertyTypeController.cs" />
+    <Compile Include="Controllers\Results\ChallengeResult.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\AuditLogsController.cs" />
+    <Compile Include="Controllers\SubstationController.cs" />
+    <Compile Include="Controllers\ServiceTelController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Controllers\MaxwonController.cs" />
+    <Compile Include="Controllers\SlideImageController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="CustomMessageHandler\CustomMessageContext.cs" />
+    <Compile Include="CustomMessageHandler\CustomMessageHandler.cs" />
+    <Compile Include="CustomMessageHandler\CustomMessageHandler_Events.cs" />
+    <Compile Include="Models\FixWeixinBugWeixinResult.cs" />
+    <Compile Include="Models\InvokeResult.cs" />
+    <Compile Include="Models\Layout\BreadcrumbViewModel.cs" />
+    <Compile Include="Models\Layout\UserMenuModel.cs" />
+    <Compile Include="Models\Account\LoginFormViewModel.cs" />
+    <Compile Include="Models\Account\LoginViewModel.cs" />
+    <Compile Include="Models\Account\RegisterResultViewModel.cs" />
+    <Compile Include="Models\Account\RegisterViewModel.cs" />
+    <Compile Include="Models\Account\TenantSelectionViewModel.cs" />
+    <Compile Include="Models\Layout\LanguageSelectionViewModel.cs" />
+    <Compile Include="Controllers\LayoutController.cs" />
+    <Compile Include="Controllers\LesoftWuye2ControllerBase.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Layout\TopMenuViewModel.cs" />
+    <Compile Include="Models\WeixinPageAuthAttribute.cs" />
+    <Compile Include="Models\WeixinResult.cs" />
+    <Compile Include="Models\WxPayModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\LesoftWuye2WebViewPageBase.cs" />
+    <Compile Include="Views\UrlChecker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Scripts\sweetalert\sweet-alert.scss" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Layout\_UserMenuOrLoginLink.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Shared\_SideBar.cshtml" />
+    <Content Include="Views\Layout\_LeftMenu.cshtml" />
+    <Content Include="Views\Shared\_PageHeader.cshtml" />
+    <Content Include="Views\Layout\_Breadcrumb.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Layout\_TopBar.cshtml" />
+    <Content Include="Views\AuditLogs\Index.cshtml" />
+    <Content Include="Views\Maintenance\Index.cshtml" />
+    <Content Include="Views\Settings\Index.cshtml" />
+    <Content Include="Views\Notices\Index.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Newss\Index.cshtml" />
+    <Content Include="Views\LifeInfoTypes\Index.cshtml" />
+    <Content Include="Views\NewsProjects\Index.cshtml" />
+    <Content Include="Views\PropertyCitys\Index.cshtml" />
+    <Content Include="Views\PropertyTypes\Index.cshtml" />
+    <Content Include="Views\LifeInfos\Index.cshtml" />
+    <Content Include="Views\Propertys\Index.cshtml" />
+    <Content Include="Views\Activitys\Index.cshtml" />
+    <Content Include="Views\ServiceTels\Index.cshtml" />
+    <Content Include="Views\SlideImages\Index.cshtml" />
+    <Content Include="Views\Substations\Index.cshtml" />
+    <Content Include="Views\Estateinfos\Index.cshtml" />
+    <Content Include="Views\EstateinfoTypes\Index.cshtml" />
+    <Content Include="Views\ApiLogs\Index.cshtml" />
+    <Content Include="Views\RentsaleinfoTypes\Index.cshtml" />
+    <Content Include="Views\Rentsaleinfos\Index.cshtml" />
+    <Content Include="Views\Activitys\Person.cshtml" />
+    <Content Include="Views\Suppliers\Index.cshtml" />
+    <Content Include="Views\Plates\Index.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Groupons\Index.cshtml" />
+    <Content Include="Views\MallSlideImages\Index.cshtml" />
+    <Content Include="Views\Categorys\Index.cshtml" />
+    <Content Include="Views\ForumPost\Index.cshtml" />
+    <Content Include="Views\ForumPost\View.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\View.cshtml" />
+    <Content Include="Views\ProductComments\Index.cshtml" />
+    <Content Include="Views\Products\SlideImages.cshtml" />
+    <Content Include="Scripts\jquery-2.2.0.min.map" />
+    <Content Include="Views\WeixinPage\Weixin\__Layout\Layout.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Activity\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Activity\My.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Activity\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Notice\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Notice\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\News\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\News\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Login.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\My\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\Repair.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\Feedback.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\Fee.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Substation\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Room\Add.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Room\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Room\AddWithPhone.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Register.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Address\Add.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Address\Edit.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Address\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Address\Select.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Groupon\Comments.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Groupon\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Groupon\Order.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Groupon\OrderList.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Groupon\Submit.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Groupon\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Jiazheng\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Order\Comment.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Order\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Order\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\NearCircle\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Waiting.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Groupon\Like.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\LinkBill\Count.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\LinkBill\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\LinkBill\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Rentsaleinfo\Add.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Rentsaleinfo\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Rentsaleinfo\My.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Rentsaleinfo\MyView.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Rentsaleinfo\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Estateinfo\Add.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Estateinfo\List.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Estateinfo\My.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Estateinfo\MyView.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Estateinfo\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\PayList.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\Alipay.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\ForgetPassword.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\Contact.cshtml" />
+    <Content Include="Views\WeixinSubscribes\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Templates\SHOPPING-CENTER-001\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Templates\SHOPPING-CENTER-001\My\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\PrepareFee.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Room\AddWithWizard.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Room\AddWithCode.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Room\AddWithPassword.cshtml" />
+    <Content Include="Views\FeeServices\Index.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\FeeService\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Service\AlipayReturn.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Refund\View.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Refund\Apply.cshtml" />
+    <Content Include="Views\WeixinPage\Weixin\Mall\Refund\List.cshtml" />
+    <Content Include="Views\RefundOrder\Index.cshtml" />
+    <Content Include="Views\RefundOrder\View.cshtml" />
+    <Content Include="Views\WeixinPage\Templates\SHOPPING-CENTER-001\Bill.cshtml" />
+    <Content Include="Views\WeixinPage\Templates\SHOPPING-CENTER-001\Check.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\alipay-sdk-NET-20170209153316\AopSdk.csproj">
+      <Project>{9C11CAE5-5188-4E71-825B-68FC3135728A}</Project>
+      <Name>AopSdk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LesoftWuye2.Application\LesoftWuye2.Application.csproj">
+      <Project>{85B18A20-336B-4320-AF2D-CE597E19D661}</Project>
+      <Name>LesoftWuye2.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LesoftWuye2.Core\LesoftWuye2.Core.csproj">
+      <Project>{AE6FECEC-CE26-4E93-8A04-B79A086A3763}</Project>
+      <Name>LesoftWuye2.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LesoftWuye2.EntityFramework\LesoftWuye2.EntityFramework.csproj">
+      <Project>{b86a4dff-aaea-4470-8a9a-a9521a3520f9}</Project>
+      <Name>LesoftWuye2.EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LesoftWuye2.WebApi\LesoftWuye2.WebApi.csproj">
+      <Project>{8e8a25c2-95a6-4c4b-842e-a37e884e610c}</Project>
+      <Name>LesoftWuye2.WebApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\js\kindeditor\attached\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />-->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>61814</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:8033/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v15.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!--<Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v14.0\WebApplications\Microsoft.WebApplication.targets" />-->
+  <!--
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+   To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

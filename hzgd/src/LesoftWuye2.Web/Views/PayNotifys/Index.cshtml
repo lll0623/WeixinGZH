@@ -1,0 +1,109 @@
+﻿@using LesoftWuye2.Core.PayNotifys
+@using LesoftWuye2.Application.PayNotifys
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<LesoftWuye2.Application.PayNotifys.Dto.PayNotifyListDto>
+    @{
+    ViewBag.ActiveMenu = "PayNotifys";
+    ViewBag.Title = "支付通知";
+    }
+    @section scripts
+    {
+    @Html.IncludeScript("~/Views/PayNotifys/Index.js")
+    }
+
+    <!--列表-->
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="widget">
+                <div class="widget-header">
+                    <span class="widget-caption">支付通知管理</span>
+                    <div class="widget-buttons">
+                        <button class="btn btn-primary btn-sm" data-role-name="Pages.PayNotifys.Create" data-toggle="modal" data-target="#PayNotifyCreateModal"><i class="fa fa-plus"></i>添加支付通知</button>
+                    </div>
+                </div>
+
+
+                <div class="widget-body no-padding">
+                    <div data-role="search-panel" id="searchpanel" data-lastsearch="@(ViewData["___searchparas"])"></div>
+                    <div role="grid" id="simpledatatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                        <table class="table table-bordered table-hover table-striped data-list">
+                            <thead class="bordered-themeprimary">
+                                <tr role="row">
+                                    
+                                    <th style="width: 150px" class="center">创建时间</th>
+                                    <th style="width: 200px" class="center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var paynotify in Model.Items)
+                                {
+                                <tr>
+                                    
+                                    <td class="center">@paynotify.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td class="button-holder center">
+                                        <a data-role-name="Pages.PayNotifys.Update" data-role="update-row" data-id="@(paynotify.Id)" class="btn btn-default btn-xs"><i class="fa fa-edit"></i>修改</a>
+                                        <a data-role-name="Pages.PayNotifys.Delete" data-role="delete-row" data-id="@(paynotify.Id)" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i>删除</a>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @(Html.Raw(ViewData["___paging"]))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--添加-->
+    <div class="modal fade" id="PayNotifyCreateModal" tabindex="-1" role="dialog" aria-labelledby="PayNotifyCreateModalLabel" data-backdrop="static">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <form name="paynotifyCreateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span><i class="fa fa-plus">&nbsp;</i>添加支付通知</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+    </div>
+</form>
+            </div>
+        </div>
+    </div>
+
+    <!--修改-->
+    <div class="modal fade" id="PayNotifyUpdateModal" tabindex="-1" role="dialog" aria-labelledby="PayNotifyCreateModalLabel" data-backdrop="static">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <form name="paynotifyUpdateForm" role="form" data-role='common-create-form' data-mode='modal' class="form-validation" data-bv-excluded="isActive">
+                    <input name="id" type="hidden" />
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span><i class="fa fa-plus">&nbsp;</i>修改支付通知</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i><span>取消</span></button>
+                        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i><span>保存</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,269 @@
+﻿@using Abp.Web.Mvc.Extensions
+@model LesoftWuye2.Application.Newss.Dto.NewsItemDto
+@{
+    Layout = "~/Views/WeixinPage/Weixin/__Layout/Layout.cshtml";
+    ViewBag.Title = "添加商铺";
+}
+@section styles
+{
+    <style>
+        .am-form-group {
+            margin-bottom: 0px;
+        }
+    </style>
+}
+@section scripts
+{
+    <script>
+        (function() {
+            $(function() {
+
+                var progress = $.AMUI.progress;
+                progress.start();
+
+                var projectCode = '';
+                var buildCode = '';
+                var unitCode = '';
+                var floorCode = '';
+                var rommCode = '';
+                var mobile = '';
+
+
+                app.services.app.weixinService.getPProjectList()
+                    .done(function(result) {
+                        if (result.success) {
+                            var html = '';
+                            $(result.records).each(function(idx, obj) {
+                                html += "<li data-code='" + obj.code + "'><span>&nbsp;&nbsp;" + obj.name + "</span><i class='am-icon-angle-right am-icon-fw am-fr'></i></li>";
+                            });
+                            progress.done(true);
+                            $('#projects').find('ul').html(html);
+
+                            $('#projects').find('ul li').click(function() {
+                                var code = $(this).data('code');
+                                var name = $(this).text();
+                                $('#current-select-info').text(name);
+                                projectCode = code;
+                                loadBuilds();
+                            });
+
+                        } else {
+                            app.message.error(result.msg);
+                        }
+
+                    });
+
+                function loadBuilds() {
+                    progress.start();
+                    app.services.app.weixinService.getPBuildingList(projectCode)
+                        .done(function(result) {
+                            if (result.success) {
+                                var html = '';
+                                $(result.records).each(function(idx, obj) {
+                                    html += "<li data-code='" + obj.code + "'><span>&nbsp;&nbsp;" + obj.name + "</span><i class='am-icon-angle-right am-icon-fw am-fr'></i></li>";
+                                });
+                                progress.done(true);
+                                $('#projects').find('ul').html(html);
+
+                                $('#projects').find('ul li').click(function() {
+                                    var code = $(this).data('code');
+                                    var name = $(this).text().trim();
+                                    $('#current-select-info').text($('#current-select-info').text() + " / " + name);
+                                    buildCode = code;
+                                    loadUnits();
+                                });
+
+                            } else {
+                                app.message.error(result.msg);
+                            }
+
+                        });
+                };
+
+                function loadUnits() {
+                    progress.start();
+                    app.services.app.weixinService.getPUnitList(buildCode)
+                        .done(function(result) {
+                            if (result.success) {
+                                var html = '';
+                                $(result.pUnits).each(function(idx, obj) {
+                                    html += "<li data-code='" + obj.pUnitCode + "'><span>&nbsp;&nbsp;" + obj.pUnitName + "</span><i class='am-icon-angle-right am-icon-fw am-fr'></i></li>";
+                                });
+                                progress.done(true);
+                                $('#projects').find('ul').html(html);
+                                $('#projects').find('ul li').click(function() {
+                                    var code = $(this).data('code');
+                                    var name = $(this).text().trim();
+                                    $('#current-select-info').text($('#current-select-info').text() + " / " + name);
+                                    unitCode = code;
+                                    loadFloors();
+                                });
+
+                            } else {
+                                app.message.error(result.msg);
+                            }
+
+                        });
+                };
+
+                function loadFloors() {
+                    progress.start();
+                    app.services.app.weixinService.getPFloorListByUnit(projectCode, buildCode, unitCode)
+                        .done(function(result) {
+                            if (result.success) {
+                                var html = '';
+                                $(result.pFloors).each(function(idx, obj) {
+                                    html += "<li data-code='" + obj.pFloorName + "'><span>&nbsp;&nbsp;" + obj.name + "</span><i class='am-icon-angle-right am-icon-fw am-fr'></i></li>";
+                                });
+                                progress.done(true);
+                                $('#projects').find('ul').html(html);
+
+                                $('#projects').find('ul li').click(function() {
+                                    var code = $(this).data('code');
+                                    var name = $(this).text().trim();
+                                    $('#current-select-info').text($('#current-select-info').text() + " / " + name);
+                                    floorCode = code;
+                                    loadRooms();
+                                });
+
+                            } else {
+                                app.message.error(result.msg);
+                            }
+
+                        });
+                };
+
+                function loadRooms() {
+                    progress.start();
+                    app.services.app.weixinService.getPRoomListByFloor(projectCode, buildCode, unitCode, floorCode)
+                        .done(function(result) {
+                            if (result.success) {
+                                var html = '';
+                                $(result.pRooms).each(function(idx, obj) {
+                                    html += "<li data-code='" + obj.code + "'  data-mobile='" + obj.mobileNum + "' ><span>&nbsp;&nbsp;" + obj.name + "</span><i class='am-icon-angle-right am-icon-fw am-fr'></i></li>";
+                                });
+                                progress.done(true);
+                                $('#projects').find('ul').html(html);
+                                $('#projects').find('ul li').click(function() {
+                                    var code = $(this).data('code');
+                                    var name = $(this).text().trim();
+                                    $('#current-select-info').text($('#current-select-info').text() + " / " + name);
+                                    rommCode = code;
+                                    mobile = $(this).data('mobile') + "";
+
+                                    if (mobile == '' || mobile.length !== 11) {
+                                        app.message.warn('该房间未设置手机号码或不正确，请到服务中心更新后再使用该功能!');
+                                        return;
+                                    }
+
+                                    $('#mobile-1').val(mobile.substr(0, 1));
+                                    $('#mobile-2').val(mobile.substr(1, 1));
+                                    $('#mobile-3').val(mobile.substr(2, 1));
+                                    $('#mobile-4').val(mobile.substr(3, 1));
+                                    $('#mobile-5').val(mobile.substr(4, 1));
+                                    $('#mobile-6').val();
+                                    $('#mobile-7').val();
+                                    $('#mobile-8').val();
+                                    $('#mobile-9').val();
+                                    $('#mobile-10').val(mobile.substr(9, 1));
+                                    $('#mobile-11').val(mobile.substr(10, 1));
+
+
+                                    $('#projects').hide();
+                                    $('#inputMobile').show();
+                                    $('#mobile-6').focus();
+
+                                });
+
+                            } else {
+                                app.message.error(result.msg);
+                            }
+
+                        });
+                };
+
+                $('#mobile-6').keyup(function(e) {
+                    if (($('#mobile-6').val() + "").length > 0)
+                        $('#mobile-7').focus();
+                });
+
+                $('#mobile-7').keyup(function(e) {
+                    if (($('#mobile-7').val() + "").length > 0)
+                        $('#mobile-8').focus();
+                });
+
+                $('#mobile-8').keyup(function(e) {
+                    if (($('#mobile-8').val() + "").length > 0)
+                        $('#mobile-9').focus();
+                });
+
+                $('#submit').click(function() {
+                    var inputMobile = $('#mobile-6').val() + $('#mobile-7').val() + $('#mobile-8').val() + $('#mobile-9').val();
+                    if (inputMobile != mobile.substr(5, 4)) {
+                        app.message.error('您输入手机号码不正确，请检查！');
+                        return;
+                    }
+                    app.ui.setButtonBusy($('#submit'));
+                    app.services.app.weixinService.memberAddPRoom(rommCode)
+                       .done(function (result) {
+                           if (result.success) {
+                               app.message.success('添加商铺', '成功', function () {
+                                   window.location.href = '/weixin/room/list';
+                               });
+                           } else {
+                               app.message.warn(result.msg);
+                           }
+
+                       }).always(function () {
+                           app.ui.clearButtonBusy($('#submit'));
+                       });
+
+                });
+
+
+            });
+        })();
+
+    </script>
+}
+
+
+<div class="am-panel am-panel-default" style="margin-bottom: 0px">
+    <div class="am-panel-bd">&nbsp;&nbsp;<span class="am-icon-home" style="color: #ff6600"></span>
+        <span id="current-select-info" style="color: blue;">请选择楼盘</span>
+    </div>
+</div>
+
+<div style="background-color: white;" id="projects">
+    <ul class="am-list am-list-static am-list-border">
+
+    </ul>
+</div>
+
+
+
+<div class="am-panel am-panel-default" style="margin-bottom: 0px;display: none"  id="inputMobile">
+    <div class="am-panel-bd">
+        <p class="am-serif" style="text-align: center">请补全此房屋业主的预留手机号码</p>
+        <div class="am-g" style="text-align: center">
+            <input type="tel" value="1" id="mobile-1" style="width: 26px; text-align: center" disabled="disabled"/>
+            <input type="tel" value="1" id="mobile-2" style="width: 26px; text-align: center" disabled="disabled"/>
+            <input type="tel" value="1" id="mobile-3"style="width: 26px; text-align: center" disabled="disabled"/>
+            <input type="tel" value="1" id="mobile-4"style="width: 26px; text-align: center" disabled="disabled"/>
+            <input type="tel" value="1" id="mobile-5"style="width: 26px; text-align: center" disabled="disabled"/>
+            <input type="tel" value="" id="mobile-6"style="width: 26px; text-align: center; color: #ff6600"/>
+            <input type="tel" value="" id="mobile-7"style="width: 26px; text-align: center; color: #ff6600"/>
+            <input type="tel" value="" id="mobile-8"style="width: 26px; text-align: center; color: #ff6600"/>
+            <input type="tel" value="" id="mobile-9"style="width: 26px; text-align: center; color: #ff6600"/>
+            <input type="tel" value="1" id="mobile-10"style="width: 26px; text-align: center" disabled="disabled"/>
+            <input type="tel" value="1" id="mobile-11"style="width: 26px; text-align: center" disabled="disabled"/>
+        </div>
+
+        <div class="am-g">
+            <div class="am-u-sm-12">
+                <button type="button" class="am-btn am-btn-primary am-radius am-btn-block service-form-submit" id="submit">提交</button>
+            </div>
+        </div>
+
+    </div>
+</div>
